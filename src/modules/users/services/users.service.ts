@@ -31,8 +31,8 @@ export class UserService implements IUserService {
 		if (!existedUser) {
 			return false;
 		}
-		const newUser = new User(existedUser.email, existedUser.password);
-		console.log(existedUser.password);
+		const newUser = new User(existedUser.email, existedUser.password as string);
+		console.log(password);
 		return newUser.comparePassword(password);
 	}
 

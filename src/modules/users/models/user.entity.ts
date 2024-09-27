@@ -9,7 +9,7 @@ export class User {
 		passwordHash?: string,
 	) {
 		if (passwordHash) {
-			this._password = passwordHash;
+			this._password = passwordHash as string;
 		}
 	}
 
@@ -26,10 +26,13 @@ export class User {
 	}
 
 	public async setPassword(pass: string, salt: number): Promise<void> {
+		console.log(pass);
 		this._password = await hash(pass, salt);
 	}
 
 	public async comparePassword(pass: string): Promise<boolean> {
+		// console.log('this' + this._password);
+		// console.log('pass' + pass);
 		return compare(pass, this._password);
 	}
 }
