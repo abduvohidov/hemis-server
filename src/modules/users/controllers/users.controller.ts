@@ -6,13 +6,13 @@ import { UserLoginDto } from '../dto/user-login.dto';
 import { UserRegisterDto } from '../dto/user-register.dto';
 import { sign } from 'jsonwebtoken';
 import { TYPES } from '../../../types';
+import { ILogger } from '../../../logger/logger.interface';
 import { IUserService } from '../services/users.service.interface';
+import { IConfigService } from '../../../config/config.service.interface';
 import { BaseController } from '../../../common/baseController/base.controller';
 import { ValidateMiddleware } from '../../../common/middlewares/validate.middleware';
-import { AuthGuard } from '../../../common/middlewares/auth.guard';
-import { HTTPError } from '../../../common/errors/http-error.class';
-import { IConfigService } from '../../../common/config/config.service.interface';
-import { ILogger } from '../../../common/logger/logger.interface';
+import { HTTPError } from '../../../errors/http-error.class';
+import { AuthGuard } from '../../../common/auth/auth.guard';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -27,6 +27,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/register',
 				method: 'post',
 				func: this.register,
+				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
 			{
 				path: '/login',
@@ -38,26 +39,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
-			},
-			{
-				path: '/verifyEmail',
-				method: 'post',
-				func: this.verifyEmailAndSave,
-			},
-			{
-				path: '/remove/:id',
-				method: 'delete',
-				func: this.remove,
-			},
-			{
-				path: '/user/:id',
-				method: 'get',
-				func: this.getById,
-			},
-			{
-				path: '/user-or-create',
-				method: 'post',
-				func: this.getOrCreate,
+				middlewares: [new AuthGuard()],
 			},
 		]);
 	}
@@ -69,7 +51,7 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result = await this.userService.validateUser(req.body);
 		if (!result) {
-			return next(new HTTPError(401, 'ошибка авторизации'));
+			return next(new HTTPError(401, 'ошибка авторизации', 'login'));
 		}
 		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
 		this.ok(res, { jwt });
@@ -84,59 +66,12 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HTTPError(422, 'Такой пользователь уже существует'));
 		}
-		this.ok(res, { email: result.email, name: result.name });
+		this.ok(res, { email: result.email, id: result.id });
 	}
 
-	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
-		const userInfo = await this.userService.getUserInfo(user as string);
-		this.ok(res, { name: userInfo?.name, email: userInfo?.email, id: userInfo?.id });
-	}
-
-	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.params;
-		const userInfoById = await this.userService.findById(id);
-		if (!userInfoById) {
-			return next(new HTTPError(404, 'Пользователь не найден'));
-		}
-		this.ok(res, { email: userInfoById.email, id: userInfoById.id });
-	}
-
-	async getOrCreate(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id, profile } = req.body;
-		const userInfo = await this.userService.findOrCreate(id, profile);
-
-		if (!userInfo) {
-			return next(new HTTPError(422, 'Не удалось создать или получить пользователя'));
-		}
-		this.ok(res, { email: userInfo.email, id: userInfo.id });
-	}
-
-	async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.params;
-		const result = await this.userService.remove(id);
-		if (!result) {
-			return next(new HTTPError(422, 'Нет такого пользователь'));
-		}
-		this.ok(res, {
-			status: true,
-			message: 'пользователь успешно удалено',
-		});
-	}
-
-	async verifyEmailAndSave(
-		{ body }: Request<{}, {}, { code: number }>,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
-		const user = await this.userService.verifyEmailAndSaveUser(body.code);
-
-		if (!user) {
-			this.send(res, 422, 'Code is invalid');
-			return;
-		}
-		const token = await this.signJWT(user.email, this.configService.get('SECRET'));
-		res.cookie('token', token);
-		this.ok(res, { user, token });
+	async info({ user }: Request | any, res: Response, next: NextFunction): Promise<void> {
+		const userInfo = await this.userService.getUserInfo(user);
+		this.ok(res, { email: userInfo?.email, id: userInfo?.id });
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {

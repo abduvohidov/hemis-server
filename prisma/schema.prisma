@@ -7,9 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// #test
 model UserModel {
-  id       String @id @default(uuid())
-  email    String
-  password String?
-  name     String
+  id    Int     @id @default(autoincrement())
+  password String
+  email String  @unique
+  name  String
 }

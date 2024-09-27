@@ -1,17 +1,14 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
 import { inject, injectable } from 'inversify';
+import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
 import { json } from 'body-parser';
-import { IConfigService } from './common/config/config.service.interface';
-import { IExeptionFilter } from './common/errors/exeption.filter.interface';
-import { ConfigPassportService } from './common/config/config.passport.service';
-import { IUsersRepository, UserController } from './modules/users';
+import { IConfigService } from './config/config.service.interface';
+import { IExeptionFilter } from './errors/exeption.filter.interface';
 import { PrismaService } from './database/prisma.service';
-import { ILogger } from './common/logger/logger.interface';
-import session from 'express-session';
-import passport from 'passport';
 import 'reflect-metadata';
+import { IUsersRepository, UserController } from './modules/users';
 
 @injectable()
 export class App {
@@ -26,7 +23,6 @@ export class App {
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 		@inject(TYPES.UserController) private userController: UserController,
 		@inject(TYPES.UserRepository) private userRepository: IUsersRepository,
-		@inject(TYPES.ConfigPassportService) private configPassportService: ConfigPassportService,
 	) {
 		this.app = express();
 		this.port = this.configService.get('PORT') || 9000;
@@ -34,25 +30,10 @@ export class App {
 
 	useMiddleware(): void {
 		this.app.use(json());
-		this.app.use(
-			session({
-				secret: this.configService.get('SECRET'),
-				resave: false,
-				saveUninitialized: false,
-			}),
-		);
-		this.app.use(passport.session());
 	}
 
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
-		this.app.use(
-			'/oauth/login/google',
-			passport.authenticate('google', { scope: ['profile', 'email'] }),
-		);
-		this.app.get('/oauth/redirect/google', passport.authenticate('google'), (req, res) => {
-			res.redirect('https://najottalim.uz/');
-		});
 	}
 
 	useExeptionFilters(): void {
