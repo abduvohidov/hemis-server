@@ -4,7 +4,7 @@ import { inject, injectable } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IUsersRepository, User } from '../index';
 import { UserLoginDto } from '../dto/user-login.dto';
-import { IUserService } from './users.service.interface';	
+import { IUserService } from './users.service.interface';
 import { UserRegisterDto } from '../dto/user-register.dto';
 
 @injectable()
