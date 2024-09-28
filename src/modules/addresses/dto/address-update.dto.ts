@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class AddressCreateDto {
+export class AddressUpdateDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly country: string;
