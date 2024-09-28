@@ -9,7 +9,7 @@ export class User {
 		passwordHash?: string,
 	) {
 		if (passwordHash) {
-			this._password = passwordHash;
+			this._password = passwordHash || '';
 		}
 	}
 
@@ -30,6 +30,9 @@ export class User {
 	}
 
 	public async comparePassword(pass: string): Promise<boolean> {
-		return compare(pass, this._password);
+		if (!this._password) {
+			throw new Error('Password not set for user');
+		}
+		return await compare(pass, this._password);
 	}
 }
