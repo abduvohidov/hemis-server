@@ -52,11 +52,6 @@ export class StudentController extends BaseController implements IStudentControl
 				func: this.getByJshshr,
 			},
 			{
-				path: '/jshshr',
-				method: 'get',
-				func: this.getByJshshr,
-			},
-			{
 				path: '/last-name',
 				method: 'get',
 				func: this.getByLastName,
