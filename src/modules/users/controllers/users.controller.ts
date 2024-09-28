@@ -1,18 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
-import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
-import { IUserController } from './users.controller.interface';
-import { UserLoginDto } from '../dto/user-login.dto';
-import { UserRegisterDto } from '../dto/user-register.dto';
 import { sign } from 'jsonwebtoken';
 import { TYPES } from '../../../types';
-import { ILogger } from '../../../logger/logger.interface';
-import { IUserService } from '../services/users.service.interface';
-import { IConfigService } from '../../../config/config.service.interface';
-import { BaseController } from '../../../common/baseController/base.controller';
-import { ValidateMiddleware } from '../../../common/middlewares/validate.middleware';
-import { HTTPError } from '../../../errors/http-error.class';
-import { AuthGuard } from '../../../common/auth/auth.guard';
+import { IUserService } from '../index';
+import { ILogger } from '../../../logger';
+import { HTTPError } from '../../../errors';
+import { injectable, inject } from 'inversify';
+import { IConfigService } from '../../../config';
+import { UserLoginDto } from '../dto/user-login.dto';
+import { NextFunction, Request, Response } from 'express';
+import { UserRegisterDto } from '../dto/user-register.dto';
+import { IUserController } from './users.controller.interface';
+import { BaseController, ValidateMiddleware, AuthMiddleware } from '../../../common';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -39,7 +37,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
-				middlewares: [new AuthGuard()],
+				middlewares: [new AuthMiddleware(this.configService.get('SECRET'))],
 			},
 		]);
 	}

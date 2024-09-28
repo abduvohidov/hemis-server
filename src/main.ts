@@ -1,13 +1,11 @@
 import { App } from './app';
-import { Container, ContainerModule, interfaces } from 'inversify';
-import { ConfigService } from './config/config.service';
-import { IConfigService } from './config/config.service.interface';
-import { ExeptionFilter } from './errors/exeption.filter';
-import { IExeptionFilter } from './errors/exeption.filter.interface';
-import { ILogger } from './logger/logger.interface';
-import { LoggerService } from './logger/logger.service';
 import { TYPES } from './types';
+import { LoggerService, ILogger } from './logger';
+import { ConfigService, IConfigService } from './config';
 import { PrismaService } from './database/prisma.service';
+import { ExeptionFilter, IExeptionFilter } from './errors';
+import { IGoogleAuthService, GoogleAuthService } from './common';
+import { Container, ContainerModule, interfaces } from 'inversify';
 import {
 	IUserController,
 	IUserService,
@@ -31,6 +29,8 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IUsersRepository>(TYPES.UserRepository).to(UsersRepository).inSingletonScope();
 	bind<IUserController>(TYPES.UserController).to(UserController).inSingletonScope();
 	bind<IUserService>(TYPES.UserService).to(UserService);
+
+	bind<IGoogleAuthService>(TYPES.GoogleAuthService).to(GoogleAuthService);
 
 	bind<App>(TYPES.Application).to(App);
 });

@@ -1,12 +1,16 @@
 export const TYPES = {
-	Application: Symbol.for('Application'),
 	ILogger: Symbol.for('ILogger'),
-	ExeptionFilter: Symbol.for('ExeptionFilter'),
+	Application: Symbol.for('Application'),
 	ConfigService: Symbol.for('ConfigService'),
 	PrismaService: Symbol.for('PrismaService'),
+	ExeptionFilter: Symbol.for('ExeptionFilter'),
 
-	UserController: Symbol.for('UserController'),
-	UserService: Symbol.for('UserService'),
+	//User
 	UserModel: Symbol.for('UserModel'),
+	UserService: Symbol.for('UserService'),
 	UserRepository: Symbol.for('UserRepository'),
+	UserController: Symbol.for('UserController'),
+
+	// Services
+	GoogleAuthService: Symbol.for('GoogleAuthService'),
 };

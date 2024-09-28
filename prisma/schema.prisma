@@ -4,13 +4,13 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url      = "postgres://postgres:AB2091008uzb@localhost:5432/hemis_database"
 }
 
 // #test
 model UserModel {
   id    Int     @id @default(autoincrement())
-  password String
+  password String?
   email String  @unique
   name  String
 }

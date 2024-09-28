@@ -1,13 +1,13 @@
-import express, { Express } from 'express';
+import 'reflect-metadata';
 import { Server } from 'http';
-import { inject, injectable } from 'inversify';
-import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
 import { json } from 'body-parser';
-import { IConfigService } from './config/config.service.interface';
-import { IExeptionFilter } from './errors/exeption.filter.interface';
+import { IConfigService } from './config';
+import { IExeptionFilter } from './errors';
+import express, { Express } from 'express';
+import { inject, injectable } from 'inversify';
+import { ILogger } from './logger/logger.interface';
 import { PrismaService } from './database/prisma.service';
-import 'reflect-metadata';
 import { IUsersRepository, UserController } from './modules/users';
 
 @injectable()
@@ -20,9 +20,7 @@ export class App {
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
-		@inject(TYPES.PrismaService) private prismaService: PrismaService,
 		@inject(TYPES.UserController) private userController: UserController,
-		@inject(TYPES.UserRepository) private userRepository: IUsersRepository,
 	) {
 		this.app = express();
 		this.port = this.configService.get('PORT') || 9000;

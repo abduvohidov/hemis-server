@@ -1,15 +1,14 @@
+import { TYPES } from '../../../types';
 import { UserModel } from '.prisma/client';
 import { inject, injectable } from 'inversify';
-import { User } from '../models/user.entity';
 import { IUsersRepository } from './users.repository.interface';
-import { TYPES } from '../../../types';
 import { PrismaService } from '../../../database/prisma.service';
 
 @injectable()
 export class UsersRepository implements IUsersRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create({ email, password, name }: User): Promise<UserModel> {
+	async create({ email, password, name }: { name: string; email: string; password?: string }): Promise<UserModel> {
 		return this.prismaService.client.userModel.create({
 			data: {
 				email,
@@ -19,7 +18,7 @@ export class UsersRepository implements IUsersRepository {
 		});
 	}
 
-	async find(email: string): Promise<UserModel | null> {
+	async findByEmail(email: string): Promise<UserModel | null> {
 		return this.prismaService.client.userModel.findFirst({
 			where: {
 				email,
