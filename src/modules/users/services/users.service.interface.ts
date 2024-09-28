@@ -1,9 +1,10 @@
 import { UserModel } from '@prisma/client';
-import { UserLoginDto } from '../dto/user-login.dto';
-import { UserRegisterDto } from '../dto/user-register.dto';
+import { UserLoginDto, UserRegisterDto, UserUpdateDto } from '../index';
 
 export interface IUserService {
-	createUser: (dto: UserRegisterDto) => Promise<UserModel | null>;
 	validateUser: (dto: UserLoginDto) => Promise<boolean>;
-	getUserInfo: (email: string) => Promise<UserModel | null>;
+	removeUser: (id: number) => Promise<{ email: string } | null>;
+	changeUser: (id: number, dto: UserUpdateDto) => Promise<UserModel | null>;
+	getUserByEmail: (email: string) => Promise<UserModel | null>;
+	prepareUser: (dto: UserRegisterDto) => Promise<UserModel | null>;
 }
