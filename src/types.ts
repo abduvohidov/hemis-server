@@ -11,6 +11,4 @@ export const TYPES = {
 	UserRepository: Symbol.for('UserRepository'),
 	UserController: Symbol.for('UserController'),
 
-	// Services
-	GoogleAuthService: Symbol.for('GoogleAuthService'),
 };

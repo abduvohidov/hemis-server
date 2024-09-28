@@ -6,9 +6,8 @@ import { IConfigService } from './config';
 import { IExeptionFilter } from './errors';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
+import { UserController } from './modules/users';
 import { ILogger } from './logger/logger.interface';
-import { PrismaService } from './database/prisma.service';
-import { IUsersRepository, UserController } from './modules/users';
 
 @injectable()
 export class App {

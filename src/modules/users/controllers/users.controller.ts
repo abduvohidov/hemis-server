@@ -22,12 +22,6 @@ export class UserController extends BaseController implements IUserController {
 		super(loggerService);
 		this.bindRoutes([
 			{
-				path: '/register',
-				method: 'post',
-				func: this.register,
-				middlewares: [new ValidateMiddleware(UserRegisterDto)],
-			},
-			{
 				path: '/login',
 				method: 'post',
 				func: this.login,
@@ -53,18 +47,6 @@ export class UserController extends BaseController implements IUserController {
 		}
 		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
 		this.ok(res, { jwt });
-	}
-
-	async register(
-		{ body }: Request<{}, {}, UserRegisterDto>,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
-		const result = await this.userService.createUser(body);
-		if (!result) {
-			return next(new HTTPError(422, 'Такой пользователь уже существует'));
-		}
-		this.ok(res, { email: result.email, id: result.id });
 	}
 
 	async info({ user }: Request | any, res: Response, next: NextFunction): Promise<void> {
