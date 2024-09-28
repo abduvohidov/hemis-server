@@ -8,7 +8,13 @@ import { PrismaService } from '../../../database/prisma.service';
 export class UsersRepository implements IUsersRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create({ email, password, name, lastName, role }: Omit<UserModel, "id">): Promise<UserModel> {
+	async create({
+		email,
+		password,
+		name,
+		lastName,
+		role,
+	}: Omit<UserModel, 'id'>): Promise<UserModel> {
 		return this.prismaService.client.userModel.create({
 			data: {
 				email,
@@ -20,7 +26,7 @@ export class UsersRepository implements IUsersRepository {
 		});
 	}
 
-	async deleteById(id: number): Promise< UserModel | null> {
+	async deleteById(id: number): Promise<UserModel | null> {
 		return this.prismaService.client.userModel.delete({
 			where: { id },
 		});
