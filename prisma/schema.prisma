@@ -20,16 +20,16 @@ model Student {
   id                Int      @id @default(autoincrement())
   lastName          String
   firstName         String
-  middleName        String?
-  passportNumber    String
-  jshshr            String
+  middleName        String
+  passportNumber    String   @unique
+  jshshr            String   @unique
   dateOfBirth       DateTime
   gender            String
   nationality       String
   email             String   @unique
-  password          String
   phoneNumber       String
   parentPhoneNumber String
+  password          String
 
   // References
   addresses Address[]
