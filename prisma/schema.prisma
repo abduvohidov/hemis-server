@@ -27,9 +27,9 @@ model Student {
   gender            String
   nationality       String
   email             String   @unique
-  password          String
   phoneNumber       String
   parentPhoneNumber String
+  password          String
 
   // References
   addresses Address[]

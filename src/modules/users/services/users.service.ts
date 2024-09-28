@@ -32,7 +32,6 @@ export class UserService implements IUserService {
 
 	async validateUser({ email, password }: UserLoginDto): Promise<boolean> {
 		const existedUser = await this.usersRepository.findByEmail(email);
-		console.log(existedUser);
 		if (!existedUser) {
 			return false;
 		}
@@ -43,7 +42,6 @@ export class UserService implements IUserService {
 			existedUser.role,
 			existedUser.password as string,
 		);
-		console.log(newUser);
 		return true;
 	}
 

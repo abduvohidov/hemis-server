@@ -10,5 +10,5 @@ export interface IStudentEntity {
 	email: string;
 	phoneNumber: string;
 	parentPhoneNumber: string;
-	passwordHash?: string;
+	password: string;
 }
