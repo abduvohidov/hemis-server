@@ -4,13 +4,105 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = "postgres://postgres:AB2091008uzb@localhost:5432/hemis_database"
+  url      = env("DATABASE_URL")
 }
 
-// #test
 model UserModel {
-  id    Int     @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
+  name     String
+  lastName String
+  email    String  @unique
   password String?
-  email String  @unique
-  name  String
+  role     String
+}
+
+model Student {
+  id                Int      @id @default(autoincrement())
+  lastName          String
+  firstName         String
+  middleName        String?
+  passportNumber    String
+  jshshr            String
+  dateOfBirth       DateTime
+  gender            String
+  nationality       String
+  email             String   @unique
+  password          String
+  phoneNumber       String
+  parentPhoneNumber String
+
+  // References
+  addresses Address[]
+  education Education[]
+}
+
+model Address {
+  id        Int    @id @default(autoincrement())
+  country   String
+  region    String
+  address   String
+  studentId Int    @unique
+
+  // References
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model Education {
+  id                    Int    @id @default(autoincrement())
+  studentId             Int    @unique
+  bachelorId            Int
+  currentSpecialization String
+  facultyId             Int
+  course                String
+  paymentType           String
+  entryYear             String
+  educationForm         String
+  languageCertificate   String
+  semester              String
+  scientificSupervisor  String
+  scientificAdvisor     String
+  internshipSupervisor  String
+  internalReviewer      String
+  externamReviewer      String
+  thesisTopic           String
+  articlesId            Int
+  academicLeave         String
+
+  // References
+  student  Student  @relation(fields: [studentId], references: [id])
+  bachelor Bachelor @relation(fields: [bachelorId], references: [id])
+  faculty  Faculty  @relation(fields: [facultyId], references: [id])
+  articles Articles @relation(fields: [articlesId], references: [id])
+}
+
+model Bachelor {
+  id                     Int    @id @default(autoincrement())
+  previousUniversity     String
+  graduationYear         String
+  diplomaNumber          String
+  previousSpecialization String
+
+  // References
+  education Education[]
+}
+
+model Faculty {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  // References
+  Education Education[]
+}
+
+model Articles {
+  id                   Int      @id @default(autoincrement())
+  firstArticle         String
+  firstArticleDate     DateTime
+  firstArticleJournal  String
+  secondArticle        String
+  secondArticleDate    DateTime
+  secondArticleJournal String
+
+  // References
+  Education Education[]
 }
