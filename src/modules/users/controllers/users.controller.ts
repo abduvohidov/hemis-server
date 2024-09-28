@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { TYPES } from '../../../types';
+import { ROLES } from './../../../types';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
+import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { UserLoginDto } from '../dto/user-login.dto';
@@ -10,16 +12,18 @@ import { IUserService, UserUpdateDto } from '../index';
 import { NextFunction, Request, Response } from 'express';
 import { UserRegisterDto } from '../dto/user-register.dto';
 import { IUserController } from './users.controller.interface';
-import { BaseController, ValidateMiddleware } from '../../../common';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
+	private readonly secret4Token: string;
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.UserService) private userService: IUserService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
+		this.secret4Token = this.configService.get('SECRET');
 		this.bindRoutes([
 			{
 				path: '/login',
@@ -32,21 +36,36 @@ export class UserController extends BaseController implements IUserController {
 				path: '/delete/:id',
 				method: 'delete',
 				func: this.deleteUser,
-				middlewares: [],
+				middlewares: [
+					new AuthMiddleware(this.secret4Token),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teamLead,
+						ROLES.teacher,
+					]),
+				],
 			},
 
 			{
 				path: '/create',
 				method: 'post',
 				func: this.createUser,
-				middlewares: [new ValidateMiddleware(UserRegisterDto)],
+				middlewares: [
+					new ValidateMiddleware(UserRegisterDto),
+					new AuthMiddleware(this.secret4Token),
+					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+				],
 			},
 
 			{
 				path: '/update/:id',
 				method: 'put',
 				func: this.updateUser,
-				middlewares: [],
+				middlewares: [
+					new AuthMiddleware(this.secret4Token),
+					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+				],
 			},
 		]);
 	}
@@ -65,19 +84,19 @@ export class UserController extends BaseController implements IUserController {
 		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
 
 		switch (user?.role) {
-			case 'admin':
+			case ROLES.admin:
 				this.ok(res, { jwt, redirectTo: 'admin' });
 				break;
-			case 'director':
+			case ROLES.director:
 				this.ok(res, { jwt, redirectTo: 'director' });
 				break;
-			case 'teamLead':
+			case ROLES.teamLead:
 				this.ok(res, { jwt, redirectTo: 'teamLead' });
 				break;
-			case 'teacher':
+			case ROLES.teacher:
 				this.ok(res, { jwt, redirectTo: 'teacher' });
 				break;
-			case 'student':
+			case ROLES.student:
 				this.ok(res, { jwt, redirectTo: 'student' });
 				break;
 

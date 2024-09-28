@@ -3,8 +3,11 @@ import { IMiddleware } from './middleware.interface';
 import { NextFunction, Request, Response } from 'express';
 
 export class VerifyRole implements IMiddleware {
-	constructor(private prisma: PrismaClient, private allowedRoles: string[]) {}
+	private prisma: PrismaClient;
 
+	constructor(prisma: PrismaClient, private allowedRoles: string[]) {
+		this.prisma = prisma;
+	}
 	async execute(request: Request, response: Response, next: NextFunction): Promise<void> {
 		try {
 			const email = request.user as string;

@@ -17,3 +17,11 @@ export const TYPES = {
 	StudentRepository: Symbol.for('StudentRepository'),
 	StudentController: Symbol.for('StudentController'),
 };
+
+export const ROLES = {
+	admin: 'admin',
+	director: 'director',
+	teamLead: 'teamLead',
+	teacher: 'teacher',
+	student: 'student',
+};
