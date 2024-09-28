@@ -1,36 +1,37 @@
-import { Student } from '@prisma/client';
 import { injectable, inject } from 'inversify';
-import { IStudentRepository } from './student.repository.interface';
 import { TYPES } from '../../../types';
 import { PrismaService } from '../../../database/prisma.service';
+import { IStudentRepository } from './student.repository.interface';
+import { IStudentEntity } from '../models/student.entity.interface';
+import { Student } from '../models/student.entity';
 import 'reflect-metadata';
 
 @injectable()
 export class StudentRepository implements IStudentRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create(student: Student): Promise<Student> {
+	async create(student: Student): Promise<IStudentEntity> {
 		return await this.prismaService.client.student.create({
 			data: student,
 		});
 	}
 
-	async findByEmail(email: string): Promise<Student | null> {
+	async findByEmail(email: string): Promise<IStudentEntity | null> {
 		return await this.prismaService.client.student.findUnique({
 			where: { email },
 		});
 	}
 
-	async findById(id: number): Promise<Student | null> {
+	async findById(id: number): Promise<IStudentEntity | null> {
 		return await this.prismaService.client.student.findUnique({
 			where: { id },
 		});
 	}
 
-	async update(id: number, student: Partial<Student>): Promise<Student> {
+	async update(id: number, IStudentEntity: Partial<IStudentEntity>): Promise<IStudentEntity> {
 		return await this.prismaService.client.student.update({
 			where: { id },
-			data: student,
+			data: IStudentEntity,
 		});
 	}
 
@@ -40,52 +41,52 @@ export class StudentRepository implements IStudentRepository {
 		});
 	}
 
-	async findAll(): Promise<Student[]> {
+	async findAll(): Promise<IStudentEntity[]> {
 		return await this.prismaService.client.student.findMany();
 	}
 
-	async findByLastName(lastName: string): Promise<Student[] | null> {
+	async findByLastName(lastName: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { lastName },
 		});
 	}
 
-	async findByFirstName(firstName: string): Promise<Student[] | null> {
+	async findByFirstName(firstName: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { firstName },
 		});
 	}
 
-	async findByNationality(nationality: string): Promise<Student[] | null> {
+	async findByNationality(nationality: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { nationality },
 		});
 	}
 
-	async findByGender(gender: string): Promise<Student[] | null> {
+	async findByGender(gender: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { gender },
 		});
 	}
 
-	async findByPhoneNumber(phoneNumber: string): Promise<Student[] | null> {
+	async findByPhoneNumber(phoneNumber: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { phoneNumber },
 		});
 	}
 
-	async findByParentPhoneNumber(parentPhoneNumber: string): Promise<Student[] | null> {
+	async findByParentPhoneNumber(parentPhoneNumber: string): Promise<IStudentEntity[] | null> {
 		return await this.prismaService.client.student.findMany({
 			where: { parentPhoneNumber },
 		});
 	}
-	async findByPassportNumber(passportNumber: string): Promise<Student | null> {
+	async findByPassportNumber(passportNumber: string): Promise<IStudentEntity | null> {
 		return await this.prismaService.client.student.findUnique({
 			where: { passportNumber },
 		});
 	}
 
-	async findByJshshr(jshshr: string): Promise<Student | null> {
+	async findByJshshr(jshshr: string): Promise<IStudentEntity | null> {
 		return await this.prismaService.client.student.findUnique({
 			where: { jshshr },
 		});

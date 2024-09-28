@@ -1,18 +1,18 @@
-import { Student } from '@prisma/client';
+import { IStudentEntity } from '../models/student.entity.interface';
 
 export interface IStudentRepository {
-	create(student: Student): Promise<Student>;
-	findAll(): Promise<Student[]>;
-	update(id: number, student: Partial<Student>): Promise<Student>;
+	create(student: IStudentEntity): Promise<IStudentEntity>;
+	findAll(): Promise<IStudentEntity[]>;
+	update(id: number, student: Partial<IStudentEntity>): Promise<IStudentEntity>;
 	delete(id: number): Promise<void>;
-	findByEmail(email: string): Promise<Student | null>;
-	findById(id: number): Promise<Student | null>;
-	findByPassportNumber(passportNumber: string): Promise<Student | null>;
-	findByJshshr(jshshr: string): Promise<Student | null>;
-	findByLastName(lastName: string): Promise<Student[] | null>;
-	findByFirstName(firstName: string): Promise<Student[] | null>;
-	findByNationality(nationality: string): Promise<Student[] | null>;
-	findByGender(gender: string): Promise<Student[] | null>;
-	findByPhoneNumber(phoneNumber: string): Promise<Student[] | null>;
-	findByParentPhoneNumber(parentPhoneNumber: string): Promise<Student[] | null>;
+	findByEmail(email: string): Promise<IStudentEntity | null>;
+	findById(id: number): Promise<IStudentEntity | null>;
+	findByPassportNumber(passportNumber: string): Promise<IStudentEntity | null>;
+	findByJshshr(jshshr: string): Promise<IStudentEntity | null>;
+	findByLastName(lastName: string): Promise<IStudentEntity[] | null>;
+	findByFirstName(firstName: string): Promise<IStudentEntity[] | null>;
+	findByNationality(nationality: string): Promise<IStudentEntity[] | null>;
+	findByGender(gender: string): Promise<IStudentEntity[] | null>;
+	findByPhoneNumber(phoneNumber: string): Promise<IStudentEntity[] | null>;
+	findByParentPhoneNumber(parentPhoneNumber: string): Promise<IStudentEntity[] | null>;
 }

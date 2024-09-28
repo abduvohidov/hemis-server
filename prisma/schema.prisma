@@ -20,7 +20,7 @@ model Student {
   id                Int      @id @default(autoincrement())
   lastName          String
   firstName         String
-  middleName        String?
+  middleName        String
   passportNumber    String   @unique
   jshshr            String   @unique
   dateOfBirth       DateTime
