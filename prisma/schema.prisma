@@ -21,8 +21,8 @@ model Student {
   lastName          String
   firstName         String
   middleName        String?
-  passportNumber    String
-  jshshr            String
+  passportNumber    String   @unique
+  jshshr            String   @unique
   dateOfBirth       DateTime
   gender            String
   nationality       String
