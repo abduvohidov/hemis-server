@@ -9,4 +9,10 @@ export class UserRegisterDto {
 
 	@IsString({ message: 'Не указано имя' })
 	name: string;
+
+	@IsString({ message: 'Не указано фамилия' })
+	lastName: string;
+
+	@IsString({ message: 'Не указано роль' })
+	role: string;
 }
