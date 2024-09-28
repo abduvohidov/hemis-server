@@ -1,7 +1,21 @@
 import { Student } from '@prisma/client';
+import { IStudentEntity } from '../models/student.entity.interface';
 
 export interface IStudentRepository {
-	create: (student: Student) => Promise<Student>;
+	create: ({
+		firstName,
+		lastName,
+		middleName,
+		passportNumber,
+		jshshr,
+		dateOfBirth,
+		gender,
+		nationality,
+		email,
+		phoneNumber,
+		parentPhoneNumber,
+		password,
+	}: IStudentEntity) => Promise<IStudentEntity>;
 	findAll: () => Promise<Student[]>;
 	update: (id: number, student: Partial<Student>) => Promise<Student>;
 	delete: (id: number) => Promise<void>;

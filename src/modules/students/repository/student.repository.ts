@@ -4,12 +4,13 @@ import { PrismaService } from '../../../database/prisma.service';
 import { IStudentRepository } from './student.repository.interface';
 import { Student } from '@prisma/client';
 import 'reflect-metadata';
+import { IStudentEntity } from '../models/student.entity.interface';
 
 @injectable()
 export class StudentRepository implements IStudentRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create(student: Student): Promise<Student> {
+	async create(student: IStudentEntity): Promise<IStudentEntity> {
 		return await this.prismaService.client.student.create({
 			data: {
 				lastName: student.lastName,

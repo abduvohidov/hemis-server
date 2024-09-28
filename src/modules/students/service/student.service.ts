@@ -15,9 +15,8 @@ export class StudentService implements IStudentService {
 		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
 	) {}
 
-	async create(student: StudentRegisterDto): Promise<Student | null> {
+	async create(student: StudentRegisterDto): Promise<IStudentEntity | null> {
 		const newStudent = new StudentEntity(
-			student.id,
 			student.lastName,
 			student.firstName,
 			student.middleName,

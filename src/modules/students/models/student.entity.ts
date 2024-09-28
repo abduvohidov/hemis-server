@@ -4,7 +4,7 @@ export class Student implements IStudentEntity {
 	private _password: string;
 
 	constructor(
-		private readonly _id: number,
+		// private readonly _id: number,
 		private readonly _lastName: string,
 		private readonly _firstName: string,
 		private readonly _middleName: string,
@@ -23,9 +23,9 @@ export class Student implements IStudentEntity {
 		}
 	}
 
-	get id(): number {
-		return this._id;
-	}
+	// get id(): number {
+	// 	return this._id;
+	// }
 
 	get email(): string {
 		return this._email;
