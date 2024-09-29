@@ -22,6 +22,12 @@ export const TYPES = {
 	AddressService: Symbol.for('AddressService'),
 	AddressRepository: Symbol.for('AddressRepository'),
 	AddressController: Symbol.for('AddressController'),
+
+	//Faculty
+	FacultyModel: Symbol.for('FacultyModel'),
+	FacultyService: Symbol.for('FacultyService'),
+	FacultyRepository: Symbol.for('FacultyRepository'),
+	FacultyController: Symbol.for('FacultyController'),
 };
 
 export const ROLES = {
