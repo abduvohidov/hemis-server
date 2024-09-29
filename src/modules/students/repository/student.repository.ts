@@ -131,7 +131,7 @@ export class StudentRepository implements IStudentRepository {
 		});
 	}
 	async findByPassportNumber(passportNumber: string): Promise<Student | null> {
-		return await this.prismaService.client.student.findUnique({
+		return await this.prismaService.client.student.findFirst({
 			include: {
 				addresses: true,
 			},
@@ -140,7 +140,7 @@ export class StudentRepository implements IStudentRepository {
 	}
 
 	async findByJshshr(jshshr: string): Promise<Student | null> {
-		return await this.prismaService.client.student.findUnique({
+		return await this.prismaService.client.student.findFirst({
 			include: {
 				addresses: true,
 			},

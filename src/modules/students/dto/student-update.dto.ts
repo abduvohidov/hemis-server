@@ -9,7 +9,8 @@ export class StudentUpdateDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly firstName: string;
-
+	
+	@IsNotEmpty()
 	@IsString()
 	readonly middleName: string;
 
