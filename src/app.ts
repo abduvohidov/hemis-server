@@ -9,6 +9,7 @@ import { inject, injectable } from 'inversify';
 import { UserController } from './modules/users';
 import { ILogger } from './logger/logger.interface';
 import { StudentController } from './modules/students/controller/student.controller';
+import { AddressController } from './modules/addresses';
 
 @injectable()
 export class App {
@@ -22,6 +23,7 @@ export class App {
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UserController) private userController: UserController,
 		@inject(TYPES.StudentController) private studentController: StudentController,
+		@inject(TYPES.AddressController) private addressController: AddressController,
 	) {
 		this.app = express();
 		this.port = this.configService.get('PORT') || 9000;
@@ -34,6 +36,7 @@ export class App {
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
 		this.app.use('/students', this.studentController.router);
+		this.app.use('/addresses', this.addressController.router);
 	}
 
 	useExeptionFilters(): void {

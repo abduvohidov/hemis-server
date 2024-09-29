@@ -20,16 +20,17 @@ export class AddressService implements IAddressService {
 		);
 
 		const existedAddress = await this.addressRepository.findByCountry(address.country);
+		console.log(newAddress);
 		if (existedAddress) {
 			return null;
 		}
 
 		return this.addressRepository.create(newAddress);
 	}
-	async findByCountry(country: string): Promise<Address[] | null> {
+	async findByCountry(country: string): Promise<Address | null> {
 		const existedCuntry = await this.addressRepository.findByCountry(country);
 
-		if (existedCuntry) {
+		if (!existedCuntry) {
 			return null;
 		}
 

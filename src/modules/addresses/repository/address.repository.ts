@@ -3,8 +3,8 @@ import { IAddressRepository } from './address.repository.interface';
 import { TYPES } from '../../../types';
 import { PrismaService } from '../../../database/prisma.service';
 import { Address } from '@prisma/client';
-import 'reflect-metadata';
 import { IAddress } from '../model/address.entity.interface';
+import 'reflect-metadata';
 
 @injectable()
 export class AddressRepository implements IAddressRepository {
@@ -21,8 +21,8 @@ export class AddressRepository implements IAddressRepository {
 		});
 	}
 
-	async findByCountry(country: string): Promise<Address[] | null> {
-		return await this.prismaService.client.address.findMany({
+	async findByCountry(country: string): Promise<Address | null> {
+		return await this.prismaService.client.address.findFirst({
 			include: { student: true },
 			where: { country },
 		});

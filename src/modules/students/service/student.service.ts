@@ -31,6 +31,8 @@ export class StudentService implements IStudentService {
 			student.password,
 		);
 		const salt = this.configService.get('SALT');
+		console.log(student.parentPhoneNumber);
+		console.log(student.password);
 		await newStudent.setPassword(student.password, Number(salt));
 		const existedStudent = await this.studentRepository.findByEmail(student.email);
 		if (existedStudent) {
@@ -46,7 +48,7 @@ export class StudentService implements IStudentService {
 	async update(id: number, student: Partial<Student>): Promise<Student> {
 		const existingStudent = await this.studentRepository.findById(id);
 		if (!existingStudent) {
-			throw new Error(`Student with ID ${id} not found.`);
+			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
 		return this.studentRepository.update(id, student);
 	}
@@ -54,7 +56,7 @@ export class StudentService implements IStudentService {
 	async delete(id: number): Promise<void> {
 		const existingStudent = await this.studentRepository.findById(id);
 		if (!existingStudent) {
-			throw new Error(`Student with ID ${id} not found.`);
+			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
 		await this.studentRepository.delete(id);
 	}

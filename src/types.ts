@@ -19,7 +19,9 @@ export const TYPES = {
 
 	//Address
 	AddressModel: Symbol.for('AddressModel'),
+	AddressService: Symbol.for('AddressService'),
 	AddressRepository: Symbol.for('AddressRepository'),
+	AddressController: Symbol.for('AddressController'),
 };
 
 export const ROLES = {

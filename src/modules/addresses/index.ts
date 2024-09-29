@@ -1,4 +1,6 @@
 // controller
+export { AddressController } from './controller/address.controller';
+export { IAddressController } from './controller/address.controller.interface';
 
 // dto
 export { AddressCreateDto } from './dto/address-create.dto';
@@ -13,3 +15,5 @@ export { AddressRepository } from './repository/address.repository';
 export { IAddressRepository } from './repository/address.repository.interface';
 
 // services
+export { AddressService } from './service/address.service';
+export { IAddressService } from './service/address.service.interface';
