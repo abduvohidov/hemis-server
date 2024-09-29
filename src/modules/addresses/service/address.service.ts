@@ -20,13 +20,27 @@ export class AddressService implements IAddressService {
 		);
 
 		const existedAddress = await this.addressRepository.findByCountry(address.country);
-		console.log(newAddress);
 		if (existedAddress) {
 			return null;
 		}
 
 		return this.addressRepository.create(newAddress);
 	}
+
+	async find(): Promise<Address[]> {
+		return this.addressRepository.find();
+	}
+
+	async findById(id: number): Promise<Address | null> {
+		const existed = await this.addressRepository.findById(id);
+
+		if (!existed) {
+			return null;
+		}
+
+		return this.addressRepository.findById(id);
+	}
+
 	async findByCountry(country: string): Promise<Address | null> {
 		const existedCuntry = await this.addressRepository.findByCountry(country);
 
@@ -35,5 +49,41 @@ export class AddressService implements IAddressService {
 		}
 
 		return this.addressRepository.findByCountry(country);
+	}
+
+	async findByRegion(region: string): Promise<Address | null> {
+		const existedRegion = await this.addressRepository.findByRegion(region);
+
+		if (!existedRegion) {
+			return null;
+		}
+
+		return this.addressRepository.findByRegion(region);
+	}
+
+	async findByAddress(address: string): Promise<Address | null> {
+		const existedAddress = await this.addressRepository.findByAddress(address);
+
+		if (!existedAddress) {
+			return null;
+		}
+
+		return this.addressRepository.findByAddress(address);
+	}
+
+	async update(id: number, address: Partial<Address>): Promise<Address | null> {
+		const existingAddress = await this.addressRepository.findById(id);
+		if (!existingAddress) {
+			return null;
+		}
+		return this.addressRepository.update(id, address);
+	}
+
+	async delete(id: number): Promise<void | null> {
+		const existingAddress = await this.addressRepository.findById(id);
+		if (!existingAddress) {
+			return null;
+		}
+		await this.addressRepository.delete(id);
 	}
 }

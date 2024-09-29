@@ -31,8 +31,6 @@ export class StudentService implements IStudentService {
 			student.password,
 		);
 		const salt = this.configService.get('SALT');
-		console.log(student.parentPhoneNumber);
-		console.log(student.password);
 		await newStudent.setPassword(student.password, Number(salt));
 		const existedStudent = await this.studentRepository.findByEmail(student.email);
 		if (existedStudent) {

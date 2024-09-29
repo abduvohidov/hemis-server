@@ -25,6 +25,41 @@ export class AddressController extends BaseController implements IAddressControl
 				func: this.create,
 				middlewares: [new ValidateMiddleware(AddressCreateDto)],
 			},
+			{
+				path: '/all',
+				method: 'get',
+				func: this.find,
+			},
+			{
+				path: '/id',
+				method: 'get',
+				func: this.findById,
+			},
+			{
+				path: '/country',
+				method: 'get',
+				func: this.findByCountry,
+			},
+			{
+				path: '/region',
+				method: 'get',
+				func: this.findByRegion,
+			},
+			{
+				path: '/address',
+				method: 'get',
+				func: this.findByAddress,
+			},
+			{
+				path: '/update',
+				method: 'patch',
+				func: this.update,
+			},
+			{
+				path: '/delete',
+				method: 'delete',
+				func: this.delete,
+			},
 		]);
 	}
 
@@ -45,5 +80,102 @@ export class AddressController extends BaseController implements IAddressControl
 			data,
 		});
 	}
-	findByCountry: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+
+	async find(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.find();
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно создано',
+			data,
+		});
+	}
+
+	async findById({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.findById(body.id);
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно получено',
+			data,
+		});
+	}
+
+	async findByCountry({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.findByCountry(body.country);
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно получено',
+			data,
+		});
+	}
+
+	async findByRegion({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.findByRegion(body.region);
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно получено',
+			data,
+		});
+	}
+
+	async findByAddress({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.findByAddress(body.address);
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно получено',
+			data,
+		});
+	}
+
+	async update({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = body;
+
+		if (!data) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		await this.addressService.update(data.id, data);
+
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно обновлено',
+			data: data,
+		});
+	}
+
+	async delete({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		if (!body.id) {
+			return next(new HTTPError(422, 'Такой адресс не существует'));
+		}
+
+		await this.addressService.delete(body.id);
+		this.ok(res, {
+			status: true,
+			message: 'Адресс успешно удалено',
+		});
+	}
 }

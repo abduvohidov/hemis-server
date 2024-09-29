@@ -11,7 +11,6 @@ export class StudentRepository implements IStudentRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(student: IStudentEntity): Promise<IStudentEntity> {
-		console.log(student);
 		return await this.prismaService.client.student.create({
 			data: {
 				lastName: student.lastName,
