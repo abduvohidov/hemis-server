@@ -27,7 +27,7 @@ export class UserService implements IUserService {
 		return false;
 	}
 
-	async removeUser(id: number): Promise<{ email: string } | null> {
+	async removeUser(id: number): Promise<UserModel | null> {
 		return await this.usersRepository.deleteById(id);
 	}
 

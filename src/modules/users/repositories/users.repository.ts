@@ -27,6 +27,14 @@ export class UsersRepository implements IUsersRepository {
 	}
 
 	async deleteById(id: number): Promise<UserModel | null> {
+		const user = await this.prismaService.client.userModel.findFirst({
+			where: { id },
+		});
+	
+		if (!user) {
+			return null;
+		}
+	
 		return this.prismaService.client.userModel.delete({
 			where: { id },
 		});

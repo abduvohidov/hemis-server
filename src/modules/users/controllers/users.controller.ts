@@ -38,12 +38,7 @@ export class UserController extends BaseController implements IUserController {
 				func: this.deleteUser,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teamLead,
-						ROLES.teacher,
-					]),
+					new VerifyRole(new PrismaClient(), [ROLES.admin]),
 				],
 			},
 
