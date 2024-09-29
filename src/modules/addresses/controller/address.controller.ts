@@ -90,7 +90,7 @@ export class AddressController extends BaseController implements IAddressControl
 
 		this.ok(res, {
 			status: true,
-			message: 'Адресс успешно создано',
+			message: 'Адресс успешно получено',
 			data,
 		});
 	}

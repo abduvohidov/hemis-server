@@ -27,6 +27,12 @@ export const TYPES = {
 	EducationService: Symbol.for('EducationService'),
 	EducationRepository: Symbol.for('EducationRepository'),
 	EducationController: Symbol.for('EducationController'),
+
+	//Faculty
+	FacultyModel: Symbol.for('FacultyModel'),
+	FacultyService: Symbol.for('FacultyService'),
+	FacultyRepository: Symbol.for('FacultyRepository'),
+	FacultyController: Symbol.for('FacultyController'),
 };
 
 export const ROLES = {
