@@ -1,10 +1,10 @@
 import { compare, hash } from 'bcryptjs';
 import { IStudentEntity } from './student.entity.interface';
+import { HTTPError } from '../../../errors';
 export class Student implements IStudentEntity {
 	private _password: string;
 
 	constructor(
-		// private readonly _id: number,
 		private readonly _lastName: string,
 		private readonly _firstName: string,
 		private readonly _middleName: string,
@@ -22,10 +22,6 @@ export class Student implements IStudentEntity {
 			this._password = passwordHash || '';
 		}
 	}
-
-	// get id(): number {
-	// 	return this._id;
-	// }
 
 	get email(): string {
 		return this._email;
@@ -76,12 +72,18 @@ export class Student implements IStudentEntity {
 	}
 
 	public async setPassword(pass: string, salt: number): Promise<void> {
+		if (!pass || typeof pass !== 'string') {
+			throw new Error('Неверный пароль');
+		}
+		if (!salt || typeof salt !== 'number') {
+			throw new Error('Неверная соль');
+		}
 		this._password = await hash(pass, salt);
 	}
 
 	public async comparePassword(pass: string): Promise<boolean> {
 		if (!this._password) {
-			throw new Error('Password not set for user');
+			throw new Error('Пароль для пользователя не установлен');
 		}
 		return await compare(pass, this._password);
 	}

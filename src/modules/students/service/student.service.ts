@@ -46,7 +46,7 @@ export class StudentService implements IStudentService {
 	async update(id: number, student: Partial<Student>): Promise<Student> {
 		const existingStudent = await this.studentRepository.findById(id);
 		if (!existingStudent) {
-			throw new Error(`Student with ID ${id} not found.`);
+			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
 		return this.studentRepository.update(id, student);
 	}
@@ -54,7 +54,7 @@ export class StudentService implements IStudentService {
 	async delete(id: number): Promise<void> {
 		const existingStudent = await this.studentRepository.findById(id);
 		if (!existingStudent) {
-			throw new Error(`Student with ID ${id} not found.`);
+			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
 		await this.studentRepository.delete(id);
 	}

@@ -16,6 +16,12 @@ export const TYPES = {
 	StudentService: Symbol.for('StudentService'),
 	StudentRepository: Symbol.for('StudentRepository'),
 	StudentController: Symbol.for('StudentController'),
+
+	//Address
+	AddressModel: Symbol.for('AddressModel'),
+	AddressService: Symbol.for('AddressService'),
+	AddressRepository: Symbol.for('AddressRepository'),
+	AddressController: Symbol.for('AddressController'),
 };
 
 export const ROLES = {

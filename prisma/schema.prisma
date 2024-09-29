@@ -41,7 +41,7 @@ model Address {
   country   String
   region    String
   address   String
-  studentId Int    @unique
+  studentId Int    
 
   // References
   student Student @relation(fields: [studentId], references: [id])
@@ -49,7 +49,7 @@ model Address {
 
 model Education {
   id                    Int    @id @default(autoincrement())
-  studentId             Int    @unique
+  studentId             Int    
   bachelorId            Int
   currentSpecialization String
   facultyId             Int
