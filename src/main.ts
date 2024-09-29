@@ -29,6 +29,14 @@ import {
 	IAddressRepository,
 	IAddressService,
 } from './modules/addresses';
+import {
+	EducationController,
+	EducationRepository,
+	EducationService,
+	IEducationController,
+	IEducationRepository,
+	IEducationService,
+} from './modules/education';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -52,6 +60,10 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IAddressRepository>(TYPES.AddressRepository).to(AddressRepository).inSingletonScope();
 	bind<IAddressService>(TYPES.AddressService).to(AddressService).inSingletonScope();
 	bind<IAddressController>(TYPES.AddressController).to(AddressController).inSingletonScope();
+
+	bind<IEducationRepository>(TYPES.EducationRepository).to(EducationRepository).inSingletonScope();
+	bind<IEducationService>(TYPES.EducationService).to(EducationService).inSingletonScope();
+	bind<IEducationController>(TYPES.EducationController).to(EducationController).inSingletonScope();
 
 	bind<App>(TYPES.Application).to(App);
 });

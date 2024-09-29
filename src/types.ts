@@ -22,6 +22,11 @@ export const TYPES = {
 	AddressService: Symbol.for('AddressService'),
 	AddressRepository: Symbol.for('AddressRepository'),
 	AddressController: Symbol.for('AddressController'),
+
+	//Education
+	EducationService: Symbol.for('EducationService'),
+	EducationRepository: Symbol.for('EducationRepository'),
+	EducationController: Symbol.for('EducationController'),
 };
 
 export const ROLES = {

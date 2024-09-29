@@ -9,3 +9,7 @@ export { IEducationRepository } from './repositories/education.repository.interf
 // Services
 export { EducationService } from './services/education.service';
 export { IEducationService } from './services/education.service.interface';
+
+// Controller
+export { EducationController } from './controllers/education.controller';
+export { IEducationController } from './controllers/education.controller.interface';
