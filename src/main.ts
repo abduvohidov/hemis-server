@@ -45,6 +45,14 @@ import {
 	IFacultyRepository,
 	IFacultyService,
 } from './modules/faculties';
+import {
+	ArticleController,
+	ArticleRepository,
+	ArticleService,
+	IArticleController,
+	IArticleRepository,
+	IArticleService,
+} from './modules/articles';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -76,6 +84,10 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IFacultyRepository>(TYPES.FacultyRepository).to(FacultyRepository).inSingletonScope();
 	bind<IFacultyService>(TYPES.FacultyService).to(FacultyService).inSingletonScope();
 	bind<IFacultyController>(TYPES.FacultyController).to(FacultyController).inSingletonScope();
+
+	bind<IArticleRepository>(TYPES.ArticleRepository).to(ArticleRepository).inSingletonScope();
+	bind<IArticleService>(TYPES.ArticleService).to(ArticleService).inSingletonScope();
+	bind<IArticleController>(TYPES.ArticleController).to(ArticleController).inSingletonScope();
 
 	bind<App>(TYPES.Application).to(App);
 });
