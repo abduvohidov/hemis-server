@@ -12,7 +12,7 @@ export class BachelorService implements IBachelorService {
 	constructor(@inject(TYPES.BachelorRepository) private bachelorRepository: BacherlorRepository) {}
 
 	async create(params: BachelorCreateDto): Promise<Bachelor | null> {
-		const existed = await this.bachelorRepository.find();
+		const existed = await this.bachelorRepository.findByDiplomaNumber(params.diplomaNumber);
 		if (existed) {
 			return null;
 		}

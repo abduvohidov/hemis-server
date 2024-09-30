@@ -11,26 +11,7 @@ export class EducationRepository implements IEducationRepository {
 
 	async create(data: CreateEducationDto): Promise<Education | null> {
 		return this.prismaService.client.education.create({
-			data: {
-				studentId: data.studentId,
-				bachelorId: data.bachelorId,
-				currentSpecialization: data.currentSpecialization,
-				facultyId: data.facultyId,
-				course: data.course,
-				paymentType: data.paymentType,
-				entryYear: data.entryYear,
-				educationForm: data.educationForm,
-				languageCertificate: data.languageCertificate,
-				semester: data.semester,
-				scientificSupervisor: data.scientificSupervisor,
-				scientificAdvisor: data.scientificAdvisor,
-				internshipSupervisor: data.internshipSupervisor,
-				internalReviewer: data.internalReviewer,
-				externamReviewer: data.externamReviewer,
-				thesisTopic: data.thesisTopic,
-				articlesId: data.articlesId,
-				academicLeave: data.academicLeave,
-			},
+			data,
 		});
 	}
 
@@ -96,6 +77,11 @@ export class EducationRepository implements IEducationRepository {
 				faculty: true,
 				articles: true,
 			},
+		});
+	}
+	async findByStudentId(studentId: number): Promise<Education | null> {
+		return this.prismaService.client.education.findFirst({
+			where: { studentId },
 		});
 	}
 

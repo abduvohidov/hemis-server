@@ -9,5 +9,6 @@ export interface IEducationRepository {
 	//gets
 	findAll: () => Promise<Education[]>;
 	findById: (id: number) => Promise<Education | null>;
+	findByStudentId: (studentId: number) => Promise<Education | null>;
 	findByValues: (data: Partial<Education>) => Promise<Education[] | []>;
 }

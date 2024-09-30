@@ -116,7 +116,7 @@ export class AddressController extends BaseController implements IAddressControl
 		const data = await this.addressService.create(body);
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс уже существует'));
+			return next(new HTTPError(422, 'Такого студента нету'));
 		}
 
 		this.ok(res, {

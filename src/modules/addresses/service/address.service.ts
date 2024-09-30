@@ -12,7 +12,7 @@ import { AddressRepository } from '../repository/address.repository';
 export class AddressService implements IAddressService {
 	constructor(
 		@inject(TYPES.AddressRepository) private addressRepository: AddressRepository,
-		@inject(TYPES.AddressRepository) private studentRepository: StudentRepository,
+		@inject(TYPES.StudentRepository) private studentRepository: StudentRepository,
 	) {}
 
 	async create(address: AddressCreateDto): Promise<IAddress | null> {
@@ -28,7 +28,7 @@ export class AddressService implements IAddressService {
 			return null;
 		}
 
-		return this.addressRepository.create(newAddress);
+		return await this.addressRepository.create(newAddress);
 	}
 
 	async find(): Promise<Address[]> {

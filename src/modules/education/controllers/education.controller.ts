@@ -112,7 +112,7 @@ export class EducationController extends BaseController implements IEducationCon
 	async postEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const education = await this.educationService.prepareEducation(req.body);
 		if (!education) {
-			this.send(res, 400, 'This education has education already');
+			this.send(res, 400, 'This education has already ');
 			return;
 		}
 		this.ok(res, { education });

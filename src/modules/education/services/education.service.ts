@@ -1,6 +1,10 @@
 import { TYPES } from '../../../types';
 import { Education } from '@prisma/client';
 import { inject, injectable } from 'inversify';
+import { IArticleRepository } from './../../articles';
+import { IStudentRepository } from './../../students';
+import { IFacultyRepository } from './../../faculties';
+import { IBachelorRepository } from './../../bachelors';
 import { IEducationService } from './education.service.interface';
 import { CreateEducationDto, UpdateEducationDto, IEducationRepository } from '../index';
 
@@ -8,12 +12,28 @@ import { CreateEducationDto, UpdateEducationDto, IEducationRepository } from '..
 export class EducationService implements IEducationService {
 	constructor(
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
+		@inject(TYPES.BachelorRepository) private bachelorRepository: IBachelorRepository,
+		@inject(TYPES.ArticleRepository) private articleRepository: IArticleRepository,
+		@inject(TYPES.FacultyRepository) private facultyRepository: IFacultyRepository,
+		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
 	) {}
 
 	async prepareEducation(data: CreateEducationDto): Promise<Education | null> {
+		const isBachelorExists = await this.bachelorRepository.findById(data.bachelorId);
+		const isArticleExists = await this.articleRepository.findById(data.articlesId);
+		const isFacultyExists = await this.facultyRepository.findById(data.facultyId);
+		const isStudentExists = await this.studentRepository.findById(data.studentId);
+		const isDuplicate = await this.educationRepository.findByStudentId(data.studentId);
+		if (
+			isDuplicate ||
+			!isArticleExists ||
+			!isFacultyExists ||
+			!isStudentExists ||
+			!isBachelorExists
+		)
+			return null;
 		return await this.educationRepository.create(data);
 	}
-
 	async removeEducation(id: number): Promise<Education | null> {
 		return await this.educationRepository.delete(id);
 	}

@@ -1,18 +1,16 @@
-import { ROLES } from './../../../types';
-import { PrismaClient } from '@prisma/client';
-import { VerifyRole } from './../../../common/middlewares/verify-role.middleware';
-import { injectable, inject } from 'inversify';
-import { AuthMiddleware, BaseController, ValidateMiddleware } from '../../../common';
-import { IStudentController } from './student.controller.interface';
-import { Request, Response, NextFunction } from 'express';
-import { TYPES } from '../../../types';
-import { IStudentService } from '../service/student.service.interface';
-import { ILogger } from '../../../logger';
-import { IConfigService } from '../../../config';
-import { sign } from 'jsonwebtoken';
-import { HTTPError } from '../../../errors';
-import { StudentRegisterDto } from '../dto/student-register.dto';
 import 'reflect-metadata';
+import { sign } from 'jsonwebtoken';
+import { ILogger } from '../../../logger';
+import { IStudentService } from '../index';
+import { HTTPError } from '../../../errors';
+import { PrismaClient } from '@prisma/client';
+import { injectable, inject } from 'inversify';
+import { ROLES, TYPES } from './../../../types';
+import { IConfigService } from '../../../config';
+import { Request, Response, NextFunction } from 'express';
+import { StudentRegisterDto } from '../dto/student-register.dto';
+import { IStudentController } from './student.controller.interface';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
 injectable();
 export class StudentController extends BaseController implements IStudentController {
@@ -82,8 +80,8 @@ export class StudentController extends BaseController implements IStudentControl
 			},
 
 			{
-				path: '/update',
-				method: 'patch',
+				path: '/update/:id',
+				method: 'put',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -92,12 +90,11 @@ export class StudentController extends BaseController implements IStudentControl
 						ROLES.director,
 						ROLES.teacher,
 						ROLES.teamLead,
-						ROLES.student,
 					]),
 				],
 			},
 			{
-				path: '/delete',
+				path: '/delete/:id',
 				method: 'delete',
 				func: this.delete,
 				middlewares: [
@@ -192,12 +189,13 @@ export class StudentController extends BaseController implements IStudentControl
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const data = req.body;
+		const id = Number(req.params.id);
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой магистрант не существует'));
 		}
 
-		await this.studentService.update(data.id, data);
+		await this.studentService.update(id, data);
 
 		this.ok(res, {
 			status: true,
@@ -207,7 +205,7 @@ export class StudentController extends BaseController implements IStudentControl
 	}
 
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.body;
+		const id = Number(req.params.id);
 
 		if (!id) {
 			return next(new HTTPError(422, 'Такой магистрант не существует'));

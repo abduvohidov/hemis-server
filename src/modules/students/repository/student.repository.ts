@@ -31,10 +31,10 @@ export class StudentRepository implements IStudentRepository {
 
 	async findById(id: number): Promise<Student | null> {
 		return await this.prismaService.client.student.findUnique({
+			where: { id },
 			include: {
 				addresses: true,
 			},
-			where: { id },
 		});
 	}
 	async findByEmail(email: string): Promise<Student | null> {

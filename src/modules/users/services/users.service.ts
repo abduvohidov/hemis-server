@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IUsersRepository, User } from '../index';
 import { UserLoginDto } from '../dto/user-login.dto';
+import { IStudentRepository } from './../../students';
 import { IUserService } from './users.service.interface';
 import { UserUpdateDto } from './../dto/user-update.dto';
 import { UserRegisterDto } from '../dto/user-register.dto';
@@ -14,16 +15,24 @@ export class UserService implements IUserService {
 	constructor(
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UserRepository) private usersRepository: IUsersRepository,
+		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
 	) {}
 
 	async validateUser({ email, password }: UserLoginDto): Promise<boolean> {
 		const existedUser = await this.usersRepository.findByEmail(email);
-		if (!existedUser) {
-			return false;
+		const existedStudent = await this.studentRepository.findByEmail(email);
+
+		if (existedUser && existedUser.password) {
+			const isValid = await compare(password, existedUser.password);
+
+			if (isValid) return true;
 		}
-		if (password && existedUser.password) {
-			return await compare(password, existedUser.password);
+
+		if (existedStudent && existedStudent.password) {
+			const isValid = await compare(password, existedStudent.password);
+			if (isValid) return true;
 		}
+
 		return false;
 	}
 

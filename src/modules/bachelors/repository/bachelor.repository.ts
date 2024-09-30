@@ -49,6 +49,9 @@ export class BacherlorRepository implements IBachelorRepository {
 	async findById(id: number): Promise<Bachelor | null> {
 		return await this.prismaService.client.bachelor.findFirst({ where: { id } });
 	}
+	async findByDiplomaNumber(diplomaNumber: string): Promise<Bachelor | null> {
+		return await this.prismaService.client.bachelor.findFirst({ where: { diplomaNumber } });
+	}
 	async findByFilters(data: Partial<Bachelor>): Promise<Bachelor[] | []> {
 		return await this.prismaService.client.bachelor.findMany({ where: data });
 	}

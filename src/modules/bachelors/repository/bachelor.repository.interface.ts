@@ -10,5 +10,6 @@ export interface IBachelorRepository {
 	//find
 	find: () => Promise<Bachelor[]>;
 	findById: (id: number) => Promise<Bachelor | null>;
+	findByDiplomaNumber: (diplomaNumber: string) => Promise<Bachelor | null>;
 	findByFilters: (data: Partial<Bachelor>) => Promise<Bachelor[] | []>;
 }

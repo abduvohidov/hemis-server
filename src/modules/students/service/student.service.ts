@@ -1,12 +1,11 @@
-import { injectable, inject } from 'inversify';
 import { TYPES } from '../../../types';
-import { IStudentService } from './student.service.interface';
-import { IConfigService } from '../../../config';
-import { IStudentRepository } from '../repository/student.repository.interface';
 import { Student } from '@prisma/client';
-import { Student as StudentEntity } from '../index';
+import { injectable, inject } from 'inversify';
+import { IConfigService } from '../../../config';
+import { IStudentService } from './student.service.interface';
 import { StudentRegisterDto } from '../dto/student-register.dto';
 import { IStudentEntity } from '../models/student.entity.interface';
+import { Student as StudentEntity, IStudentRepository } from '../index';
 
 @injectable()
 export class StudentService implements IStudentService {
