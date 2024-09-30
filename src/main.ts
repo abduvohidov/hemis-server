@@ -53,6 +53,14 @@ import {
 	IBachelorRepository,
 	IBachelorService,
 } from './modules/bachelors';
+import {
+	ArticleController,
+	ArticleService,
+	ArticleRepository,
+	IArticleController,
+	IArticleRepository,
+	IArticleService,
+} from './modules/articles';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -88,6 +96,11 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IBachelorRepository>(TYPES.BachelorRepository).to(BacherlorRepository).inSingletonScope();
 	bind<IBachelorService>(TYPES.BachelorService).to(BachelorService).inSingletonScope();
 	bind<IBachelorController>(TYPES.BachelorController).to(BachelorController).inSingletonScope();
+
+	bind<IArticleRepository>(TYPES.ArticleRepository).to(ArticleRepository).inSingletonScope();
+	bind<IArticleService>(TYPES.ArticleService).to(ArticleService).inSingletonScope();
+	bind<IArticleController>(TYPES.ArticleController).to(ArticleController).inSingletonScope();
+
 
 	bind<App>(TYPES.Application).to(App);
 });

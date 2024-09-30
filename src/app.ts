@@ -13,6 +13,7 @@ import { EducationController } from './modules/education';
 import { FacultyController } from './modules/faculties';
 import { StudentController } from './modules/students';
 import { BachelorController } from './modules/bachelors';
+import { ArticleController } from './modules/articles';
 
 @injectable()
 export class App {
@@ -30,6 +31,7 @@ export class App {
 		@inject(TYPES.EducationController) private educationController: EducationController,
 		@inject(TYPES.FacultyController) private facultyController: FacultyController,
 		@inject(TYPES.BachelorController) private bachelorController: BachelorController,
+		@inject(TYPES.ArticleController) private articleController: ArticleController,
 	) {
 		this.app = express();
 		this.port = this.configService.get('PORT') || 9000;
@@ -46,6 +48,7 @@ export class App {
 		this.app.use('/educations', this.educationController.router);
 		this.app.use('/faculties', this.facultyController.router);
 		this.app.use('/bachelors', this.bachelorController.router);
+		this.app.use('/articles', this.articleController.router);
 	}
 
 	useExeptionFilters(): void {

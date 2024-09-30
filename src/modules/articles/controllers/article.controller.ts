@@ -1,3 +1,4 @@
+import { ArticleService } from './../services/article.service';
 import 'reflect-metadata';
 import { IArticleService, CreateArticleDto } from '../index';
 import { ILogger } from './../../../logger';
