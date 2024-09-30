@@ -7,7 +7,5 @@ export interface IAddressService {
 	update: (id: number, address: Partial<Address>) => Promise<Address | null>;
 	delete: (id: number) => Promise<void | null>;
 	findById: (id: number) => Promise<Address | null>;
-	findByCountry: (country: string) => Promise<Address | null>;
-	findByRegion: (region: string) => Promise<Address | null>;
-	findByAddress: (address: string) => Promise<Address | null>;
+	findByFilters: (data: Partial<Address>) => Promise<Address[] | []>;
 }

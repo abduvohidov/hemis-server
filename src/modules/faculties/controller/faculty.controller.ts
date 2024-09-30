@@ -1,5 +1,6 @@
+import { ROLES } from './../../../types';
 import { inject, injectable } from 'inversify';
-import { BaseController, ValidateMiddleware } from '../../../common';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 import { ILogger } from '../../../logger';
 import { TYPES } from '../../../types';
 import { FacultyService } from '../service/faculty.service';
@@ -9,6 +10,7 @@ import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { NextFunction, Request, Response } from 'express';
 import { HTTPError } from '../../../errors';
 import 'reflect-metadata';
+import { PrismaClient } from '@prisma/client';
 
 @injectable()
 export class FacultyController extends BaseController implements IFacultyController {
@@ -23,32 +25,86 @@ export class FacultyController extends BaseController implements IFacultyControl
 				path: '/create',
 				method: 'post',
 				func: this.create,
-				middlewares: [new ValidateMiddleware(FacultyCreateDto)],
+				middlewares: [
+					new ValidateMiddleware(FacultyCreateDto),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/all',
 				method: 'get',
 				func: this.find,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/id',
 				method: 'get',
 				func: this.findById,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/name',
 				method: 'get',
 				func: this.findByName,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/update',
 				method: 'patch',
 				func: this.update,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/delete',
 				method: 'delete',
 				func: this.delete,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}

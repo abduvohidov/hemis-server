@@ -66,40 +66,8 @@ export class StudentService implements IStudentService {
 	async getById(id: number): Promise<Student | null> {
 		return this.studentRepository.findById(id);
 	}
-
-	async getByPassportNumber(passportNumber: string): Promise<Student | null> {
-		return this.studentRepository.findByPassportNumber(passportNumber);
-	}
-
-	async getByJshshr(jshshr: string): Promise<Student | null> {
-		return this.studentRepository.findByJshshr(jshshr);
-	}
-
-	async getByLastName(lastName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByLastName(lastName);
-	}
-
-	async getByFirstName(firstName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByFirstName(firstName);
-	}
-
-	async getByMiddleName(middleName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByMiddleName(middleName);
-	}
-
-	async getByNationality(nationality: string): Promise<Student[] | null> {
-		return this.studentRepository.findByNationality(nationality);
-	}
-
-	async getByGender(gender: string): Promise<Student[] | null> {
-		return this.studentRepository.findByGender(gender);
-	}
-
-	async getByPhoneNumber(phoneNumber: string): Promise<Student[] | null> {
-		return this.studentRepository.findByPhoneNumber(phoneNumber);
-	}
-
-	async getByParentPhoneNumber(parentPhoneNumber: string): Promise<Student[] | null> {
-		return this.studentRepository.findByParentPhoneNumber(parentPhoneNumber);
+	async getByFilters(data: Partial<Student>): Promise<Student[] | []> {
+		if (Object.keys(data).length == 0) return [];
+		return this.studentRepository.findByFilters(data);
 	}
 }

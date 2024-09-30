@@ -10,8 +10,5 @@ export interface IBachelorRepository {
 	//find
 	find: () => Promise<Bachelor[]>;
 	findById: (id: number) => Promise<Bachelor | null>;
-	findByPreviousUniversity: (previousUniversity: string) => Promise<Bachelor[] | null>;
-	findGraduationYear: (graduationYear: string) => Promise<Bachelor[] | null>;
-	findDiplomaNumber: (diplomaNumber: string) => Promise<Bachelor | null>;
-	findPreviousSpecialization: (previousSpecialization: string) => Promise<Bachelor | null>;
+	findByFilters: (data: Partial<Bachelor>) => Promise<Bachelor[] | []>;
 }

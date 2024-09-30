@@ -29,21 +29,20 @@ export class StudentRepository implements IStudentRepository {
 		});
 	}
 
-	async findByEmail(email: string): Promise<Student | null> {
-		return await this.prismaService.client.student.findUnique({
-			include: {
-				addresses: true,
-			},
-			where: { email },
-		});
-	}
-
 	async findById(id: number): Promise<Student | null> {
 		return await this.prismaService.client.student.findUnique({
 			include: {
 				addresses: true,
 			},
 			where: { id },
+		});
+	}
+	async findByEmail(email: string): Promise<Student | null> {
+		return await this.prismaService.client.student.findUnique({
+			include: {
+				addresses: true,
+			},
+			where: { email },
 		});
 	}
 
@@ -67,84 +66,12 @@ export class StudentRepository implements IStudentRepository {
 			},
 		});
 	}
-
-	async findByLastName(lastName: string): Promise<Student[] | null> {
+	async findByFilters(data: Partial<Student>): Promise<Student[] | []> {
 		return await this.prismaService.client.student.findMany({
 			include: {
 				addresses: true,
 			},
-			where: { lastName },
-		});
-	}
-
-	async findByFirstName(firstName: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { firstName },
-		});
-	}
-
-	async findByMiddleName(middleName: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { middleName },
-		});
-	}
-
-	async findByNationality(nationality: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { nationality },
-		});
-	}
-
-	async findByGender(gender: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { gender },
-		});
-	}
-
-	async findByPhoneNumber(phoneNumber: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { phoneNumber },
-		});
-	}
-
-	async findByParentPhoneNumber(parentPhoneNumber: string): Promise<Student[] | null> {
-		return await this.prismaService.client.student.findMany({
-			include: {
-				addresses: true,
-			},
-			where: { parentPhoneNumber },
-		});
-	}
-	async findByPassportNumber(passportNumber: string): Promise<Student | null> {
-		return await this.prismaService.client.student.findFirst({
-			include: {
-				addresses: true,
-			},
-			where: { passportNumber },
-		});
-	}
-
-	async findByJshshr(jshshr: string): Promise<Student | null> {
-		return await this.prismaService.client.student.findFirst({
-			include: {
-				addresses: true,
-			},
-			where: { jshshr },
+			where: data,
 		});
 	}
 }
