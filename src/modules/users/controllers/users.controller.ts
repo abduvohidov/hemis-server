@@ -71,13 +71,14 @@ export class UserController extends BaseController implements IUserController {
 		next: NextFunction,
 	): Promise<void> {
 		const result = await this.userService.validateUser(req.body);
-		const email = req.body.email;
 		if (!result) {
-			return next(new HTTPError(401, 'ошибка авторизации', 'login'));
+			this.send(res, 422, 'This user does not exists');
+			return;
 		}
+		const email = req.body.email;
 		const user = await this.userService.getUserByEmail(email);
 		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
-
+		res.cookie('token', jwt);
 		switch (user?.role) {
 			case ROLES.admin:
 				this.ok(res, { jwt, redirectTo: 'admin' });
@@ -91,12 +92,8 @@ export class UserController extends BaseController implements IUserController {
 			case ROLES.teacher:
 				this.ok(res, { jwt, redirectTo: 'teacher' });
 				break;
-			case ROLES.student:
-				this.ok(res, { jwt, redirectTo: 'student' });
-				break;
-
 			default:
-				this.ok(res, { jwt, redirectTo: 'unknown user ' });
+				this.ok(res, { jwt, redirectTo: 'student' });
 				break;
 		}
 	}

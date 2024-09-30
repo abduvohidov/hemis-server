@@ -34,25 +34,15 @@ export class AddressRepository implements IAddressRepository {
 			where: { id },
 		});
 	}
-
-	async findByCountry(country: string): Promise<Address | null> {
-		return await this.prismaService.client.address.findFirst({
+	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
+		return await this.prismaService.client.address.findMany({
 			include: { student: true },
-			where: { country },
-		});
-	}
-
-	async findByRegion(region: string): Promise<Address | null> {
-		return await this.prismaService.client.address.findFirst({
-			include: { student: true },
-			where: { region },
-		});
-	}
-
-	async findByAddress(address: string): Promise<Address | null> {
-		return await this.prismaService.client.address.findFirst({
-			include: { student: true },
-			where: { address },
+			where: {
+				...(data.address && { address: data.address }),
+				...(data.country && { country: data.country }),
+				...(data.region && { region: data.region }),
+				...(data.studentId && { studentId: data.studentId }),
+			},
 		});
 	}
 

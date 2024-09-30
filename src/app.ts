@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import cors from 'cors';
 import { Server } from 'http';
 import { TYPES } from './types';
 import { json } from 'body-parser';
@@ -38,6 +39,13 @@ export class App {
 	}
 
 	useMiddleware(): void {
+		this.app.use(
+			cors({
+				origin: 'http://localhost:5173',
+				methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+				credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+			}),
+		);
 		this.app.use(json());
 	}
 

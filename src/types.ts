@@ -51,5 +51,4 @@ export const ROLES = {
 	director: 'director',
 	teamLead: 'teamLead',
 	teacher: 'teacher',
-	student: 'student',
 };

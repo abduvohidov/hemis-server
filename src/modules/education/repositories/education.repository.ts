@@ -11,26 +11,7 @@ export class EducationRepository implements IEducationRepository {
 
 	async create(data: CreateEducationDto): Promise<Education | null> {
 		return this.prismaService.client.education.create({
-			data: {
-				studentId: data.studentId,
-				bachelorId: data.bachelorId,
-				currentSpecialization: data.currentSpecialization,
-				facultyId: data.facultyId,
-				course: data.course,
-				paymentType: data.paymentType,
-				entryYear: data.entryYear,
-				educationForm: data.educationForm,
-				languageCertificate: data.languageCertificate,
-				semester: data.semester,
-				scientificSupervisor: data.scientificSupervisor,
-				scientificAdvisor: data.scientificAdvisor,
-				internshipSupervisor: data.internshipSupervisor,
-				internalReviewer: data.internalReviewer,
-				externamReviewer: data.externamReviewer,
-				thesisTopic: data.thesisTopic,
-				articlesId: data.articlesId,
-				academicLeave: data.academicLeave,
-			},
+			data,
 		});
 	}
 
@@ -98,10 +79,15 @@ export class EducationRepository implements IEducationRepository {
 			},
 		});
 	}
-
 	async findByStudentId(studentId: number): Promise<Education | null> {
 		return this.prismaService.client.education.findFirst({
 			where: { studentId },
+		});
+	}
+
+	async findByValues(data: Partial<Education>): Promise<Education[] | []> {
+		return this.prismaService.client.education.findMany({
+			where: data,
 			include: {
 				student: true,
 				bachelor: true,
@@ -109,85 +95,5 @@ export class EducationRepository implements IEducationRepository {
 				articles: true,
 			},
 		});
-	}
-
-	async findByBachelorId(bachelorId: number): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({
-			where: { bachelorId },
-			include: {
-				bachelor: true,
-			},
-		});
-	}
-
-	async findByFacultyId(facultyId: number): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({
-			where: { facultyId },
-			include: {
-				faculty: true,
-			},
-		});
-	}
-
-	async findByCurrentSpecialization(currentSpecialization: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({
-			where: { currentSpecialization },
-		});
-	}
-
-	async findByCourse(course: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { course } });
-	}
-
-	async findByPaymentType(paymentType: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { paymentType } });
-	}
-
-	async findByEntryYear(entryYear: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { entryYear } });
-	}
-
-	async findByEducationForm(educationForm: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { educationForm } });
-	}
-
-	async findByLanguageCertificate(languageCertificate: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { languageCertificate } });
-	}
-
-	async findBySemester(semester: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { semester } });
-	}
-
-	async findByScientificSupervisor(scientificSupervisor: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { scientificSupervisor } });
-	}
-
-	async findByScientificAdvisor(scientificAdvisor: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { scientificAdvisor } });
-	}
-
-	async findByInternshipSupervisor(internshipSupervisor: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { internshipSupervisor } });
-	}
-
-	async findByInternalReviewer(internalReviewer: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { internalReviewer } });
-	}
-
-	async findByExternamReviewer(externamReviewer: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { externamReviewer } });
-	}
-
-	async findByThesisTopic(thesisTopic: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { thesisTopic } });
-	}
-
-	async findByArticlesId(articlesId: number): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { articlesId } });
-	}
-
-	async findByAcademicLeave(academicLeave: string): Promise<Education[] | null> {
-		return this.prismaService.client.education.findMany({ where: { academicLeave } });
 	}
 }

@@ -1,14 +1,15 @@
 import 'reflect-metadata';
-import { TYPES } from '../../../types';
 import { ILogger } from '../../../logger';
-import { injectable, inject } from 'inversify';
-import { BaseController, ValidateMiddleware } from '../../../common';
-import { Request, Response, NextFunction } from 'express';
-import { IAddressController } from './address.controller.interface';
 import { HTTPError } from '../../../errors';
+import { ROLES, TYPES } from '../../../types';
+import { PrismaClient } from '@prisma/client';
+import { injectable, inject } from 'inversify';
+import { IConfigService } from '../../../config';
+import { Request, Response, NextFunction } from 'express';
 import { AddressService } from '../service/address.service';
 import { AddressCreateDto } from '../dto/address-create.dto';
-import { IConfigService } from '../../../config';
+import { IAddressController } from './address.controller.interface';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
 @injectable()
 export class AddressController extends BaseController implements IAddressController {
@@ -23,42 +24,86 @@ export class AddressController extends BaseController implements IAddressControl
 				path: '/create',
 				method: 'post',
 				func: this.create,
-				middlewares: [new ValidateMiddleware(AddressCreateDto)],
+				middlewares: [
+					new ValidateMiddleware(AddressCreateDto),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/all',
 				method: 'get',
 				func: this.find,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/id',
 				method: 'get',
 				func: this.findById,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
-				path: '/country',
-				method: 'get',
-				func: this.findByCountry,
-			},
-			{
-				path: '/region',
-				method: 'get',
-				func: this.findByRegion,
-			},
-			{
-				path: '/address',
-				method: 'get',
-				func: this.findByAddress,
+				path: '/filter',
+				method: 'post',
+				func: this.findByFilter,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/update',
 				method: 'patch',
 				func: this.update,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/delete',
 				method: 'delete',
 				func: this.delete,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}
@@ -71,7 +116,7 @@ export class AddressController extends BaseController implements IAddressControl
 		const data = await this.addressService.create(body);
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс уже существует'));
+			return next(new HTTPError(422, 'Такого студента нету'));
 		}
 
 		this.ok(res, {
@@ -109,41 +154,11 @@ export class AddressController extends BaseController implements IAddressControl
 		});
 	}
 
-	async findByCountry({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.findByCountry(body.country);
-
+	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.addressService.findByFilters(body);
 		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
+			return next(new HTTPError(422, 'Такой студент не существует'));
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно получено',
-			data,
-		});
-	}
-
-	async findByRegion({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.findByRegion(body.region);
-
-		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
-		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно получено',
-			data,
-		});
-	}
-
-	async findByAddress({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.findByAddress(body.address);
-
-		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
-		}
-
 		this.ok(res, {
 			status: true,
 			message: 'Адресс успешно получено',

@@ -1,3 +1,6 @@
+import { ROLES } from './../../../types';
+import { VerifyRole } from './../../../common/middlewares/verify-role.middleware';
+import { AuthMiddleware } from './../../../common/middlewares/auth.middleware';
 import { Request, Response, NextFunction } from 'express';
 import { BaseController } from '../../../common';
 import { IBachelorController } from './bachelor.controller.interface';
@@ -9,6 +12,7 @@ import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
 import { IBachelorService } from '../service/bachelor.service.interface';
 import { HTTPError } from '../../../errors';
 import 'reflect-metadata';
+import { PrismaClient } from '@prisma/client';
 
 @injectable()
 export class BachelorController extends BaseController implements IBachelorController {
@@ -23,46 +27,85 @@ export class BachelorController extends BaseController implements IBachelorContr
 				path: '/create',
 				method: 'post',
 				func: this.create,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/update',
 				method: 'patch',
 				func: this.update,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/delete',
 				method: 'delete',
 				func: this.delete,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/all',
 				method: 'get',
 				func: this.find,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/id',
 				method: 'get',
 				func: this.findById,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
-				path: '/previous-university',
-				method: 'get',
-				func: this.findByPreviousUniversity,
-			},
-			{
-				path: '/graduation-year',
-				method: 'get',
-				func: this.findGraduationYear,
-			},
-			{
-				path: '/diplom-number',
-				method: 'get',
-				func: this.findGraduationYear,
-			},
-			{
-				path: '/previous-specialization',
-				method: 'get',
-				func: this.findPreviousSpecialization,
+				path: '/filter',
+				method: 'post',
+				func: this.findByFilter,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}
@@ -139,62 +182,12 @@ export class BachelorController extends BaseController implements IBachelorContr
 		});
 	}
 
-	async findByPreviousUniversity(
-		{ body }: Request,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
-		if (!body.previousUniversity) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.findByPreviousUniversity(body.previousUniversity);
+	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = await this.bachelorService.findByFilter(body);
 
 		this.ok(res, {
 			status: true,
-			message: 'Бакалавр успешно получено',
-			data,
-		});
-	}
-
-	async findGraduationYear({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.graduationYear) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.findGraduationYear(body.graduationYear);
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно получено',
-			data,
-		});
-	}
-
-	async findDiplomaNumber({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.diplomaNumber) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.findById(body.diplomaNumber);
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно получено',
-			data,
-		});
-	}
-
-	async findPreviousSpecialization(
-		{ body }: Request,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
-		if (!body.previousSpecialization) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.findPreviousSpecialization(body.previousSpecialization);
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно получено',
+			message: 'Бакалавры успешно получены',
 			data,
 		});
 	}

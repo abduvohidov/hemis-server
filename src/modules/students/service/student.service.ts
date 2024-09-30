@@ -1,12 +1,11 @@
-import { injectable, inject } from 'inversify';
 import { TYPES } from '../../../types';
-import { IStudentService } from './student.service.interface';
-import { IConfigService } from '../../../config';
-import { IStudentRepository } from '../repository/student.repository.interface';
 import { Student } from '@prisma/client';
-import { Student as StudentEntity } from '../index';
+import { injectable, inject } from 'inversify';
+import { IConfigService } from '../../../config';
+import { IStudentService } from './student.service.interface';
 import { StudentRegisterDto } from '../dto/student-register.dto';
 import { IStudentEntity } from '../models/student.entity.interface';
+import { Student as StudentEntity, IStudentRepository } from '../index';
 
 @injectable()
 export class StudentService implements IStudentService {
@@ -66,40 +65,8 @@ export class StudentService implements IStudentService {
 	async getById(id: number): Promise<Student | null> {
 		return this.studentRepository.findById(id);
 	}
-
-	async getByPassportNumber(passportNumber: string): Promise<Student | null> {
-		return this.studentRepository.findByPassportNumber(passportNumber);
-	}
-
-	async getByJshshr(jshshr: string): Promise<Student | null> {
-		return this.studentRepository.findByJshshr(jshshr);
-	}
-
-	async getByLastName(lastName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByLastName(lastName);
-	}
-
-	async getByFirstName(firstName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByFirstName(firstName);
-	}
-
-	async getByMiddleName(middleName: string): Promise<Student[] | null> {
-		return this.studentRepository.findByMiddleName(middleName);
-	}
-
-	async getByNationality(nationality: string): Promise<Student[] | null> {
-		return this.studentRepository.findByNationality(nationality);
-	}
-
-	async getByGender(gender: string): Promise<Student[] | null> {
-		return this.studentRepository.findByGender(gender);
-	}
-
-	async getByPhoneNumber(phoneNumber: string): Promise<Student[] | null> {
-		return this.studentRepository.findByPhoneNumber(phoneNumber);
-	}
-
-	async getByParentPhoneNumber(parentPhoneNumber: string): Promise<Student[] | null> {
-		return this.studentRepository.findByParentPhoneNumber(parentPhoneNumber);
+	async getByFilters(data: Partial<Student>): Promise<Student[] | []> {
+		if (Object.keys(data).length == 0) return [];
+		return this.studentRepository.findByFilters(data);
 	}
 }

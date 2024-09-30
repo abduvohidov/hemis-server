@@ -1,15 +1,19 @@
-import { inject, injectable } from 'inversify';
-import { IAddressService } from './address.service.interface';
 import { TYPES } from '../../../types';
-import { AddressRepository } from '../repository/address.repository';
 import { Address } from '@prisma/client';
-import { Address as AddressEntity } from '../model/address.entitiy';
+import { inject, injectable } from 'inversify';
+import { StudentRepository } from './../../students';
 import { AddressCreateDto } from '../dto/address-create.dto';
 import { IAddress } from '../model/address.entity.interface';
+import { IAddressService } from './address.service.interface';
+import { Address as AddressEntity } from '../model/address.entitiy';
+import { AddressRepository } from '../repository/address.repository';
 
 @injectable()
 export class AddressService implements IAddressService {
-	constructor(@inject(TYPES.AddressRepository) private addressRepository: AddressRepository) {}
+	constructor(
+		@inject(TYPES.AddressRepository) private addressRepository: AddressRepository,
+		@inject(TYPES.StudentRepository) private studentRepository: StudentRepository,
+	) {}
 
 	async create(address: AddressCreateDto): Promise<IAddress | null> {
 		const newAddress = new AddressEntity(
@@ -19,12 +23,12 @@ export class AddressService implements IAddressService {
 			address.studentId,
 		);
 
-		const existedAddress = await this.addressRepository.findByCountry(address.country);
-		if (existedAddress) {
+		const existedStudent = await this.studentRepository.findById(address.studentId);
+		if (!existedStudent) {
 			return null;
 		}
 
-		return this.addressRepository.create(newAddress);
+		return await this.addressRepository.create(newAddress);
 	}
 
 	async find(): Promise<Address[]> {
@@ -41,34 +45,10 @@ export class AddressService implements IAddressService {
 		return this.addressRepository.findById(id);
 	}
 
-	async findByCountry(country: string): Promise<Address | null> {
-		const existedCuntry = await this.addressRepository.findByCountry(country);
+	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
+		if (Object.keys(data).length == 0) return [];
 
-		if (!existedCuntry) {
-			return null;
-		}
-
-		return this.addressRepository.findByCountry(country);
-	}
-
-	async findByRegion(region: string): Promise<Address | null> {
-		const existedRegion = await this.addressRepository.findByRegion(region);
-
-		if (!existedRegion) {
-			return null;
-		}
-
-		return this.addressRepository.findByRegion(region);
-	}
-
-	async findByAddress(address: string): Promise<Address | null> {
-		const existedAddress = await this.addressRepository.findByAddress(address);
-
-		if (!existedAddress) {
-			return null;
-		}
-
-		return this.addressRepository.findByAddress(address);
+		return await this.addressRepository.findByFilters(data);
 	}
 
 	async update(id: number, address: Partial<Address>): Promise<Address | null> {

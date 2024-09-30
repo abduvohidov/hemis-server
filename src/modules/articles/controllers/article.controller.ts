@@ -1,12 +1,11 @@
-import { ArticleService } from './../services/article.service';
 import 'reflect-metadata';
-import { IArticleService, CreateArticleDto } from '../index';
 import { ILogger } from './../../../logger';
 import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { TYPES, ROLES } from './../../../types';
 import { IConfigService } from '../../../config';
 import { NextFunction, Request, Response } from 'express';
+import { IArticleService, CreateArticleDto } from '../index';
 import { IArticleController } from './article.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
@@ -28,7 +27,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				middlewares: [
 					new ValidateMiddleware(CreateArticleDto),
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 
@@ -38,7 +42,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.deleteArticle,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 
@@ -48,7 +57,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.findAllArticles,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 
@@ -58,7 +72,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.updateArticle,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 
@@ -68,7 +87,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.findArticleById,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 
@@ -78,7 +102,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.findByFilters,
 				middlewares: [
 					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [ROLES.admin]),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+					ROLES.teamLead,
+					]),
 				],
 			},
 		]);
