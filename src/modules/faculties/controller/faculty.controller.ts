@@ -51,7 +51,7 @@ export class FacultyController extends BaseController implements IFacultyControl
 				],
 			},
 			{
-				path: '/id',
+				path: '/:id',
 				method: 'get',
 				func: this.findById,
 				middlewares: [
