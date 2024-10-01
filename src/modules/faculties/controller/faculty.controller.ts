@@ -65,7 +65,7 @@ export class FacultyController extends BaseController implements IFacultyControl
 				],
 			},
 			{
-				path: '/name',
+				path: '/:name',
 				method: 'get',
 				func: this.findByName,
 				middlewares: [
@@ -79,8 +79,8 @@ export class FacultyController extends BaseController implements IFacultyControl
 				],
 			},
 			{
-				path: '/update',
-				method: 'patch',
+				path: '/update/:id',
+				method: 'put',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -93,7 +93,7 @@ export class FacultyController extends BaseController implements IFacultyControl
 				],
 			},
 			{
-				path: '/delete',
+				path: '/delete/:id',
 				method: 'delete',
 				func: this.delete,
 				middlewares: [
@@ -143,8 +143,9 @@ export class FacultyController extends BaseController implements IFacultyControl
 		});
 	}
 
-	async findById({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.facultyService.findById(body.id);
+	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const id = Number(req.params.id);
+		const data = await this.facultyService.findById(id);
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой факультет не существует'));
@@ -171,14 +172,15 @@ export class FacultyController extends BaseController implements IFacultyControl
 		});
 	}
 
-	async update({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = body;
+	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const data = req.body;
+		const id = Number(req.params.id);
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой факультет не существует'));
 		}
 
-		await this.facultyService.update(data.id, data);
+		await this.facultyService.update(id, data);
 
 		this.ok(res, {
 			status: true,
@@ -187,12 +189,14 @@ export class FacultyController extends BaseController implements IFacultyControl
 		});
 	}
 
-	async delete({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.id) {
+	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const id = Number(req.params.id);
+
+		if (!id) {
 			return next(new HTTPError(422, 'Такой факультет не существует'));
 		}
 
-		await this.facultyService.delete(body.id);
+		await this.facultyService.delete(id);
 		this.ok(res, {
 			status: true,
 			message: 'Факультет успешно удалено',
