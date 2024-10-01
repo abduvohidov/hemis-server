@@ -65,7 +65,7 @@ export class StudentController extends BaseController implements IStudentControl
 				],
 			},
 			{
-				path: '/id',
+				path: '/:id',
 				method: 'get',
 				func: this.getById,
 				middlewares: [
