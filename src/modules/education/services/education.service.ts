@@ -30,8 +30,9 @@ export class EducationService implements IEducationService {
 			!isFacultyExists ||
 			!isStudentExists ||
 			!isBachelorExists
-		)
+		) {
 			return null;
+		}
 		return await this.educationRepository.create(data);
 	}
 	async removeEducation(id: number): Promise<Education | null> {

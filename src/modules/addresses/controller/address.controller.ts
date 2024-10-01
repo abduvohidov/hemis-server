@@ -78,8 +78,8 @@ export class AddressController extends BaseController implements IAddressControl
 				],
 			},
 			{
-				path: '/update',
-				method: 'patch',
+				path: '/update/:id',
+				method: 'put',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -92,7 +92,7 @@ export class AddressController extends BaseController implements IAddressControl
 				],
 			},
 			{
-				path: '/delete',
+				path: '/delete/:id',
 				method: 'delete',
 				func: this.delete,
 				middlewares: [
@@ -116,7 +116,7 @@ export class AddressController extends BaseController implements IAddressControl
 		const data = await this.addressService.create(body);
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такого студента нету'));
+			return next(new HTTPError(422, 'Не удалось создать адрес'));
 		}
 
 		this.ok(res, {
@@ -166,14 +166,15 @@ export class AddressController extends BaseController implements IAddressControl
 		});
 	}
 
-	async update({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = body;
+	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const { id } = req.params;
+		const data = req.body;
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой адресс не существует'));
 		}
 
-		await this.addressService.update(data.id, data);
+		await this.addressService.update(Number(id), data);
 
 		this.ok(res, {
 			status: true,
@@ -182,12 +183,10 @@ export class AddressController extends BaseController implements IAddressControl
 		});
 	}
 
-	async delete({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.id) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
-		}
+	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const { id } = req.params;
 
-		await this.addressService.delete(body.id);
+		await this.addressService.delete(Number(id));
 		this.ok(res, {
 			status: true,
 			message: 'Адресс успешно удалено',

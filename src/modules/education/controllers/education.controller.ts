@@ -10,6 +10,7 @@ import { NextFunction, Response, Request } from 'express';
 import { CreateEducationDto, UpdateEducationDto } from '../index';
 import { IEducationController } from './education.controller.interface';
 import { ValidateMiddleware, AuthMiddleware, VerifyRole } from '../../../common';
+import { HTTPError } from '../../../errors';
 
 @injectable()
 export class EducationController extends BaseController implements IEducationController {
@@ -112,7 +113,7 @@ export class EducationController extends BaseController implements IEducationCon
 	async postEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const education = await this.educationService.prepareEducation(req.body);
 		if (!education) {
-			this.send(res, 400, 'This education has already ');
+			this.send(res, 400, 'Не удалось создать education');
 			return;
 		}
 		this.ok(res, { education });
