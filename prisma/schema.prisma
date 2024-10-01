@@ -69,9 +69,9 @@ model Education {
   academicLeave         String
 
   // References
-  student  Student  @relation(fields: [studentId], references: [id])
-  bachelor Bachelor @relation(fields: [bachelorId], references: [id])
-  faculty  Faculty  @relation(fields: [facultyId], references: [id])
+  student  Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  bachelor Bachelor @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
+  faculty  Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
   articles Articles @relation(fields: [articlesId], references: [id], onDelete: Cascade)
 }
 

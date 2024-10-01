@@ -42,8 +42,8 @@ export class App {
 		this.app.use(
 			cors({
 				origin: 'http://localhost:5173',
-				methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
-				credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+				methods: ['GET', 'POST', 'PUT', 'DELETE'],
+				credentials: true,
 			}),
 		);
 		this.app.use(json());
