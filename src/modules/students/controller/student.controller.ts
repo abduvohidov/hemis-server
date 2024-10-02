@@ -1,3 +1,4 @@
+import fs from 'fs';
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { ILogger } from '../../../logger';
@@ -63,6 +64,11 @@ export class StudentController extends BaseController implements IStudentControl
 						ROLES.teamLead,
 					]),
 				],
+			},
+			{
+				path: '/download/sheets',
+				method: 'get',
+				func: this.downloadXlsxFile,
 			},
 			{
 				path: '/:id',
@@ -216,6 +222,30 @@ export class StudentController extends BaseController implements IStudentControl
 			status: true,
 			message: 'Магистрант успешно удалено',
 		});
+	}
+
+	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const students = await this.studentService.getAll();
+			const filePath = await this.studentService.generateXlsxFile(students);
+
+			res.download(filePath, (err) => {
+				if (err) {
+					console.error('Ошибка при скачивании файла:', err);
+					return this.send(res, 500, 'Ошибка при скачивании файла.');
+				}
+
+				fs.unlink(filePath, (unlinkErr) => {
+					if (unlinkErr) {
+						console.error('Ошибка при удалении файла:', unlinkErr);
+					}
+				});
+			});
+		} catch (error) {
+			console.error('Ошибка при обработке запроса:', error);
+
+			this.send(res, 400, 'unknown');
+		}
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {

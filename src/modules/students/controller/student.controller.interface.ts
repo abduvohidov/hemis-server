@@ -8,4 +8,5 @@ export interface IStudentController {
 	getByEmail: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	getById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	getByFilters: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+	downloadXlsxFile: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

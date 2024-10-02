@@ -1,3 +1,6 @@
+import fs from 'fs';
+import xlsx from 'xlsx';
+import path from 'path';
 import { TYPES } from '../../../types';
 import { Student } from '@prisma/client';
 import { injectable, inject } from 'inversify';
@@ -65,8 +68,21 @@ export class StudentService implements IStudentService {
 	async getById(id: number): Promise<Student | null> {
 		return this.studentRepository.findById(id);
 	}
+
 	async getByFilters(data: Partial<Student>): Promise<Student[] | []> {
 		if (Object.keys(data).length == 0) return [];
 		return this.studentRepository.findByFilters(data);
+	}
+
+	async generateXlsxFile(data: Student[]): Promise<string> {
+		const workbook = xlsx.utils.book_new();
+		const worksheet = xlsx.utils.json_to_sheet(data);
+		xlsx.utils.book_append_sheet(workbook, worksheet, 'students_data');
+
+		const filePath = path.join(__dirname, '../data.xlsx');
+		xlsx.writeFile(workbook, filePath);
+		console.log(filePath);
+
+		return filePath;
 	}
 }

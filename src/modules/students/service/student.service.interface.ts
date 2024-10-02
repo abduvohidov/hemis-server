@@ -10,4 +10,5 @@ export interface IStudentService {
 	getByEmail: (email: string) => Promise<Student | null>;
 	getById: (id: number) => Promise<Student | null>;
 	getByFilters: (data: Partial<Student>) => Promise<Student[] | []>;
+	generateXlsxFile: (data: Student[]) => Promise<string>;
 }
