@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { TYPES } from '../../../types';
+import { IUserService } from '../index';
 import { ROLES } from './../../../types';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
@@ -8,9 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { UserLoginDto } from '../dto/user-login.dto';
-import { IUserService, UserUpdateDto } from '../index';
 import { NextFunction, Request, Response } from 'express';
-import { UserRegisterDto } from '../dto/user-register.dto';
 import { IUserController } from './users.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
@@ -61,6 +60,12 @@ export class UserController extends BaseController implements IUserController {
 					new AuthMiddleware(this.secret4Token),
 					new VerifyRole(new PrismaClient(), [ROLES.admin]),
 				],
+			},
+			{
+				path: '/logout',
+				method: 'post',
+				func: this.logoutUser,
+				middlewares: [new AuthMiddleware(this.secret4Token)],
 			},
 		]);
 	}
@@ -113,7 +118,7 @@ export class UserController extends BaseController implements IUserController {
 			return next(new HTTPError(400, 'Пж проверьте данные', 'create'));
 		}
 		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
-
+		res.cookie('token', jwt);
 		this.ok(res, { result, jwt });
 	}
 
@@ -125,6 +130,11 @@ export class UserController extends BaseController implements IUserController {
 			return next(new HTTPError(400, 'Пж проверьте данные', 'update'));
 		}
 		this.ok(res, { result });
+	}
+
+	async logoutUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+		res.clearCookie('token');
+		this.ok(res, 'User logged out successfuly');
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {
