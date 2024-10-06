@@ -34,7 +34,7 @@ export class FacultyService implements IFacultyService {
 		return this.facultyRepository.findById(id);
 	}
 
-	async findByName(params: Faculty): Promise<Faculty | null> {
+	async findByName(params: { name: string }): Promise<Faculty | null> {
 		const existed = await this.facultyRepository.findByName(params.name);
 		if (!existed) {
 			return null;

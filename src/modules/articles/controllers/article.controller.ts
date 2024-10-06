@@ -26,13 +26,13 @@ export class ArticleController extends BaseController implements IArticleControl
 				func: this.postArticle,
 				middlewares: [
 					new ValidateMiddleware(CreateArticleDto),
-					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
+					// new AuthMiddleware(this.secret4Token),
+					// new VerifyRole(new PrismaClient(), [
+					// 	ROLES.admin,
+					// 	ROLES.director,
+					// 	ROLES.teacher,
+					// 	ROLES.teamLead,
+					// ]),
 				],
 			},
 
@@ -100,15 +100,15 @@ export class ArticleController extends BaseController implements IArticleControl
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilters,
-				middlewares: [
-					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-					ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.secret4Token),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 		]);
 	}

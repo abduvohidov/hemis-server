@@ -26,13 +26,13 @@ export class AddressController extends BaseController implements IAddressControl
 				func: this.create,
 				middlewares: [
 					new ValidateMiddleware(AddressCreateDto),
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
+					// new AuthMiddleware(this.configService.get('SECRET')),
+					// new VerifyRole(new PrismaClient(), [
+					// 	ROLES.admin,
+					// 	ROLES.director,
+					// 	ROLES.teacher,
+					// 	ROLES.teamLead,
+					// ]),
 				],
 			},
 			{
@@ -67,15 +67,15 @@ export class AddressController extends BaseController implements IAddressControl
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilter,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.configService.get('SECRET')),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 			{
 				path: '/update/:id',

@@ -27,15 +27,15 @@ export class BachelorController extends BaseController implements IBachelorContr
 				path: '/create',
 				method: 'post',
 				func: this.create,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.configService.get('SECRET')),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 			{
 				path: '/update',
@@ -97,15 +97,15 @@ export class BachelorController extends BaseController implements IBachelorContr
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilter,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.configService.get('SECRET')),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 		]);
 	}

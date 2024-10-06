@@ -27,13 +27,13 @@ export class EducationController extends BaseController implements IEducationCon
 				func: this.postEducation,
 				middlewares: [
 					new ValidateMiddleware(CreateEducationDto),
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
+					// new AuthMiddleware(this.configService.get('SECRET')),
+					// new VerifyRole(new PrismaClient(), [
+					// 	ROLES.admin,
+					// 	ROLES.director,
+					// 	ROLES.teacher,
+					// 	ROLES.teamLead,
+					// ]),
 				],
 			},
 			{
@@ -97,15 +97,15 @@ export class EducationController extends BaseController implements IEducationCon
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilters,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.configService.get('SECRET')),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 		]);
 	}

@@ -87,7 +87,26 @@ export class EducationRepository implements IEducationRepository {
 
 	async findByValues(data: Partial<Education>): Promise<Education[] | []> {
 		return this.prismaService.client.education.findMany({
-			where: data,
+			where: {
+				...(data.studentId && { studentId: data.studentId }),
+				...(data.bachelorId && { bachelorId: data.bachelorId }),
+				...(data.currentSpecialization && { currentSpecialization: data.currentSpecialization }),
+				...(data.facultyId && { facultyId: data.facultyId }),
+				...(data.course && { course: data.course }),
+				...(data.paymentType && { paymentType: data.paymentType }),
+				...(data.entryYear && { entryYear: data.entryYear }),
+				...(data.educationForm && { educationForm: data.educationForm }),
+				...(data.languageCertificate && { languageCertificate: data.languageCertificate }),
+				...(data.semester && { semester: data.semester }),
+				...(data.scientificSupervisor && { scientificSupervisor: data.scientificSupervisor }),
+				...(data.scientificAdvisor && { scientificAdvisor: data.scientificAdvisor }),
+				...(data.internshipSupervisor && { internshipSupervisor: data.internshipSupervisor }),
+				...(data.internalReviewer && { internalReviewer: data.internalReviewer }),
+				...(data.externamReviewer && { externamReviewer: data.externamReviewer }),
+				...(data.thesisTopic && { thesisTopic: data.thesisTopic }),
+				...(data.articlesId && { articlesId: data.articlesId }),
+				...(data.academicLeave && { academicLeave: data.academicLeave }),
+			},
 			include: {
 				student: true,
 				bachelor: true,

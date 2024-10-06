@@ -9,7 +9,6 @@ export class StudentRegisterDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly firstName: string;
-	
 	@IsNotEmpty()
 	@IsString()
 	readonly middleName: string;

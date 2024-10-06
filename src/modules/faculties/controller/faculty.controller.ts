@@ -27,13 +27,13 @@ export class FacultyController extends BaseController implements IFacultyControl
 				func: this.create,
 				middlewares: [
 					new ValidateMiddleware(FacultyCreateDto),
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
+					// new AuthMiddleware(this.configService.get('SECRET')),
+					// new VerifyRole(new PrismaClient(), [
+					// 	ROLES.admin,
+					// 	ROLES.director,
+					// 	ROLES.teacher,
+					// 	ROLES.teamLead,
+					// ]),
 				],
 			},
 			{
@@ -68,15 +68,15 @@ export class FacultyController extends BaseController implements IFacultyControl
 				path: '/:name',
 				method: 'get',
 				func: this.findByName,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				// middlewares: [
+				// 	new AuthMiddleware(this.configService.get('SECRET')),
+				// 	new VerifyRole(new PrismaClient(), [
+				// 		ROLES.admin,
+				// 		ROLES.director,
+				// 		ROLES.teacher,
+				// 		ROLES.teamLead,
+				// 	]),
+				// ],
 			},
 			{
 				path: '/update/:id',
@@ -158,8 +158,9 @@ export class FacultyController extends BaseController implements IFacultyControl
 		});
 	}
 
-	async findByName({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.facultyService.findByName(body.name);
+	async findByName(req: Request, res: Response, next: NextFunction): Promise<void> {
+		console.log(req.params);
+		const data = await this.facultyService.findByName(req.params as { name: string });
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой факультет не существует'));

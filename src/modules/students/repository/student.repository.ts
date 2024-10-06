@@ -71,7 +71,20 @@ export class StudentRepository implements IStudentRepository {
 			include: {
 				addresses: true,
 			},
-			where: data,
+			where: {
+				...(data.lastName && { lastName: data.lastName }),
+				...(data.firstName && { firstName: data.firstName }),
+				...(data.middleName && { middleName: data.middleName }),
+				...(data.passportNumber && { passportNumber: data.passportNumber }),
+				...(data.jshshr && { jshshr: data.jshshr }),
+				...(data.dateOfBirth && { dateOfBirth: data.dateOfBirth }),
+				...(data.gender && { gender: data.gender }),
+				...(data.nationality && { nationality: data.nationality }),
+				...(data.email && { email: data.email }),
+				...(data.phoneNumber && { phoneNumber: data.phoneNumber }),
+				...(data.parentPhoneNumber && { parentPhoneNumber: data.parentPhoneNumber }),
+				...(data.password && { password: data.password }),
+			},
 		});
 	}
 }

@@ -8,5 +8,5 @@ export interface IFacultyService {
 	update: (id: number, params: Faculty) => Promise<Faculty | null>;
 	delete: (id: number) => Promise<Faculty | null>;
 	findById: (id: number) => Promise<Faculty | null>;
-	findByName: (params: Faculty) => Promise<Faculty | null>;
+	findByName: (params: { name: string }) => Promise<Faculty | null>;
 }
