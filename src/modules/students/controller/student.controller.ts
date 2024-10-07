@@ -171,7 +171,8 @@ export class StudentController extends BaseController implements IStudentControl
 	}
 
 	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.studentService.getById(req.body.id);
+		const { id } = req.params;
+		const data = await this.studentService.getById(Number(id));
 
 		if (!data) {
 			return next(new HTTPError(422, 'Такой магистрант не существует'));

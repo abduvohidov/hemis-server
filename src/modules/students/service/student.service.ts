@@ -50,15 +50,21 @@ export class StudentService implements IStudentService {
 		if (!existingStudent) {
 			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
+
 		return this.studentRepository.update(id, student);
 	}
 
 	async delete(id: number): Promise<void> {
-		const existingStudent = await this.studentRepository.findById(id);
-		if (!existingStudent) {
-			throw new Error(`Студент с идентификатором ${id} не найден.`);
+		try {
+			const existingStudent = await this.studentRepository.findById(Number(id));
+			if (!existingStudent) {
+				throw new Error(`Студент с идентификатором ${id} не найден.`);
+			}
+			await this.studentRepository.delete(id);
+		} catch (error) {
+			console.error(`Ошибка при удалении студента с идентификатором ${id}:`, error);
+			throw error;
 		}
-		await this.studentRepository.delete(id);
 	}
 
 	async getByEmail(email: string): Promise<Student | null> {
