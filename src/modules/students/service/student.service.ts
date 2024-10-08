@@ -56,7 +56,8 @@ export class StudentService implements IStudentService {
 
 	async delete(id: number): Promise<void> {
 		try {
-			const existingStudent = await this.studentRepository.findById(Number(id));
+			const existingStudent = await this.studentRepository.findById(id);
+
 			if (!existingStudent) {
 				throw new Error(`Студент с идентификатором ${id} не найден.`);
 			}

@@ -212,13 +212,13 @@ export class StudentController extends BaseController implements IStudentControl
 	}
 
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
+		const id = req.params.id;
 
 		if (!id) {
 			return next(new HTTPError(422, 'Такой магистрант не существует'));
 		}
 
-		await this.studentService.delete(id);
+		await this.studentService.delete(Number(id));
 		this.ok(res, {
 			status: true,
 			message: 'Магистрант успешно удалено',
