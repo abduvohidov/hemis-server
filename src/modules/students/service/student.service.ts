@@ -88,7 +88,6 @@ export class StudentService implements IStudentService {
 
 		const filePath = path.join(__dirname, '../data.xlsx');
 		xlsx.writeFile(workbook, filePath);
-		console.log(filePath);
 
 		return filePath;
 	}
