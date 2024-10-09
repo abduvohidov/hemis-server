@@ -1,16 +1,16 @@
 import 'reflect-metadata';
+import { IEducation } from '../types';
 import { IEducationService } from '..';
 import { ILogger } from '../../../logger';
 import { inject, injectable } from 'inversify';
 import { ROLES, TYPES } from './../../../types';
 import { BaseController } from '../../../common';
 import { IConfigService } from './../../../config';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Student } from '@prisma/client';
 import { NextFunction, Response, Request } from 'express';
 import { CreateEducationDto, UpdateEducationDto } from '../index';
 import { IEducationController } from './education.controller.interface';
 import { ValidateMiddleware, AuthMiddleware, VerifyRole } from '../../../common';
-import { HTTPError } from '../../../errors';
 
 @injectable()
 export class EducationController extends BaseController implements IEducationController {
@@ -155,10 +155,12 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const education = await this.educationService.getByFilters(req.body);
-		if (!education) {
-			this.send(res, 400, 'Education got');
-			return;
+		let data: Array<Student> = [];
+		if (education.length) {
+			education.forEach((education: IEducation) => {
+				data = [...data, education['student'] as Student];
+			});
 		}
-		this.ok(res, { data: education });
+		this.ok(res, { data });
 	}
 }
