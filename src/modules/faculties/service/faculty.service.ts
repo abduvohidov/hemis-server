@@ -2,13 +2,13 @@ import 'reflect-metadata';
 import { TYPES } from '../../../types';
 import { inject, injectable } from 'inversify';
 import { Faculty, Student } from '@prisma/client';
+import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
-import { IFacultyService } from './faculty.service.interface';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
+import { IFacultyService } from './faculty.service.interface';
 import { IFaculty } from '../models/faculty.entity.interface';
 import { Faculty as FacultyEntity } from '../models/faculty.entity';
 import { FacultyRepository } from '../repository/faculty.repository';
-import { IEducation } from '../../education/types';
 
 @injectable()
 export class FacultyService implements IFacultyService {
@@ -40,9 +40,11 @@ export class FacultyService implements IFacultyService {
 	}
 
 	async findByName(name: string): Promise<Student[] | []> {
+		if (!name) return [];
 		const faculties = await this.facultyRepository.findByName(name);
+		console.log(faculties);
 		const facultiesIds = faculties?.map((faculty: Faculty) => faculty.id);
-		if (facultiesIds) {
+		if (facultiesIds?.length) {
 			const education = await this.educationRepository.findByFacultyId(facultiesIds);
 			const students = education.flatMap((education: IEducation) => education.student);
 			if (students.length > 0) return students as Student[];

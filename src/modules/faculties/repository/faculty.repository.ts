@@ -1,10 +1,10 @@
-import { injectable, inject } from 'inversify';
-import { IFacultyRepository } from './faculty.repository.interface';
-import { TYPES } from '../../../types';
-import { PrismaService } from '../../../database/prisma.service';
-import { IFaculty } from '../models/faculty.entity.interface';
-import { Faculty } from '@prisma/client';
 import 'reflect-metadata';
+import { TYPES } from '../../../types';
+import { Faculty } from '@prisma/client';
+import { injectable, inject } from 'inversify';
+import { IFaculty } from '../models/faculty.entity.interface';
+import { PrismaService } from '../../../database/prisma.service';
+import { IFacultyRepository } from './faculty.repository.interface';
 
 @injectable()
 export class FacultyRepository implements IFacultyRepository {
@@ -28,7 +28,7 @@ export class FacultyRepository implements IFacultyRepository {
 		});
 	}
 
-	async findByName(name: string): Promise<Faculty[] | null> {
+	async findByName(name: string): Promise<Faculty[] | []> {
 		return await this.prismaService.client.faculty.findMany({
 			where: { name },
 		});
