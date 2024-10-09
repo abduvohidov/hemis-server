@@ -37,12 +37,7 @@ export class AddressRepository implements IAddressRepository {
 	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
 		return await this.prismaService.client.address.findMany({
 			include: { student: true },
-			where: {
-				...(data.address && { address: data.address }),
-				...(data.country && { country: data.country }),
-				...(data.region && { region: data.region }),
-				...(data.studentId && { studentId: data.studentId }),
-			},
+			where: data,
 		});
 	}
 

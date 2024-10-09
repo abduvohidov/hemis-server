@@ -156,6 +156,6 @@ export class ArticleController extends BaseController implements IArticleControl
 	}
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const articles = await this.articleService.getByValues(req.body);
-		this.ok(res, { articles });
+		this.ok(res, { data: articles });
 	}
 }

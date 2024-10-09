@@ -1,16 +1,16 @@
-import { ROLES } from './../../../types';
-import { inject, injectable } from 'inversify';
-import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
-import { ILogger } from '../../../logger';
-import { TYPES } from '../../../types';
-import { FacultyService } from '../service/faculty.service';
-import { IFacultyController } from './faculty.controller.interface';
-import { IConfigService } from '../../../config';
-import { FacultyCreateDto } from '../dto/faculty-create.dto';
-import { NextFunction, Request, Response } from 'express';
-import { HTTPError } from '../../../errors';
 import 'reflect-metadata';
+import { TYPES } from '../../../types';
+import { ROLES } from './../../../types';
+import { ILogger } from '../../../logger';
+import { HTTPError } from '../../../errors';
 import { PrismaClient } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { IConfigService } from '../../../config';
+import { NextFunction, Request, Response } from 'express';
+import { FacultyService } from '../service/faculty.service';
+import { FacultyCreateDto } from '../dto/faculty-create.dto';
+import { IFacultyController } from './faculty.controller.interface';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
 @injectable()
 export class FacultyController extends BaseController implements IFacultyController {
@@ -65,8 +65,8 @@ export class FacultyController extends BaseController implements IFacultyControl
 				],
 			},
 			{
-				path: '/:name',
-				method: 'get',
+				path: '/filter',
+				method: 'post',
 				func: this.findByName,
 				// middlewares: [
 				// 	new AuthMiddleware(this.configService.get('SECRET')),
@@ -125,17 +125,8 @@ export class FacultyController extends BaseController implements IFacultyControl
 		});
 	}
 
-	async find(
-		{ body }: Request<{}, {}, FacultyCreateDto>,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
+	async find(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const data = await this.facultyService.find();
-
-		if (!data) {
-			return next(new HTTPError(422, 'Такой факультет не существует'));
-		}
-
 		this.ok(res, {
 			status: true,
 			message: 'Факультет успешно получено',
@@ -159,12 +150,8 @@ export class FacultyController extends BaseController implements IFacultyControl
 	}
 
 	async findByName(req: Request, res: Response, next: NextFunction): Promise<void> {
-		console.log(req.params);
-		const data = await this.facultyService.findByName(req.params as { name: string });
-
-		if (!data) {
-			return next(new HTTPError(422, 'Такой факультет не существует'));
-		}
+		const { name } = req.body;
+		const data = await this.facultyService.findByName(name);
 
 		this.ok(res, {
 			status: true,

@@ -49,7 +49,15 @@ export class BachelorService implements IBachelorService {
 	}
 
 	async findByFilter(data: Partial<Bachelor>): Promise<Bachelor[] | []> {
-		if (Object.keys(data).length == 0) return [];
+		const bachelorFilters = {
+			...(data.previousUniversity && { previousUniversity: data.previousUniversity }),
+			...(data.graduationYear && { graduationYear: data.graduationYear }),
+			...(data.diplomaNumber && { diplomaNumber: data.diplomaNumber }),
+			...(data.previousSpecialization && { previousSpecialization: data.previousSpecialization }),
+		};
+		const hasBachelorFilters = Object.keys(bachelorFilters).length > 0;
+		if (!hasBachelorFilters) return [];
+
 		return await this.bachelorRepository.findByFilters(data);
 	}
 }

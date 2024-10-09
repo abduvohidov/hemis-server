@@ -77,15 +77,31 @@ export class StudentService implements IStudentService {
 	}
 
 	async getByFilters(data: Partial<Student>): Promise<Student[] | []> {
-		if (Object.keys(data).length == 0) return [];
-		return this.studentRepository.findByFilters(data);
+		const studentFilters = {
+			...(data.lastName && { lastName: data.lastName }),
+			...(data.firstName && { firstName: data.firstName }),
+			...(data.middleName && { middleName: data.middleName }),
+			...(data.passportNumber && { passportNumber: data.passportNumber }),
+			...(data.jshshr && { jshshr: data.jshshr }),
+			...(data.dateOfBirth && { dateOfBirth: data.dateOfBirth }),
+			...(data.gender && { gender: data.gender }),
+			...(data.nationality && { nationality: data.nationality }),
+			...(data.email && { email: data.email }),
+			...(data.phoneNumber && { phoneNumber: data.phoneNumber }),
+			...(data.parentPhoneNumber && { parentPhoneNumber: data.parentPhoneNumber }),
+			...(data.password && { password: data.password }),
+		};
+		const hasStudentFilters = Object.keys(studentFilters).length > 0;
+		if (!hasStudentFilters) {
+			return [];
+		}
+		return this.studentRepository.findByFilters(studentFilters);
 	}
 
 	async generateXlsxFile(data: Student[]): Promise<string> {
 		const workbook = xlsx.utils.book_new();
 		const worksheet = xlsx.utils.json_to_sheet(data);
 		xlsx.utils.book_append_sheet(workbook, worksheet, 'students_data');
-
 		const filePath = path.join(__dirname, '../data.xlsx');
 		xlsx.writeFile(workbook, filePath);
 

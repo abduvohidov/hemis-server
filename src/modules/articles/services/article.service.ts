@@ -29,9 +29,17 @@ export class ArticleService implements IArticleService {
 		return await this.articleRepository.findById(id);
 	}
 	async getByValues(filters: Partial<Articles>): Promise<Articles[] | null> {
-		if (Object.keys(filters).length === 0) {
-			return null;
-		}
+		const articleFilters = {
+			...(filters.firstArticle && { firstArticle: filters.firstArticle }),
+			...(filters.firstArticleDate && { firstArticleDate: filters.firstArticleDate }),
+			...(filters.firstArticleJournal && { firstArticleJournal: filters.firstArticleJournal }),
+			...(filters.secondArticle && { secondArticle: filters.secondArticle }),
+			...(filters.secondArticleDate && { secondArticleDate: filters.secondArticleDate }),
+			...(filters.secondArticleJournal && { secondArticleJournal: filters.secondArticleJournal }),
+		};
+		const hasArticleFilters = Object.keys(articleFilters).length > 0;
+		if (!hasArticleFilters) return [];
+
 		return await this.articleRepository.filterByValues(filters);
 	}
 }

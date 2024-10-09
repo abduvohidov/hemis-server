@@ -159,6 +159,6 @@ export class EducationController extends BaseController implements IEducationCon
 			this.send(res, 400, 'Education got');
 			return;
 		}
-		this.ok(res, { education });
+		this.ok(res, { data: education });
 	}
 }

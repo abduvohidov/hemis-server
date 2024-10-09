@@ -46,9 +46,18 @@ export class AddressService implements IAddressService {
 	}
 
 	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
-		if (Object.keys(data).length == 0) return [];
+		const addressFilters = {
+			...(data.address && { address: data.address }),
+			...(data.country && { country: data.country }),
+			...(data.region && { region: data.region }),
+			...(data.studentId && { studentId: data.studentId }),
+		};
 
-		return await this.addressRepository.findByFilters(data);
+		const hasAddressFilters = Object.keys(addressFilters).length > 0;
+		if (!hasAddressFilters) {
+			return [];
+		}
+		return await this.addressRepository.findByFilters(addressFilters);
 	}
 
 	async update(id: number, address: Partial<Address>): Promise<Address | null> {

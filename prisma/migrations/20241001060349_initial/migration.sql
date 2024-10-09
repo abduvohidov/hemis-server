@@ -1,4 +1,4 @@
--- DropForeignKey
+q-- DropForeignKey
 ALTER TABLE "Education" DROP CONSTRAINT "Education_bachelorId_fkey";
 
 -- DropForeignKey

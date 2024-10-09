@@ -53,7 +53,30 @@ export class EducationService implements IEducationService {
 	}
 
 	async getByFilters(data: Partial<Education>): Promise<Education[] | []> {
-		if (Object.keys(data).length == 0) return [];
-		return await this.educationRepository.findByValues(data);
+		const educationFilters = {
+			...(data.studentId && { studentId: data.studentId }),
+			...(data.bachelorId && { bachelorId: data.bachelorId }),
+			...(data.currentSpecialization && { currentSpecialization: data.currentSpecialization }),
+			...(data.facultyId && { facultyId: data.facultyId }),
+			...(data.course && { course: data.course }),
+			...(data.paymentType && { paymentType: data.paymentType }),
+			...(data.entryYear && { entryYear: data.entryYear }),
+			...(data.educationForm && { educationForm: data.educationForm }),
+			...(data.languageCertificate && { languageCertificate: data.languageCertificate }),
+			...(data.semester && { semester: data.semester }),
+			...(data.scientificSupervisor && { scientificSupervisor: data.scientificSupervisor }),
+			...(data.scientificAdvisor && { scientificAdvisor: data.scientificAdvisor }),
+			...(data.internshipSupervisor && { internshipSupervisor: data.internshipSupervisor }),
+			...(data.internalReviewer && { internalReviewer: data.internalReviewer }),
+			...(data.externamReviewer && { externamReviewer: data.externamReviewer }),
+			...(data.thesisTopic && { thesisTopic: data.thesisTopic }),
+			...(data.articlesId && { articlesId: data.articlesId }),
+			...(data.academicLeave && { academicLeave: data.academicLeave }),
+		};
+		const hasEducationFilters = Object.keys(educationFilters).length > 0;
+		if (!hasEducationFilters) {
+			return [];
+		}
+		return await this.educationRepository.findByValues(educationFilters);
 	}
 }

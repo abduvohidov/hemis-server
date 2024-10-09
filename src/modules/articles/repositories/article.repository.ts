@@ -48,14 +48,7 @@ export class ArticleRepository implements IArticleRepository {
 
 	async filterByValues(filters: Partial<Articles>): Promise<Articles[] | null> {
 		return await this.prismaService.client.articles.findMany({
-			where: {
-				...(filters.firstArticle && { firstArticle: filters.firstArticle }),
-				...(filters.firstArticleDate && { firstArticleDate: filters.firstArticleDate }),
-				...(filters.firstArticleJournal && { firstArticleJournal: filters.firstArticleJournal }),
-				...(filters.secondArticle && { secondArticle: filters.secondArticle }),
-				...(filters.secondArticleDate && { secondArticleDate: filters.secondArticleDate }),
-				...(filters.secondArticleJournal && { secondArticleJournal: filters.secondArticleJournal }),
-			},
+			where: filters,
 		});
 	}
 }

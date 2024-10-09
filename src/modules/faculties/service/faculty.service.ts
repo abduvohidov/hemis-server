@@ -1,12 +1,12 @@
-import { inject, injectable } from 'inversify';
-import { FacultyRepository } from '../repository/faculty.repository';
-import { IFacultyService } from './faculty.service.interface';
+import 'reflect-metadata';
 import { TYPES } from '../../../types';
+import { Faculty } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { IFacultyService } from './faculty.service.interface';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { IFaculty } from '../models/faculty.entity.interface';
 import { Faculty as FacultyEntity } from '../models/faculty.entity';
-import { Faculty } from '@prisma/client';
-import 'reflect-metadata';
+import { FacultyRepository } from '../repository/faculty.repository';
 
 @injectable()
 export class FacultyService implements IFacultyService {
@@ -34,12 +34,12 @@ export class FacultyService implements IFacultyService {
 		return this.facultyRepository.findById(id);
 	}
 
-	async findByName(params: { name: string }): Promise<Faculty | null> {
-		const existed = await this.facultyRepository.findByName(params.name);
+	async findByName(name: string): Promise<Faculty[] | null> {
+		const existed = await this.facultyRepository.findByName(name);
 		if (!existed) {
 			return null;
 		}
-		return this.facultyRepository.findByName(params.name);
+		return existed;
 	}
 
 	async update(id: number, params: Faculty): Promise<Faculty | null> {
