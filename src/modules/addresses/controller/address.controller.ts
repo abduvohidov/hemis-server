@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import { IAddress } from '../types';
+import { Student } from '../../students';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
 import { ROLES, TYPES } from '../../../types';
@@ -155,9 +157,15 @@ export class AddressController extends BaseController implements IAddressControl
 	}
 
 	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.findByFilters(body);
-		if (!data) {
-			return next(new HTTPError(422, 'Такой студент не существует'));
+		const address = await this.addressService.findByFilters(body);
+		const data: Array<Student> = [];
+		if (address.length) {
+			address.forEach((address: IAddress) => {
+				const student = address['student'] as unknown as Student;
+				if (student) {
+					data.push(student);
+				}
+			});
 		}
 		this.ok(res, {
 			status: true,

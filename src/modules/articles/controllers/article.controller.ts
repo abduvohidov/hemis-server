@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Student } from '@prisma/client';
 import { ILogger } from './../../../logger';
 import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
@@ -155,7 +156,8 @@ export class ArticleController extends BaseController implements IArticleControl
 		this.ok(res, { article });
 	}
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const articles = await this.articleService.getByValues(req.body);
-		this.ok(res, { data: articles });
+		const data = await this.articleService.getByValues(req.body);
+
+		this.ok(res, { data });
 	}
 }

@@ -1,12 +1,17 @@
-import { Articles } from '@prisma/client';
 import { TYPES } from './../../../types';
-import { inject, injectable } from 'inversify';
 import { IArticleRepository } from '../index';
+import { inject, injectable } from 'inversify';
+import { Articles, Student } from '@prisma/client';
+import { IEducation } from '../../education/types';
+import { IEducationRepository } from '../../education';
 import { IArticleService } from './article.service.interface';
 
 @injectable()
 export class ArticleService implements IArticleService {
-	constructor(@inject(TYPES.ArticleRepository) private articleRepository: IArticleRepository) {}
+	constructor(
+		@inject(TYPES.ArticleRepository) private articleRepository: IArticleRepository,
+		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
+	) {}
 
 	async prepareArticle(data: Articles): Promise<Articles | null> {
 		return await this.articleRepository.create(data);
@@ -28,7 +33,7 @@ export class ArticleService implements IArticleService {
 	async getById(id: number): Promise<Articles | null> {
 		return await this.articleRepository.findById(id);
 	}
-	async getByValues(filters: Partial<Articles>): Promise<Articles[] | null> {
+	async getByValues(filters: Partial<Articles>): Promise<Student[] | []> {
 		const articleFilters = {
 			...(filters.firstArticle && { firstArticle: filters.firstArticle }),
 			...(filters.firstArticleDate && { firstArticleDate: filters.firstArticleDate }),
@@ -39,7 +44,11 @@ export class ArticleService implements IArticleService {
 		};
 		const hasArticleFilters = Object.keys(articleFilters).length > 0;
 		if (!hasArticleFilters) return [];
-
-		return await this.articleRepository.filterByValues(filters);
+		const articles = await this.articleRepository.filterByValues(filters);
+		const articlesId = articles?.map((article: Articles) => article.id);
+		const education = await this.educationRepository.findByArticlesId(articlesId);
+		const students = education.flatMap((education: IEducation) => education.student);
+		if (students.length > 0) return students as Student[];
+		return [];
 	}
 }

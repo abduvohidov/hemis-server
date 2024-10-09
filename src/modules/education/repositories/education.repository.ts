@@ -85,6 +85,37 @@ export class EducationRepository implements IEducationRepository {
 		});
 	}
 
+	async findByFacultyId(ids: number[]): Promise<Education[] | []> {
+		return this.prismaService.client.education.findMany({
+			where: {
+				facultyId: { in: ids },
+			},
+			include: {
+				student: true,
+			},
+		});
+	}
+	async findByBachelorsId(ids: number[]): Promise<Education[] | []> {
+		return this.prismaService.client.education.findMany({
+			where: {
+				bachelorId: { in: ids },
+			},
+			include: {
+				student: true,
+			},
+		});
+	}
+	async findByArticlesId(ids: number[]): Promise<Education[] | []> {
+		return this.prismaService.client.education.findMany({
+			where: {
+				articlesId: { in: ids },
+			},
+			include: {
+				student: true,
+			},
+		});
+	}
+
 	async findByValues(data: Partial<Education>): Promise<Education[] | []> {
 		return this.prismaService.client.education.findMany({
 			where: data,

@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import { TYPES } from '../../../types';
-import { Bachelor } from '@prisma/client';
 import { inject, injectable } from 'inversify';
+import { Bachelor, Student } from '@prisma/client';
+import { IEducation } from '../../education/types';
+import { IEducationRepository } from '../../education';
 import { IBachelorService } from './bachelor.service.interface';
 import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
 import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
@@ -9,7 +11,10 @@ import { BacherlorRepository } from '../repository/bachelor.repository';
 
 @injectable()
 export class BachelorService implements IBachelorService {
-	constructor(@inject(TYPES.BachelorRepository) private bachelorRepository: BacherlorRepository) {}
+	constructor(
+		@inject(TYPES.BachelorRepository) private bachelorRepository: BacherlorRepository,
+		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
+	) {}
 
 	async create(params: BachelorCreateDto): Promise<Bachelor | null> {
 		const existed = await this.bachelorRepository.findByDiplomaNumber(params.diplomaNumber);
@@ -48,16 +53,21 @@ export class BachelorService implements IBachelorService {
 		return await this.bachelorRepository.findById(id);
 	}
 
-	async findByFilter(data: Partial<Bachelor>): Promise<Bachelor[] | []> {
+	async findByFilter(data: Partial<Bachelor>): Promise<Student[] | []> {
 		const bachelorFilters = {
 			...(data.previousUniversity && { previousUniversity: data.previousUniversity }),
 			...(data.graduationYear && { graduationYear: data.graduationYear }),
 			...(data.diplomaNumber && { diplomaNumber: data.diplomaNumber }),
 			...(data.previousSpecialization && { previousSpecialization: data.previousSpecialization }),
 		};
+
 		const hasBachelorFilters = Object.keys(bachelorFilters).length > 0;
 		if (!hasBachelorFilters) return [];
-
-		return await this.bachelorRepository.findByFilters(data);
+		const bachelor = await this.bachelorRepository.findByFilters(data);
+		const bachelorIds = bachelor.map((bachelor) => bachelor.id);
+		const education = await this.educationRepository.findByBachelorsId(bachelorIds);
+		const students = education.flatMap((education: IEducation) => education.student);
+		if (students.length > 0) return students as Student[];
+		return [];
 	}
 }

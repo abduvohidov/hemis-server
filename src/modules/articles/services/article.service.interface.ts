@@ -1,4 +1,4 @@
-import { Articles } from '@prisma/client';
+import { Articles, Student } from '@prisma/client';
 
 export interface IArticleService {
 	prepareArticle: (data: Articles) => Promise<Articles | null>;
@@ -7,5 +7,5 @@ export interface IArticleService {
 	//gets
 	getAll: () => Promise<Articles[]>;
 	getById: (id: number) => Promise<Articles | null>;
-	getByValues: (filters: Partial<Articles>) => Promise<Articles[] | null>;
+	getByValues: (filters: Partial<Articles>) => Promise<Student[] | []>;
 }

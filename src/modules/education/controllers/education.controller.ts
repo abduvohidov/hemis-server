@@ -155,12 +155,16 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const education = await this.educationService.getByFilters(req.body);
-		let data: Array<Student> = [];
+		const data: Array<Student> = [];
 		if (education.length) {
 			education.forEach((education: IEducation) => {
-				data = [...data, education['student'] as Student];
+				const student = education['student'] as Student;
+				if (student) {
+					data.push(student);
+				}
 			});
 		}
+
 		this.ok(res, { data });
 	}
 }

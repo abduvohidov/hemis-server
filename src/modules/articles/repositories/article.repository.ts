@@ -46,7 +46,7 @@ export class ArticleRepository implements IArticleRepository {
 		return await this.prismaService.client.articles.findUnique({ where: { id } });
 	}
 
-	async filterByValues(filters: Partial<Articles>): Promise<Articles[] | null> {
+	async filterByValues(filters: Partial<Articles>): Promise<Articles[] | []> {
 		return await this.prismaService.client.articles.findMany({
 			where: filters,
 		});

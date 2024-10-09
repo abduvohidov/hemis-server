@@ -1,16 +1,21 @@
 import 'reflect-metadata';
 import { TYPES } from '../../../types';
-import { Faculty } from '@prisma/client';
 import { inject, injectable } from 'inversify';
+import { Faculty, Student } from '@prisma/client';
+import { IEducationRepository } from '../../education';
 import { IFacultyService } from './faculty.service.interface';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { IFaculty } from '../models/faculty.entity.interface';
 import { Faculty as FacultyEntity } from '../models/faculty.entity';
 import { FacultyRepository } from '../repository/faculty.repository';
+import { IEducation } from '../../education/types';
 
 @injectable()
 export class FacultyService implements IFacultyService {
-	constructor(@inject(TYPES.FacultyRepository) private facultyRepository: FacultyRepository) {}
+	constructor(
+		@inject(TYPES.FacultyRepository) private facultyRepository: FacultyRepository,
+		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
+	) {}
 
 	async create(params: FacultyCreateDto): Promise<IFaculty | null> {
 		const newFaculty = new FacultyEntity(params.name);
@@ -34,12 +39,16 @@ export class FacultyService implements IFacultyService {
 		return this.facultyRepository.findById(id);
 	}
 
-	async findByName(name: string): Promise<Faculty[] | null> {
-		const existed = await this.facultyRepository.findByName(name);
-		if (!existed) {
-			return null;
+	async findByName(name: string): Promise<Student[] | []> {
+		const faculties = await this.facultyRepository.findByName(name);
+		const facultiesIds = faculties?.map((faculty: Faculty) => faculty.id);
+		if (facultiesIds) {
+			const education = await this.educationRepository.findByFacultyId(facultiesIds);
+			const students = education.flatMap((education: IEducation) => education.student);
+			if (students.length > 0) return students as Student[];
+			return [];
 		}
-		return existed;
+		return [];
 	}
 
 	async update(id: number, params: Faculty): Promise<Faculty | null> {

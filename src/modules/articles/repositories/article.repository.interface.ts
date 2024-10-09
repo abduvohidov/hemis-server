@@ -7,5 +7,5 @@ export interface IArticleRepository {
 	//gets
 	findAll: () => Promise<Articles[]>;
 	findById: (id: number) => Promise<Articles | null>;
-	filterByValues: (filters: Partial<Articles>) => Promise<Articles[] | null>;
+	filterByValues: (filters: Partial<Articles>) => Promise<Articles[] | []>;
 }
