@@ -89,15 +89,7 @@ export class StudentController extends BaseController implements IStudentControl
 				path: '/update/:id',
 				method: 'put',
 				func: this.update,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				middlewares: [new AuthMiddleware(this.configService.get('SECRET'))],
 			},
 			{
 				path: '/delete/:id',

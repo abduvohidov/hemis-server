@@ -5,7 +5,7 @@ import { IUserService } from '../index';
 import { ROLES } from './../../../types';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Student, UserModel } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { UserLoginDto } from '../dto/user-login.dto';
@@ -75,31 +75,35 @@ export class UserController extends BaseController implements IUserController {
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const result = await this.userService.validateUser(req.body);
-		if (!result) {
+		const result: UserModel | Student | false = await this.userService.validateUser(req.body);
+		if (result === false) {
 			this.send(res, 422, 'This user does not exists');
 			return;
 		}
-		const email = req.body.email;
-		const user = await this.userService.getUserByEmail(email);
-		const jwt = await this.signJWT(req.body.email, this.configService.get('SECRET'));
+
+		const jwt = await this.signJWT(result.email, this.configService.get('SECRET'));
 		res.cookie('token', jwt);
-		switch (user?.role) {
-			case ROLES.admin:
-				this.ok(res, { jwt, redirectTo: 'admin' });
-				break;
-			case ROLES.director:
-				this.ok(res, { jwt, redirectTo: 'director' });
-				break;
-			case ROLES.teamLead:
-				this.ok(res, { jwt, redirectTo: 'teamLead' });
-				break;
-			case ROLES.teacher:
-				this.ok(res, { jwt, redirectTo: 'teacher' });
-				break;
-			default:
-				this.ok(res, { jwt, redirectTo: 'student' });
-				break;
+
+		if ('role' in result) {
+			switch (result.role) {
+				case ROLES.admin:
+					this.ok(res, { jwt, redirectTo: 'admin', result });
+					break;
+				case ROLES.director:
+					this.ok(res, { jwt, redirectTo: 'director', result });
+					break;
+				case ROLES.teamLead:
+					this.ok(res, { jwt, redirectTo: 'teamLead', result });
+					break;
+				case ROLES.teacher:
+					this.ok(res, { jwt, redirectTo: 'teacher', result });
+					break;
+				default:
+					this.ok(res, { jwt, redirectTo: 'student', result });
+					break;
+			}
+		} else {
+			this.ok(res, { jwt, redirectTo: 'student', result });
 		}
 	}
 

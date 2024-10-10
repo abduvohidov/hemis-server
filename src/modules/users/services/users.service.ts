@@ -1,9 +1,9 @@
 import { compare } from 'bcryptjs';
 import { TYPES } from '../../../types';
-import { UserModel } from '.prisma/client';
 import { inject, injectable } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IUsersRepository, User } from '../index';
+import { Student, UserModel } from '.prisma/client';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { IStudentRepository } from './../../students';
 import { IUserService } from './users.service.interface';
@@ -18,19 +18,18 @@ export class UserService implements IUserService {
 		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
 	) {}
 
-	async validateUser({ email, password }: UserLoginDto): Promise<boolean> {
+	async validateUser({ email, password }: UserLoginDto): Promise<Student | UserModel | false> {
 		const existedUser = await this.usersRepository.findByEmail(email);
 		const existedStudent = await this.studentRepository.findByEmail(email);
 
 		if (existedUser && existedUser.password) {
 			const isValid = await compare(password, existedUser.password);
-
-			if (isValid) return true;
+			if (isValid) return existedUser;
 		}
 
 		if (existedStudent && existedStudent.password) {
 			const isValid = await compare(password, existedStudent.password);
-			if (isValid) return true;
+			if (isValid) return existedStudent;
 		}
 
 		return false;
