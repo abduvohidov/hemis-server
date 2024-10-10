@@ -44,7 +44,6 @@ export class StudentService implements IStudentService {
 	async getAll(): Promise<Student[]> {
 		return this.studentRepository.findAll();
 	}
-
 	async update(id: number, student: Partial<Student>): Promise<Student> {
 		const existingStudent = await this.studentRepository.findById(id);
 		if (!existingStudent) {
@@ -53,7 +52,7 @@ export class StudentService implements IStudentService {
 
 		// Check if the password is included in the update data
 		if (student.password) {
-			// Recreate a StudentEntity object to hash the password
+			// Only hash and update the password if it was provided
 			const updatedStudentEntity = new StudentEntity(
 				existingStudent.lastName,
 				existingStudent.firstName,
@@ -69,7 +68,6 @@ export class StudentService implements IStudentService {
 				student.password, // Use the updated password
 			);
 
-			// Hash the new password
 			const salt = this.configService.get('SALT');
 			await updatedStudentEntity.setPassword(student.password, Number(salt));
 
