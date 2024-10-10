@@ -9,9 +9,8 @@ import { injectable, inject } from 'inversify';
 import { ROLES, TYPES } from './../../../types';
 import { IConfigService } from '../../../config';
 import { Request, Response, NextFunction } from 'express';
-import { StudentRegisterDto } from '../dto/student-register.dto';
 import { IStudentController } from './student.controller.interface';
-import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
+import { AuthMiddleware, BaseController, VerifyRole } from '../../../common';
 
 injectable();
 export class StudentController extends BaseController implements IStudentController {
@@ -194,12 +193,13 @@ export class StudentController extends BaseController implements IStudentControl
 			return next(new HTTPError(422, 'Такой магистрант не существует'));
 		}
 
-		await this.studentService.update(id, data);
-
+		const student = await this.studentService.update(id, data);
+		const token = this.signJWT(student.email, this.configService.get('SECRET'));
+		res.cookie('token', token);
 		this.ok(res, {
 			status: true,
 			message: 'Магистрант успешно обновлено',
-			data: data,
+			data: student,
 		});
 	}
 

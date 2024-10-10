@@ -7,7 +7,7 @@ export class AuthMiddleware implements IMiddleware {
 
 	execute(request: Request, response: Response, next: NextFunction): void {
 		try {
-			const token = request.headers['token'] as string;
+			const token = request.headers['token'] || request.cookies?.token;
 			if (token) {
 				verify(token, this.secret, (error: any, payload: any) => {
 					if (error) {

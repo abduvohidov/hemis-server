@@ -51,6 +51,32 @@ export class StudentService implements IStudentService {
 			throw new Error(`Студент с идентификатором ${id} не найден.`);
 		}
 
+		// Check if the password is included in the update data
+		if (student.password) {
+			// Recreate a StudentEntity object to hash the password
+			const updatedStudentEntity = new StudentEntity(
+				existingStudent.lastName,
+				existingStudent.firstName,
+				existingStudent.middleName,
+				existingStudent.passportNumber,
+				existingStudent.jshshr,
+				existingStudent.dateOfBirth,
+				existingStudent.gender,
+				existingStudent.nationality,
+				existingStudent.email,
+				existingStudent.phoneNumber,
+				existingStudent.parentPhoneNumber,
+				student.password, // Use the updated password
+			);
+
+			// Hash the new password
+			const salt = this.configService.get('SALT');
+			await updatedStudentEntity.setPassword(student.password, Number(salt));
+
+			// Replace the plaintext password with the hashed one
+			student.password = updatedStudentEntity.password;
+		}
+
 		return this.studentRepository.update(id, student);
 	}
 

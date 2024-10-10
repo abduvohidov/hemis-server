@@ -4,6 +4,7 @@ import { Server } from 'http';
 import { TYPES } from './types';
 import { json } from 'body-parser';
 import { IConfigService } from './config';
+import cookieParser from 'cookie-parser';
 import { IExeptionFilter } from './errors';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
@@ -47,6 +48,7 @@ export class App {
 			}),
 		);
 		this.app.use(json());
+		this.app.use(cookieParser());
 	}
 
 	useRoutes(): void {
