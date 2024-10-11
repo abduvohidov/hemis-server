@@ -115,9 +115,12 @@ export class FacultyController extends BaseController implements IFacultyControl
 		next: NextFunction,
 	): Promise<void> {
 		const data = await this.facultyService.create(body);
+		console.log(data);
+
 		if (!data) {
 			return next(new HTTPError(422, 'Такой факультет уже существует'));
 		}
+
 		this.ok(res, {
 			status: true,
 			message: 'Факультет успешно создано',

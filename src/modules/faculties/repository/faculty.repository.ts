@@ -11,6 +11,7 @@ export class FacultyRepository implements IFacultyRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(params: IFaculty): Promise<IFaculty> {
+		console.log('params: ' + params);
 		return await this.prismaService.client.faculty.create({
 			data: {
 				name: params.name,
