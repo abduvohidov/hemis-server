@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { TYPES } from '../../../types';
 import { inject, injectable } from 'inversify';
-import { Bachelor, Student } from '@prisma/client';
+import { Bachelor, Master } from '@prisma/client';
 import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
 import { IBachelorService } from './bachelor.service.interface';
@@ -53,7 +53,7 @@ export class BachelorService implements IBachelorService {
 		return await this.bachelorRepository.findById(id);
 	}
 
-	async findByFilter(data: Partial<Bachelor>): Promise<Student[] | []> {
+	async findByFilter(data: Partial<Bachelor>): Promise<Master[] | []> {
 		const bachelorFilters = {
 			...(data.previousUniversity && { previousUniversity: data.previousUniversity }),
 			...(data.graduationYear && { graduationYear: data.graduationYear }),
@@ -66,8 +66,8 @@ export class BachelorService implements IBachelorService {
 		const bachelor = await this.bachelorRepository.findByFilters(data);
 		const bachelorIds = bachelor.map((bachelor) => bachelor.id);
 		const education = await this.educationRepository.findByBachelorsId(bachelorIds);
-		const students = education.flatMap((education: IEducation) => education.student);
-		if (students.length > 0) return students as Student[];
+		const masters = education.flatMap((education: IEducation) => education.master);
+		if (masters.length > 0) return masters as Master[];
 		return [];
 	}
 }

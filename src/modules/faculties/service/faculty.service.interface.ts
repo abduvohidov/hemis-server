@@ -1,4 +1,4 @@
-import { Faculty, Student } from '@prisma/client';
+import { Faculty, Master } from '@prisma/client';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { IFaculty } from '../models/faculty.entity.interface';
 
@@ -8,5 +8,5 @@ export interface IFacultyService {
 	update: (id: number, params: Faculty) => Promise<Faculty | null>;
 	delete: (id: number) => Promise<Faculty | null>;
 	findById: (id: number) => Promise<Faculty | null>;
-	findByName: (name: string) => Promise<Student[] | []>;
+	findByName: (name: string) => Promise<Master[] | []>;
 }

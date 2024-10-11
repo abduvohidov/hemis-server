@@ -1,7 +1,7 @@
 import { TYPES } from '../../../types';
 import { Address } from '@prisma/client';
+import { MasterRepository } from '../../masters';
 import { inject, injectable } from 'inversify';
-import { StudentRepository } from './../../students';
 import { AddressCreateDto } from '../dto/address-create.dto';
 import { IAddress } from '../model/address.entity.interface';
 import { IAddressService } from './address.service.interface';
@@ -12,7 +12,7 @@ import { AddressRepository } from '../repository/address.repository';
 export class AddressService implements IAddressService {
 	constructor(
 		@inject(TYPES.AddressRepository) private addressRepository: AddressRepository,
-		@inject(TYPES.StudentRepository) private studentRepository: StudentRepository,
+		@inject(TYPES.MasterRepository) private masterRepository: MasterRepository,
 	) {}
 
 	async create(address: AddressCreateDto): Promise<IAddress | null> {
@@ -20,11 +20,11 @@ export class AddressService implements IAddressService {
 			address.country,
 			address.region,
 			address.address,
-			address.studentId,
+			address.masterId,
 		);
 
-		const existedStudent = await this.studentRepository.findById(address.studentId);
-		if (!existedStudent) {
+		const existedMaster = await this.masterRepository.findById(address.masterId);
+		if (!existedMaster) {
 			return null;
 		}
 
@@ -50,7 +50,7 @@ export class AddressService implements IAddressService {
 			...(data.address && { address: data.address }),
 			...(data.country && { country: data.country }),
 			...(data.region && { region: data.region }),
-			...(data.studentId && { studentId: data.studentId }),
+			...(data.masterId && { masterId: data.masterId }),
 		};
 
 		const hasAddressFilters = Object.keys(addressFilters).length > 0;

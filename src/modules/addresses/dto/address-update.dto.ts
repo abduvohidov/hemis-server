@@ -15,5 +15,5 @@ export class AddressUpdateDto {
 
 	@IsNotEmpty()
 	@IsNumber()
-	readonly studentId: number;
+	readonly masterId: number;
 }

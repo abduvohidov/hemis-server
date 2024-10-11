@@ -1,8 +1,8 @@
 import { TYPES } from '../../../types';
 import { Education } from '@prisma/client';
 import { inject, injectable } from 'inversify';
+import { IMasterRepository } from './../../masters';
 import { IArticleRepository } from './../../articles';
-import { IStudentRepository } from './../../students';
 import { IFacultyRepository } from './../../faculties';
 import { IBachelorRepository } from './../../bachelors';
 import { IEducationService } from './education.service.interface';
@@ -15,20 +15,20 @@ export class EducationService implements IEducationService {
 		@inject(TYPES.BachelorRepository) private bachelorRepository: IBachelorRepository,
 		@inject(TYPES.ArticleRepository) private articleRepository: IArticleRepository,
 		@inject(TYPES.FacultyRepository) private facultyRepository: IFacultyRepository,
-		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
+		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
 	) {}
 
 	async prepareEducation(data: CreateEducationDto): Promise<Education | null> {
 		const isBachelorExists = await this.bachelorRepository.findById(data.bachelorId);
 		const isArticleExists = await this.articleRepository.findById(data.articlesId);
 		const isFacultyExists = await this.facultyRepository.findById(data.facultyId);
-		const isStudentExists = await this.studentRepository.findById(data.studentId);
-		const isDuplicate = await this.educationRepository.findByStudentId(data.studentId);
+		const isMasterExists = await this.masterRepository.findById(data.masterId);
+		const isDuplicate = await this.educationRepository.findByMasterId(data.masterId);
 		if (
 			isDuplicate ||
 			!isArticleExists ||
 			!isFacultyExists ||
-			!isStudentExists ||
+			!isMasterExists ||
 			!isBachelorExists
 		) {
 			return null;
@@ -54,7 +54,7 @@ export class EducationService implements IEducationService {
 
 	async getByFilters(data: Partial<Education>): Promise<Education[] | []> {
 		const educationFilters = {
-			...(data.studentId && { studentId: data.studentId }),
+			...(data.masterId && { masterId: data.masterId }),
 			...(data.bachelorId && { bachelorId: data.bachelorId }),
 			...(data.currentSpecialization && { currentSpecialization: data.currentSpecialization }),
 			...(data.facultyId && { facultyId: data.facultyId }),

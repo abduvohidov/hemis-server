@@ -5,7 +5,7 @@ export class Address implements IAddress {
 		private readonly _country: string,
 		private readonly _region: string,
 		private readonly _address: string,
-		private readonly _studentId: number,
+		private readonly _masterId: number,
 	) {}
 
 	get country(): string {
@@ -20,7 +20,7 @@ export class Address implements IAddress {
 		return this._address;
 	}
 
-	get studentId(): number {
-		return this._studentId;
+	get masterId(): number {
+		return this._masterId;
 	}
 }

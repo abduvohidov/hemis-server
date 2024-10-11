@@ -2,21 +2,20 @@ import fs from 'fs';
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { ILogger } from '../../../logger';
-import { IStudentService } from '../index';
-import { HTTPError } from '../../../errors';
+import { IMasterService } from '../index';
 import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
-import { ROLES, TYPES } from './../../../types';
+import { ROLES, TYPES } from '../../../types';
 import { IConfigService } from '../../../config';
 import { Request, Response, NextFunction } from 'express';
-import { IStudentController } from './student.controller.interface';
+import { IMasterController } from './master.controller.interface';
 import { AuthMiddleware, BaseController, VerifyRole } from '../../../common';
 
 injectable();
-export class StudentController extends BaseController implements IStudentController {
+export class MasterController extends BaseController implements IMasterController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
-		@inject(TYPES.StudentService) private studentService: IStudentService,
+		@inject(TYPES.MasterService) private masterService: IMasterService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
@@ -26,7 +25,7 @@ export class StudentController extends BaseController implements IStudentControl
 				method: 'post',
 				func: this.create,
 				middlewares: [
-					// new ValidateMiddleware(StudentRegisterDto),
+					// new ValidateMiddleware(MasterRegisterDto),
 					// new AuthMiddleware(this.configService.get('SECRET')),
 					// new VerifyRole(new PrismaClient(), [
 					// 	ROLES.admin,
@@ -40,15 +39,15 @@ export class StudentController extends BaseController implements IStudentControl
 				path: '/all',
 				method: 'get',
 				func: this.getAll,
-				// middlewares: [
-				// 	new AuthMiddleware(this.configService.get('SECRET')),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/email',
@@ -108,23 +107,24 @@ export class StudentController extends BaseController implements IStudentControl
 				path: '/filter',
 				method: 'post',
 				func: this.getByFilters,
-				// middlewares: [
-				// 	new AuthMiddleware(this.configService.get('SECRET')),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}
 
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.studentService.create(req.body);
+		const data = await this.masterService.create(req.body);
 		if (!data) {
-			return next(new HTTPError(422, 'Такой магистрант уже существует'));
+			this.send(res, 422, 'Такой магистрант уже существует');
+			return;
 		}
 		this.ok(res, {
 			status: true,
@@ -134,12 +134,7 @@ export class StudentController extends BaseController implements IStudentControl
 	}
 
 	async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.studentService.getAll();
-
-		if (!data) {
-			return next(new HTTPError(422, 'Магистранты не существует'));
-		}
-
+		const data = await this.masterService.getAll();
 		this.ok(res, {
 			status: true,
 			message: 'Магистранты успешно получено',
@@ -148,10 +143,11 @@ export class StudentController extends BaseController implements IStudentControl
 	}
 
 	async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.studentService.getByEmail(req.body.email);
+		const data = await this.masterService.getByEmail(req.body.email);
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такой магистрант не существует'));
+			this.send(res, 422, 'Такой магистрант не существует');
+			return;
 		}
 
 		this.ok(res, {
@@ -163,10 +159,11 @@ export class StudentController extends BaseController implements IStudentControl
 
 	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const { id } = req.params;
-		const data = await this.studentService.getById(Number(id));
+		const data = await this.masterService.getById(Number(id));
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такой магистрант не существует'));
+			this.send(res, 422, 'Такой магистрант не существует');
+			return;
 		}
 
 		this.ok(res, {
@@ -176,7 +173,7 @@ export class StudentController extends BaseController implements IStudentControl
 		});
 	}
 	async getByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.studentService.getByFilters(req.body);
+		const data = await this.masterService.getByFilters(req.body);
 
 		this.ok(res, {
 			status: true,
@@ -190,10 +187,11 @@ export class StudentController extends BaseController implements IStudentControl
 		const id = Number(req.params.id);
 
 		if (!data) {
-			return next(new HTTPError(422, 'Такой магистрант не существует'));
+			this.send(res, 422, 'Пж проверьте данные');
+			return;
 		}
 
-		const student = await this.studentService.update(id, data);
+		const student = await this.masterService.update(id, data);
 		const token = this.signJWT(student.email, this.configService.get('SECRET'));
 		res.cookie('token', token);
 		this.ok(res, {
@@ -207,10 +205,11 @@ export class StudentController extends BaseController implements IStudentControl
 		const id = req.params.id;
 
 		if (!id) {
-			return next(new HTTPError(422, 'Такой магистрант не существует'));
+			this.send(res, 422, 'Такой магистрант не существует');
+			return;
 		}
 
-		await this.studentService.delete(Number(id));
+		await this.masterService.delete(Number(id));
 		this.ok(res, {
 			status: true,
 			message: 'Магистрант успешно удалено',
@@ -219,8 +218,8 @@ export class StudentController extends BaseController implements IStudentControl
 
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const students = await this.studentService.getAll();
-			const filePath = await this.studentService.generateXlsxFile(students);
+			const students = await this.masterService.getAll();
+			const filePath = await this.masterService.generateXlsxFile(students);
 
 			res.download(filePath, (err) => {
 				if (err) {

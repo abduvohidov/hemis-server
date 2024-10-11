@@ -1,5 +1,5 @@
-import { Address, Student } from '@prisma/client';
+import { Address, Master } from '@prisma/client';
 
 export interface IAddress extends Address {
-	student?: Student;
+	master?: Master;
 }

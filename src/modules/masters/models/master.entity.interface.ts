@@ -1,4 +1,4 @@
-export interface IStudentEntity {
+export interface IMasterEntity {
 	lastName: string;
 	firstName: string;
 	middleName: string;

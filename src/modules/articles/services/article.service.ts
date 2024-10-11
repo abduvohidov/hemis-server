@@ -1,7 +1,7 @@
 import { TYPES } from './../../../types';
 import { IArticleRepository } from '../index';
 import { inject, injectable } from 'inversify';
-import { Articles, Student } from '@prisma/client';
+import { Articles, Master } from '@prisma/client';
 import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
 import { IArticleService } from './article.service.interface';
@@ -33,7 +33,7 @@ export class ArticleService implements IArticleService {
 	async getById(id: number): Promise<Articles | null> {
 		return await this.articleRepository.findById(id);
 	}
-	async getByValues(filters: Partial<Articles>): Promise<Student[] | []> {
+	async getByValues(filters: Partial<Articles>): Promise<Master[] | []> {
 		const articleFilters = {
 			...(filters.firstArticle && { firstArticle: filters.firstArticle }),
 			...(filters.firstArticleDate && { firstArticleDate: filters.firstArticleDate }),
@@ -47,8 +47,8 @@ export class ArticleService implements IArticleService {
 		const articles = await this.articleRepository.filterByValues(filters);
 		const articlesId = articles?.map((article: Articles) => article.id);
 		const education = await this.educationRepository.findByArticlesId(articlesId);
-		const students = education.flatMap((education: IEducation) => education.student);
-		if (students.length > 0) return students as Student[];
+		const masters = education.flatMap((education: IEducation) => education.master);
+		if (masters.length > 0) return masters as Master[];
 		return [];
 	}
 }

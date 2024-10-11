@@ -14,13 +14,13 @@ import {
 	UsersRepository,
 } from './modules/users';
 import {
-	IStudentController,
-	IStudentRepository,
-	IStudentService,
-	StudentController,
-	StudentRepository,
-	StudentService,
-} from './modules/students';
+	IMasterController,
+	IMasterRepository,
+	IMasterService,
+	MasterController,
+	MasterRepository,
+	MasterService,
+} from './modules/masters';
 import {
 	AddressController,
 	AddressRepository,
@@ -77,9 +77,9 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IUserController>(TYPES.UserController).to(UserController).inSingletonScope();
 	bind<IUserService>(TYPES.UserService).to(UserService);
 
-	bind<IStudentRepository>(TYPES.StudentRepository).to(StudentRepository).inSingletonScope();
-	bind<IStudentService>(TYPES.StudentService).to(StudentService).inSingletonScope();
-	bind<IStudentController>(TYPES.StudentController).to(StudentController).inSingletonScope();
+	bind<IMasterRepository>(TYPES.MasterRepository).to(MasterRepository).inSingletonScope();
+	bind<IMasterService>(TYPES.MasterService).to(MasterService).inSingletonScope();
+	bind<IMasterController>(TYPES.MasterController).to(MasterController).inSingletonScope();
 
 	bind<IAddressRepository>(TYPES.AddressRepository).to(AddressRepository).inSingletonScope();
 	bind<IAddressService>(TYPES.AddressService).to(AddressService).inSingletonScope();
@@ -100,7 +100,6 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IArticleRepository>(TYPES.ArticleRepository).to(ArticleRepository).inSingletonScope();
 	bind<IArticleService>(TYPES.ArticleService).to(ArticleService).inSingletonScope();
 	bind<IArticleController>(TYPES.ArticleController).to(ArticleController).inSingletonScope();
-
 
 	bind<App>(TYPES.Application).to(App);
 });

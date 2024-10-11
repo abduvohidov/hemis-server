@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 import { ROLES, TYPES } from './../../../types';
 import { BaseController } from '../../../common';
 import { IConfigService } from './../../../config';
-import { PrismaClient, Student } from '@prisma/client';
+import { PrismaClient, Master } from '@prisma/client';
 import { NextFunction, Response, Request } from 'express';
 import { CreateEducationDto, UpdateEducationDto } from '../index';
 import { IEducationController } from './education.controller.interface';
@@ -97,15 +97,15 @@ export class EducationController extends BaseController implements IEducationCon
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilters,
-				// middlewares: [
-				// 	new AuthMiddleware(this.configService.get('SECRET')),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}
@@ -155,12 +155,12 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const education = await this.educationService.getByFilters(req.body);
-		const data: Array<Student> = [];
+		const data: Array<Master> = [];
 		if (education.length) {
 			education.forEach((education: IEducation) => {
-				const student = education['student'] as Student;
-				if (student) {
-					data.push(student);
+				const master = education['master'] as Master;
+				if (master) {
+					data.push(master);
 				}
 			});
 		}

@@ -27,14 +27,14 @@ export class EducationRepository implements IEducationRepository {
 	async update(id: number, data: UpdateEducationDto): Promise<Education | null> {
 		return this.prismaService.client.education.update({
 			include: {
-				student: true,
+				master: true,
 				bachelor: true,
 				faculty: true,
 				articles: true,
 			},
 			where: { id },
 			data: {
-				...(data.studentId && { studentId: data.studentId }),
+				...(data.masterId && { masterId: data.masterId }),
 				...(data.bachelorId && { bachelorId: data.bachelorId }),
 				...(data.currentSpecialization && { currentSpecialization: data.currentSpecialization }),
 				...(data.facultyId && { facultyId: data.facultyId }),
@@ -60,7 +60,7 @@ export class EducationRepository implements IEducationRepository {
 	async findAll(): Promise<Education[]> {
 		return this.prismaService.client.education.findMany({
 			include: {
-				student: true,
+				master: true,
 				bachelor: true,
 				faculty: true,
 				articles: true,
@@ -72,16 +72,16 @@ export class EducationRepository implements IEducationRepository {
 		return this.prismaService.client.education.findUnique({
 			where: { id },
 			include: {
-				student: true,
+				master: true,
 				bachelor: true,
 				faculty: true,
 				articles: true,
 			},
 		});
 	}
-	async findByStudentId(studentId: number): Promise<Education | null> {
+	async findByMasterId(masterId: number): Promise<Education | null> {
 		return this.prismaService.client.education.findFirst({
-			where: { studentId },
+			where: { masterId },
 		});
 	}
 
@@ -91,7 +91,7 @@ export class EducationRepository implements IEducationRepository {
 				facultyId: { in: ids },
 			},
 			include: {
-				student: true,
+				master: true,
 			},
 		});
 	}
@@ -101,7 +101,7 @@ export class EducationRepository implements IEducationRepository {
 				bachelorId: { in: ids },
 			},
 			include: {
-				student: true,
+				master: true,
 			},
 		});
 	}
@@ -111,7 +111,7 @@ export class EducationRepository implements IEducationRepository {
 				articlesId: { in: ids },
 			},
 			include: {
-				student: true,
+				master: true,
 			},
 		});
 	}
@@ -120,7 +120,7 @@ export class EducationRepository implements IEducationRepository {
 		return this.prismaService.client.education.findMany({
 			where: data,
 			include: {
-				student: true,
+				master: true,
 				bachelor: true,
 				faculty: true,
 				articles: true,

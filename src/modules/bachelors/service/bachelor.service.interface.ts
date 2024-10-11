@@ -1,4 +1,4 @@
-import { Bachelor, Student } from '@prisma/client';
+import { Bachelor, Master } from '@prisma/client';
 import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
 import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
 
@@ -10,5 +10,5 @@ export interface IBachelorService {
 	//find
 	find: () => Promise<Bachelor[]>;
 	findById: (id: number) => Promise<Bachelor | null>;
-	findByFilter: (data: Partial<Bachelor>) => Promise<Student[] | []>;
+	findByFilter: (data: Partial<Bachelor>) => Promise<Master[] | []>;
 }

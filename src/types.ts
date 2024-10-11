@@ -11,11 +11,11 @@ export const TYPES = {
 	UserRepository: Symbol.for('UserRepository'),
 	UserController: Symbol.for('UserController'),
 
-	//Student
-	StudentModel: Symbol.for('StudentModel'),
-	StudentService: Symbol.for('StudentService'),
-	StudentRepository: Symbol.for('StudentRepository'),
-	StudentController: Symbol.for('StudentController'),
+	//Masters
+	MasterModel: Symbol.for('MasterModel'),
+	MasterService: Symbol.for('MasterService'),
+	MasterRepository: Symbol.for('MasterRepository'),
+	MasterController: Symbol.for('MasterController'),
 
 	//Address
 	AddressModel: Symbol.for('AddressModel'),

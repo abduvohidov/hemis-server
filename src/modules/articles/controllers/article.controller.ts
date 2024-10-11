@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { Student } from '@prisma/client';
 import { ILogger } from './../../../logger';
 import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
@@ -101,15 +100,15 @@ export class ArticleController extends BaseController implements IArticleControl
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilters,
-				// middlewares: [
-				// 	new AuthMiddleware(this.secret4Token),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.secret4Token),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 		]);
 	}

@@ -4,29 +4,29 @@ CREATE TABLE "UserModel" (
     "name" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT,
+    "password" TEXT NOT NULL,
     "role" TEXT NOT NULL,
 
     CONSTRAINT "UserModel_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Student" (
+CREATE TABLE "Master" (
     "id" SERIAL NOT NULL,
     "lastName" TEXT NOT NULL,
     "firstName" TEXT NOT NULL,
-    "middleName" TEXT,
+    "middleName" TEXT NOT NULL,
     "passportNumber" TEXT NOT NULL,
     "jshshr" TEXT NOT NULL,
     "dateOfBirth" TIMESTAMP(3) NOT NULL,
     "gender" TEXT NOT NULL,
     "nationality" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "parentPhoneNumber" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
 
-    CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Master_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -35,7 +35,7 @@ CREATE TABLE "Address" (
     "country" TEXT NOT NULL,
     "region" TEXT NOT NULL,
     "address" TEXT NOT NULL,
-    "studentId" INTEGER NOT NULL,
+    "masterId" INTEGER NOT NULL,
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
@@ -43,7 +43,7 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "Education" (
     "id" SERIAL NOT NULL,
-    "studentId" INTEGER NOT NULL,
+    "masterId" INTEGER NOT NULL,
     "bachelorId" INTEGER NOT NULL,
     "currentSpecialization" TEXT NOT NULL,
     "facultyId" INTEGER NOT NULL,
@@ -101,19 +101,19 @@ CREATE TABLE "Articles" (
 CREATE UNIQUE INDEX "UserModel_email_key" ON "UserModel"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
+CREATE UNIQUE INDEX "Master_passportNumber_key" ON "Master"("passportNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Address_studentId_key" ON "Address"("studentId");
+CREATE UNIQUE INDEX "Master_jshshr_key" ON "Master"("jshshr");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Education_studentId_key" ON "Education"("studentId");
+CREATE UNIQUE INDEX "Master_email_key" ON "Master"("email");
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Address" ADD CONSTRAINT "Address_masterId_fkey" FOREIGN KEY ("masterId") REFERENCES "Master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Education" ADD CONSTRAINT "Education_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Education" ADD CONSTRAINT "Education_masterId_fkey" FOREIGN KEY ("masterId") REFERENCES "Master"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Education" ADD CONSTRAINT "Education_bachelorId_fkey" FOREIGN KEY ("bachelorId") REFERENCES "Bachelor"("id") ON DELETE CASCADE ON UPDATE CASCADE;

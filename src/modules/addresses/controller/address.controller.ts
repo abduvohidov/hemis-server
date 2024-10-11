@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { IAddress } from '../types';
-import { Student } from '../../students';
+import { Master } from '../../masters';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
 import { ROLES, TYPES } from '../../../types';
@@ -69,15 +69,15 @@ export class AddressController extends BaseController implements IAddressControl
 				path: '/filter',
 				method: 'post',
 				func: this.findByFilter,
-				// middlewares: [
-				// 	new AuthMiddleware(this.configService.get('SECRET')),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/update/:id',
@@ -158,12 +158,12 @@ export class AddressController extends BaseController implements IAddressControl
 
 	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
 		const address = await this.addressService.findByFilters(body);
-		const data: Array<Student> = [];
+		const data: Array<Master> = [];
 		if (address.length) {
 			address.forEach((address: IAddress) => {
-				const student = address['student'] as unknown as Student;
-				if (student) {
-					data.push(student);
+				const master = address['master'] as unknown as Master;
+				if (master) {
+					data.push(master);
 				}
 			});
 		}

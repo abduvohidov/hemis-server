@@ -1,7 +1,7 @@
 import { compare, hash } from 'bcryptjs';
-import { IStudentEntity } from './student.entity.interface';
-import { HTTPError } from '../../../errors';
-export class Student implements IStudentEntity {
+import { IMasterEntity } from './master.entity.interface';
+
+export class Master implements IMasterEntity {
 	private _password: string;
 
 	constructor(

@@ -3,19 +3,19 @@ import cors from 'cors';
 import { Server } from 'http';
 import { TYPES } from './types';
 import { json } from 'body-parser';
-import { IConfigService } from './config';
 import cookieParser from 'cookie-parser';
+import { IConfigService } from './config';
 import { IExeptionFilter } from './errors';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { UserController } from './modules/users';
 import { ILogger } from './logger/logger.interface';
-import { AddressController } from './modules/addresses';
-import { EducationController } from './modules/education';
-import { FacultyController } from './modules/faculties';
-import { StudentController } from './modules/students';
-import { BachelorController } from './modules/bachelors';
+import { MasterController } from './modules/masters';
 import { ArticleController } from './modules/articles';
+import { AddressController } from './modules/addresses';
+import { FacultyController } from './modules/faculties';
+import { BachelorController } from './modules/bachelors';
+import { EducationController } from './modules/education';
 
 @injectable()
 export class App {
@@ -28,7 +28,7 @@ export class App {
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExeptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UserController) private userController: UserController,
-		@inject(TYPES.StudentController) private studentController: StudentController,
+		@inject(TYPES.MasterController) private masterController: MasterController,
 		@inject(TYPES.AddressController) private addressController: AddressController,
 		@inject(TYPES.EducationController) private educationController: EducationController,
 		@inject(TYPES.FacultyController) private facultyController: FacultyController,
@@ -53,7 +53,7 @@ export class App {
 
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
-		this.app.use('/students', this.studentController.router);
+		this.app.use('/masters', this.masterController.router);
 		this.app.use('/addresses', this.addressController.router);
 		this.app.use('/educations', this.educationController.router);
 		this.app.use('/faculties', this.facultyController.router);

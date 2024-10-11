@@ -12,38 +12,38 @@ export class AddressRepository implements IAddressRepository {
 
 	async create(address: IAddress): Promise<IAddress> {
 		return await this.prismaService.client.address.create({
-			include: { student: true },
+			include: { master: true },
 			data: {
 				country: address.country,
 				region: address.region,
 				address: address.address,
-				studentId: address.studentId,
+				masterId: address.masterId,
 			},
 		});
 	}
 
 	async find(): Promise<Address[]> {
 		return await this.prismaService.client.address.findMany({
-			include: { student: true },
+			include: { master: true },
 		});
 	}
 
 	async findById(id: number): Promise<Address | null> {
 		return await this.prismaService.client.address.findFirst({
-			include: { student: true },
+			include: { master: true },
 			where: { id },
 		});
 	}
 	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
 		return await this.prismaService.client.address.findMany({
-			include: { student: true },
+			include: { master: true },
 			where: data,
 		});
 	}
 
 	async update(id: number, address: Partial<Address>): Promise<Address> {
 		return await this.prismaService.client.address.update({
-			include: { student: true },
+			include: { master: true },
 			where: { id },
 			data: address,
 		});

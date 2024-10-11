@@ -1,5 +1,5 @@
-import { Education, Student } from '@prisma/client';
+import { Education, Master } from '@prisma/client';
 
 export interface IEducation extends Education {
-	student?: Student;
+	master?: Master;
 }

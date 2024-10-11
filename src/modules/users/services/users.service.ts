@@ -3,9 +3,9 @@ import { TYPES } from '../../../types';
 import { inject, injectable } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IUsersRepository, User } from '../index';
-import { Student, UserModel } from '.prisma/client';
+import { Master, UserModel } from '.prisma/client';
 import { UserLoginDto } from '../dto/user-login.dto';
-import { IStudentRepository } from './../../students';
+import { IMasterRepository } from './../../masters';
 import { IUserService } from './users.service.interface';
 import { UserUpdateDto } from './../dto/user-update.dto';
 import { UserRegisterDto } from '../dto/user-register.dto';
@@ -15,21 +15,21 @@ export class UserService implements IUserService {
 	constructor(
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UserRepository) private usersRepository: IUsersRepository,
-		@inject(TYPES.StudentRepository) private studentRepository: IStudentRepository,
+		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
 	) {}
 
-	async validateUser({ email, password }: UserLoginDto): Promise<Student | UserModel | false> {
+	async validateUser({ email, password }: UserLoginDto): Promise<Master | UserModel | false> {
 		const existedUser = await this.usersRepository.findByEmail(email);
-		const existedStudent = await this.studentRepository.findByEmail(email);
+		const existedMaster = await this.masterRepository.findByEmail(email);
 
 		if (existedUser && existedUser.password) {
 			const isValid = await compare(password, existedUser.password);
 			if (isValid) return existedUser;
 		}
 
-		if (existedStudent && existedStudent.password) {
-			const isValid = await compare(password, existedStudent.password);
-			if (isValid) return existedStudent;
+		if (existedMaster && existedMaster.password) {
+			const isValid = await compare(password, existedMaster.password);
+			if (isValid) return existedMaster;
 		}
 
 		return false;

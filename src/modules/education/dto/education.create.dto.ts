@@ -3,7 +3,7 @@ import { IsInt, IsString, IsNotEmpty } from 'class-validator';
 export class CreateEducationDto {
 	@IsInt()
 	@IsNotEmpty()
-	studentId: number;
+	masterId: number;
 
 	@IsInt()
 	@IsNotEmpty()

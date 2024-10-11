@@ -3,7 +3,7 @@ import { IsInt, IsString, IsOptional } from 'class-validator';
 export class UpdateEducationDto {
 	@IsInt()
 	@IsOptional()
-	studentId?: number;
+	masterId?: number;
 
 	@IsInt()
 	@IsOptional()

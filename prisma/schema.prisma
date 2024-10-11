@@ -12,11 +12,11 @@ model UserModel {
   name     String
   lastName String
   email    String  @unique
-  password String?
+  password String
   role     String
 }
 
-model Student {
+model Master {
   id                Int      @id @default(autoincrement())
   lastName          String
   firstName         String
@@ -41,15 +41,15 @@ model Address {
   country   String
   region    String
   address   String
-  studentId Int
+  masterId Int
 
   // References
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  master Master @relation(fields: [masterId], references: [id], onDelete: Cascade)
 }
 
 model Education {
   id                    Int    @id @default(autoincrement())
-  studentId             Int
+  masterId             Int
   bachelorId            Int
   currentSpecialization String
   facultyId             Int
@@ -67,9 +67,9 @@ model Education {
   thesisTopic           String
   articlesId            Int
   academicLeave         String
-
+  
   // References
-  student  Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  master  Master  @relation(fields: [masterId], references: [id], onDelete: Cascade)
   bachelor Bachelor @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
   faculty  Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
   articles Articles @relation(fields: [articlesId], references: [id], onDelete: Cascade)

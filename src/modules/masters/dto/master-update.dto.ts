@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, IsDate, Length } from 'class-validator';
 
-export class StudentRegisterDto {
+export class MasterUpdateDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly lastName: string;
@@ -9,6 +9,7 @@ export class StudentRegisterDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly firstName: string;
+
 	@IsNotEmpty()
 	@IsString()
 	readonly middleName: string;

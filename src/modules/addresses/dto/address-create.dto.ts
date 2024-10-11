@@ -15,5 +15,5 @@ export class AddressCreateDto {
 
 	@IsNotEmpty()
 	@IsNumber()
-	readonly studentId: number;
+	readonly masterId: number;
 }

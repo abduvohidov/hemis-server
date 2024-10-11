@@ -9,7 +9,7 @@ export interface IEducationRepository {
 	//gets
 	findAll: () => Promise<Education[]>;
 	findById: (id: number) => Promise<Education | null>;
-	findByStudentId: (studentId: number) => Promise<Education | null>;
+	findByMasterId: (masterId: number) => Promise<Education | null>;
 	findByFacultyId: (ids: number[]) => Promise<Education[] | []>;
 	findByBachelorsId: (ids: number[]) => Promise<Education[] | []>;
 	findByArticlesId: (ids: number[]) => Promise<Education[] | []>;

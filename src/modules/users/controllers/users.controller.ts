@@ -5,12 +5,12 @@ import { IUserService } from '../index';
 import { ROLES } from './../../../types';
 import { ILogger } from '../../../logger';
 import { HTTPError } from '../../../errors';
-import { PrismaClient, Student, UserModel } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { UserLoginDto } from '../dto/user-login.dto';
 import { NextFunction, Request, Response } from 'express';
 import { IUserController } from './users.controller.interface';
+import { PrismaClient, Master, UserModel } from '@prisma/client';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 
 @injectable()
@@ -75,7 +75,7 @@ export class UserController extends BaseController implements IUserController {
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const result: UserModel | Student | false = await this.userService.validateUser(req.body);
+		const result: UserModel | Master | false = await this.userService.validateUser(req.body);
 		if (result === false) {
 			this.send(res, 422, 'This user does not exists');
 			return;
@@ -99,11 +99,11 @@ export class UserController extends BaseController implements IUserController {
 					this.ok(res, { jwt, redirectTo: 'teacher', result });
 					break;
 				default:
-					this.ok(res, { jwt, redirectTo: 'student', result });
+					this.ok(res, { jwt, redirectTo: 'master', result });
 					break;
 			}
 		} else {
-			this.ok(res, { jwt, redirectTo: 'student', result });
+			this.ok(res, { jwt, redirectTo: 'master', result });
 		}
 	}
 

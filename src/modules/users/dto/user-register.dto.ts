@@ -18,6 +18,6 @@ export class UserRegisterDto {
 	lastName: string;
 
 	@IsString({ message: 'Не указано роль' })
-	@IsIn(['admin', 'director', 'teamLead', 'teacher', 'student'], { message: 'Недопустимая роль' })
+	@IsIn(['admin', 'director', 'teamLead', 'teacher', 'master'], { message: 'Недопустимая роль' })
 	role: string;
 }
