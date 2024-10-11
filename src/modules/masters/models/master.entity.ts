@@ -72,6 +72,8 @@ export class Master implements IMasterEntity {
 	}
 
 	public async setPassword(pass: string, salt: number): Promise<void> {
+		console.log('pass: ' + pass);
+		console.log('salt: ' + salt);
 		if (!pass || typeof pass !== 'string') {
 			throw new Error('Неверный пароль');
 		}

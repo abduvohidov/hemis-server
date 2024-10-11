@@ -10,12 +10,14 @@ import { IConfigService } from '../../../config';
 import { Request, Response, NextFunction } from 'express';
 import { IMasterController } from './master.controller.interface';
 import { AuthMiddleware, BaseController, VerifyRole } from '../../../common';
+import { IAddressService } from '../../addresses';
 
 injectable();
 export class MasterController extends BaseController implements IMasterController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.MasterService) private masterService: IMasterService,
+		@inject(TYPES.AddressService) private addressService: IAddressService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
@@ -121,16 +123,20 @@ export class MasterController extends BaseController implements IMasterControlle
 	}
 
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.masterService.create(req.body);
-		if (!data) {
-			this.send(res, 422, 'Такой магистрант уже существует');
-			return;
+		try {
+			const data = await this.masterService.create(req.body);
+			if (!data) {
+				this.send(res, 422, 'Такой магистрант уже существует');
+				return;
+			}
+			this.ok(res, {
+				status: true,
+				message: 'Магистрант успешно создано',
+				data,
+			});
+		} catch (err) {
+			this.send(res, 500, err);
 		}
-		this.ok(res, {
-			status: true,
-			message: 'Магистрант успешно создано',
-			data,
-		});
 	}
 
 	async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
