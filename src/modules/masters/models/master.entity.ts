@@ -47,8 +47,9 @@ export class Master implements IMasterEntity {
 		return this._jshshr;
 	}
 
+	// Return dateOfBirth as a Date object
 	get dateOfBirth(): Date {
-		return this._dateOfBirth;
+		return new Date(`${this._dateOfBirth}T00:00:00.000Z`);
 	}
 
 	get gender(): string {
@@ -72,8 +73,6 @@ export class Master implements IMasterEntity {
 	}
 
 	public async setPassword(pass: string, salt: number): Promise<void> {
-		console.log('pass: ' + pass);
-		console.log('salt: ' + salt);
 		if (!pass || typeof pass !== 'string') {
 			throw new Error('Неверный пароль');
 		}
