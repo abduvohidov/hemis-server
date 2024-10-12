@@ -42,13 +42,18 @@ export class ArticleService implements IArticleService {
 			...(filters.secondArticleDate && { secondArticleDate: filters.secondArticleDate }),
 			...(filters.secondArticleJournal && { secondArticleJournal: filters.secondArticleJournal }),
 		};
+
 		const hasArticleFilters = Object.keys(articleFilters).length > 0;
 		if (!hasArticleFilters) return [];
+
 		const articles = await this.articleRepository.filterByValues(filters);
 		const articlesId = articles?.map((article: Articles) => article.id);
 		const education = await this.educationRepository.findByArticlesId(articlesId);
 		const masters = education.flatMap((education: IEducation) => education.master);
-		if (masters.length > 0) return masters as Master[];
+
+		if (masters.length > 0) {
+			return masters as Master[];
+		}
 		return [];
 	}
 }

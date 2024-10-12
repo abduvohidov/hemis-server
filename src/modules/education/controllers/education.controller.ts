@@ -81,7 +81,7 @@ export class EducationController extends BaseController implements IEducationCon
 			},
 			{
 				path: '/all',
-				method: 'post',
+				method: 'get',
 				func: this.findAll,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -125,73 +125,166 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 
 	async postEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const education = await this.educationService.prepareEducation(req.body);
-		if (!education) {
-			this.send(res, 400, 'Не удалось создать education');
-			return;
+		try {
+			const education = await this.educationService.prepareEducation(req.body);
+			if (!education) {
+				this.send(res, 400, 'Не удалось создать education');
+				return;
+			}
+			this.ok(res, { education });
+		} catch (err) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении education, проверьте добавляемые данные',
+			);
 		}
-		this.ok(res, { education });
 	}
+
 	async deleteEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const id = Number(req.params.id);
-		const education = await this.educationService.removeEducation(id);
-		if (!education) {
-			this.send(res, 400, 'This education does not exists ');
-			return;
-		}
-		this.ok(res, { education });
-	}
-	async updateEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const data = req.body;
-		console.log(data);
 
-		const education = await this.educationService.changeEducation(id, data);
-		if (!education) {
-			this.send(res, 400, 'This education does not exists ');
-			return;
-		}
-		this.ok(res, { education });
-	}
-	async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const education = await this.educationService.getAll();
-		if (!education) {
-			this.send(res, 400, 'Something went wrong');
-			return;
-		}
-		this.ok(res, { education });
-	}
-	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const education = await this.educationService.getById(id);
-		if (!education) {
-			this.send(res, 400, 'This education does not exists');
-			return;
-		}
-		this.ok(res, { education });
-	}
-	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const education = await this.educationService.getByFilters(req.body);
-		const data: Array<Master> = [];
-		if (education.length) {
-			education.forEach((education: IEducation) => {
-				const master = education['master'] as Master;
-				if (master) {
-					data.push(master);
-				}
+		try {
+			if (isNaN(id) || id <= 0) {
+				this.send(res, 400, 'Некорректный ID образования');
+				return;
+			}
+
+			const education = await this.educationService.removeEducation(id);
+
+			if (!education) {
+				this.send(res, 404, 'Такое образование не существует');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Образование успешно удалено',
+				data: education,
 			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при удалении образования');
 		}
-
-		this.ok(res, { data });
 	}
-	async findByMaster(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.body;
-		const education = await this.educationService.getByMasterId(id);
 
-		if (!education) {
-			this.send(res, 404, 'This user does not exists');
-			return;
+	async updateEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const id = Number(req.params.id);
+			const data = req.body;
+
+			if (isNaN(id) || id <= 0) {
+				this.send(res, 400, 'Некорректный ID образования');
+				return;
+			}
+
+			const education = await this.educationService.changeEducation(id, data);
+
+			if (!education) {
+				this.send(res, 404, 'Такое образование не существует');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Образование успешно обновлено',
+				data: education,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при обновлении образования');
 		}
-		this.ok(res, { data: education });
+	}
+
+	async findAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const education = await this.educationService.getAll();
+
+			if (!education || education.length === 0) {
+				this.send(res, 404, 'Образования не найдены');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Образования успешно получены',
+				data: education,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении образований');
+		}
+	}
+
+	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const id = Number(req.params.id);
+
+			if (isNaN(id) || id <= 0) {
+				this.send(res, 400, 'Некорректный ID образования');
+				return;
+			}
+
+			const education = await this.educationService.getById(id);
+
+			if (!education) {
+				this.send(res, 404, 'Такое образование не существует');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Образование успешно получено',
+				data: education,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении образования');
+		}
+	}
+
+	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const education = await this.educationService.getByFilters(req.body);
+
+			const data: Array<Master> = [];
+
+			if (education && education.length > 0) {
+				education.forEach((educationRecord: IEducation) => {
+					const master = educationRecord.master as Master;
+					if (master) {
+						data.push(master);
+					}
+				});
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Фильтрованные мастера успешно получены',
+				data,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при фильтрации образований');
+		}
+	}
+
+	async findByMaster(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const { id } = req.body;
+			if (!id || isNaN(Number(id))) {
+				this.send(res, 400, 'Некорректный ID пользователя');
+				return;
+			}
+
+			const education = await this.educationService.getByMasterId(id);
+			if (!education) {
+				this.send(res, 404, 'Пользователь не найден');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Образование по мастеру успешно получено',
+				data: education,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении данных образования');
+		}
 	}
 }

@@ -201,7 +201,13 @@ export class ArticleController extends BaseController implements IArticleControl
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.articleService.getByValues(req.body);
-			this.ok(res, { data });
+			console.log(data);
+
+			this.ok(res, {
+				status: true,
+				message: 'Статьи успешно получены',
+				data: data,
+			});
 		} catch (error) {
 			this.send(res, 500, 'Ошибка при получении статей');
 		}

@@ -16,6 +16,7 @@ export class BacherlorRepository implements IBachelorRepository {
 			include: {
 				education: true,
 			},
+
 			data: {
 				previousUniversity: params.previousUniversity,
 				graduationYear: params.graduationYear,
@@ -24,6 +25,7 @@ export class BacherlorRepository implements IBachelorRepository {
 			},
 		});
 	}
+
 	async update(id: number, params: BachelorUpdateDto): Promise<Bachelor | null> {
 		return await this.prismaService.client.bachelor.update({
 			include: {

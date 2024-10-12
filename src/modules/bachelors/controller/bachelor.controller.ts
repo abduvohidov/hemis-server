@@ -38,7 +38,7 @@ export class BachelorController extends BaseController implements IBachelorContr
 				],
 			},
 			{
-				path: '/update',
+				path: '/update/:id',
 				method: 'patch',
 				func: this.update,
 				middlewares: [
@@ -52,7 +52,7 @@ export class BachelorController extends BaseController implements IBachelorContr
 				],
 			},
 			{
-				path: '/delete',
+				path: '/delete/:id',
 				method: 'delete',
 				func: this.delete,
 				middlewares: [
@@ -80,7 +80,7 @@ export class BachelorController extends BaseController implements IBachelorContr
 				],
 			},
 			{
-				path: '/id',
+				path: '/:id',
 				method: 'get',
 				func: this.findById,
 				middlewares: [
@@ -115,80 +115,130 @@ export class BachelorController extends BaseController implements IBachelorContr
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const data = await this.bachelorService.create(body);
+		try {
+			const data = await this.bachelorService.create(body);
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой бакалавр уже существует'));
+			if (!data) {
+				return next(new HTTPError(422, 'Такой бакалавр уже существует'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавр успешно создано',
+				data,
+			});
+		} catch (error) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении бакалавра, проверьте добавляемые данные',
+			);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно создано',
-			data,
-		});
 	}
 
-	async update({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body) {
-			return next(new HTTPError(422, 'Такой бакалавр уже существует'));
+	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const id = Number(req.params.id);
+			const { body } = req;
+
+			if (isNaN(id) || id <= 0) {
+				return next(new HTTPError(422, 'Некорректный ID бакалавра'));
+			}
+
+			const data = await this.bachelorService.update(id, body);
+
+			if (!data) {
+				return next(new HTTPError(404, 'Такой бакалавр не найден'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавр успешно обновлен',
+				data,
+			});
+		} catch (error) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при обновлении бакалавра, проверьте добавляемые данные',
+			);
 		}
-
-		const data = await this.bachelorService.update(body.id, body);
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно обновлено',
-			data,
-		});
 	}
 
-	async delete({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.id) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
+	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const id = Number(req.params.id);
+
+			if (isNaN(id) || id <= 0) {
+				return next(new HTTPError(422, 'Некорректный ID бакалавра'));
+			}
+
+			const data = await this.bachelorService.delete(id);
+
+			if (!data) {
+				return next(new HTTPError(404, 'Такой бакалавр не найден'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавр успешно удален',
+				data,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при удалении бакалавра');
 		}
-
-		const data = await this.bachelorService.delete(body.id);
-
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно удалено',
-			data,
-		});
 	}
 
 	async find({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.find();
+		try {
+			if (!body) {
+				return next(new HTTPError(422, 'Такой бакалавр не существует'));
+			}
+			const data = await this.bachelorService.find();
 
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно получено',
-			data,
-		});
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавр успешно получено',
+				data,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении бакалавр');
+		}
 	}
 
-	async findById({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		if (!body.id) {
-			return next(new HTTPError(422, 'Такой бакалавр не существует'));
-		}
-		const data = await this.bachelorService.findById(body.id);
+	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const id = Number(req.params.id);
+		try {
+			if (isNaN(id) || id <= 0) {
+				return next(new HTTPError(422, 'Некорректный ID бакалавра'));
+			}
 
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавр успешно получено',
-			data,
-		});
+			const data = await this.bachelorService.findById(id);
+			if (!data) {
+				return next(new HTTPError(404, 'Такой бакалавр не найден'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавр успешно получен',
+				data,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении бакалавра');
+		}
 	}
 
 	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.bachelorService.findByFilter(body);
+		try {
+			const data = await this.bachelorService.findByFilter(body);
 
-		this.ok(res, {
-			status: true,
-			message: 'Бакалавры успешно получены',
-			data,
-		});
+			this.ok(res, {
+				status: true,
+				message: 'Бакалавры успешно получены',
+				data,
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении бакалавр');
+		}
 	}
 }
