@@ -29,6 +29,7 @@ export class FacultyRepository implements IFacultyRepository {
 	}
 
 	async findByName(name: string): Promise<Faculty | null> {
+		console.log(name);
 		return await this.prismaService.client.faculty.findFirst({
 			where: { name },
 		});
