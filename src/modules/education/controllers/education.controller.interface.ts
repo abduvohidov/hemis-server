@@ -9,4 +9,5 @@ export interface IEducationController {
 	findAll: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findByFilters: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+	findByMaster: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

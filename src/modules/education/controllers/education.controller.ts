@@ -37,6 +37,21 @@ export class EducationController extends BaseController implements IEducationCon
 				],
 			},
 			{
+				path: '/findByMaster',
+				method: 'post',
+				func: this.findByMaster,
+				middlewares: [
+					new ValidateMiddleware(CreateEducationDto),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
+			},
+			{
 				path: '/delete/:id',
 				method: 'delete',
 				func: this.deleteEducation,
@@ -166,5 +181,13 @@ export class EducationController extends BaseController implements IEducationCon
 		}
 
 		this.ok(res, { data });
+	}
+	async findByMaster(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const education = await this.educationService.getByMasterId(req.body);
+		if (!education) {
+			this.send(res, 404, 'This user does not exists');
+			return;
+		}
+		this.ok(res, { data: education });
 	}
 }

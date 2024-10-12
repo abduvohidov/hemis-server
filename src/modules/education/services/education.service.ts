@@ -66,6 +66,9 @@ export class EducationService implements IEducationService {
 	async getById(id: number): Promise<Education | null> {
 		return await this.educationRepository.findById(id);
 	}
+	async getByMasterId(id: number): Promise<Education | null> {
+		return await this.educationRepository.findByMasterId(id);
+	}
 
 	async getByFilters(data: Partial<Education>): Promise<Education[] | []> {
 		const educationFilters = {

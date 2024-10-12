@@ -9,5 +9,6 @@ export interface IEducationService {
 	//gets
 	getAll: () => Promise<Education[]>;
 	getById: (id: number) => Promise<Education | null>;
+	getByMasterId: (id: number) => Promise<Education | null>;
 	getByFilters: (filters: Partial<Education>) => Promise<Education[] | []>;
 }
