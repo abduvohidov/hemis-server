@@ -80,7 +80,7 @@ export class FacultyController extends BaseController implements IFacultyControl
 			},
 			{
 				path: '/update/:id',
-				method: 'put',
+				method: 'patch',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -114,83 +114,113 @@ export class FacultyController extends BaseController implements IFacultyControl
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const data = await this.facultyService.create(body);
-		console.log(data);
+		try {
+			const data = await this.facultyService.create(body);
+			if (!data) {
+				return next(new HTTPError(422, 'Такой факультет уже существует'));
+			}
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой факультет уже существует'));
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно создано',
+				data,
+			});
+		} catch (e) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении пользователя, проверьте добавляемые данные',
+			);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно создано',
-			data,
-		});
 	}
 
 	async find(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.facultyService.find();
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно получено',
-			data,
-		});
+		try {
+			const data = await this.facultyService.find();
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно получено',
+				data,
+			});
+		} catch (error) {
+			next(error);
+		}
 	}
 
 	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const data = await this.facultyService.findById(id);
+		try {
+			const id = Number(req.params.id);
+			const data = await this.facultyService.findById(id);
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой факультет не существует'));
+			if (!data) {
+				return next(new HTTPError(422, 'Такой факультет не существует'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно получено',
+				data,
+			});
+		} catch (error) {
+			next(error);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно получено',
-			data,
-		});
 	}
 
 	async findByName(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { name } = req.body;
-		const data = await this.facultyService.findByName(name);
+		try {
+			const { name } = req.body;
+			const data = await this.facultyService.findByName(name);
 
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно получено',
-			data,
-		});
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно получено',
+				data,
+			});
+		} catch (error) {
+			next(error);
+		}
 	}
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = req.body;
-		const id = Number(req.params.id);
+		try {
+			const data = req.body;
+			const id = Number(req.params.id);
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой факультет не существует'));
+			if (!data) {
+				return next(new HTTPError(422, 'Такой факультет не существует'));
+			}
+
+			await this.facultyService.update(id, data);
+
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно обновлено',
+				data: data,
+			});
+		} catch (e) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при обновлении пользователя, проверьте добавляемые данные',
+			);
 		}
-
-		await this.facultyService.update(id, data);
-
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно обновлено',
-			data: data,
-		});
 	}
 
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
+		try {
+			const id = Number(req.params.id);
 
-		if (!id) {
-			return next(new HTTPError(422, 'Такой факультет не существует'));
+			if (!id) {
+				return next(new HTTPError(422, 'Такой факультет не существует'));
+			}
+
+			await this.facultyService.delete(id);
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно удалено',
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при удаление факультета');
 		}
-
-		await this.facultyService.delete(id);
-		this.ok(res, {
-			status: true,
-			message: 'Факультет успешно удалено',
-		});
 	}
 }

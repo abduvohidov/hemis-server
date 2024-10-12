@@ -43,7 +43,6 @@ export class FacultyService implements IFacultyService {
 	async findByName(name: string): Promise<Master[] | []> {
 		if (!name) return [];
 		const faculties = await this.facultyRepository.findByName(name);
-		console.log(faculties);
 		const facultiesIds = faculties?.map((faculty: Faculty) => faculty.id);
 		if (facultiesIds?.length) {
 			const education = await this.educationRepository.findByFacultyId(facultiesIds);
