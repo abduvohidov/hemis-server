@@ -9,13 +9,15 @@ export class ArticleRepository implements IArticleRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(data: Articles): Promise<Articles | null> {
+		const firstArticleDate = new Date(`${data?.firstArticleDate}T00:00:00.000Z`);
+		const secondArticleDate = new Date(`${data?.secondArticleDate}T00:00:00.000Z`);
 		return await this.prismaService.client.articles.create({
 			data: {
 				firstArticle: data.firstArticle,
-				firstArticleDate: data.firstArticleDate,
+				firstArticleDate,
 				firstArticleJournal: data.firstArticleJournal,
 				secondArticle: data.secondArticle,
-				secondArticleDate: data.secondArticleDate,
+				secondArticleDate,
 				secondArticleJournal: data.secondArticleJournal,
 			},
 		});

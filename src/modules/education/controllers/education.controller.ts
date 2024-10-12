@@ -144,7 +144,8 @@ export class EducationController extends BaseController implements IEducationCon
 	async updateEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const id = Number(req.params.id);
 		const data = req.body;
-		console.log('data', data);
+		console.log(data);
+
 		const education = await this.educationService.changeEducation(id, data);
 		if (!education) {
 			this.send(res, 400, 'This education does not exists ');
@@ -185,7 +186,8 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 	async findByMaster(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const { id } = req.body;
-		const education = await this.educationService.getByMasterId(Number(id));
+		const education = await this.educationService.getByMasterId(id);
+
 		if (!education) {
 			this.send(res, 404, 'This user does not exists');
 			return;
