@@ -85,10 +85,10 @@ export class EducationRepository implements IEducationRepository {
 		});
 	}
 
-	async findByFacultyId(ids: number[]): Promise<Education[] | []> {
+	async findByFacultyId(id: number): Promise<Education[] | []> {
 		return this.prismaService.client.education.findMany({
 			where: {
-				facultyId: { in: ids },
+				facultyId: id,
 			},
 			include: {
 				master: true,

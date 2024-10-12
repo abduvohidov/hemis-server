@@ -40,12 +40,19 @@ export class FacultyService implements IFacultyService {
 		return this.facultyRepository.findById(id);
 	}
 
-	async findByName(name: string): Promise<Master[] | []> {
+	async findByName(name: string): Promise<Faculty | null> {
+		if (!name) return null;
+		const faculty = await this.facultyRepository.findByName(name);
+		if (!faculty) {
+			return null;
+		}
+		return faculty;
+	}
+	async filterByName(name: string): Promise<Master[] | []> {
 		if (!name) return [];
-		const faculties = await this.facultyRepository.findByName(name);
-		const facultiesIds = faculties?.map((faculty: Faculty) => faculty.id);
-		if (facultiesIds?.length) {
-			const education = await this.educationRepository.findByFacultyId(facultiesIds);
+		const faculty = await this.facultyRepository.findByName(name);
+		if (faculty) {
+			const education = await this.educationRepository.findByFacultyId(faculty.id);
 			const masters = education.flatMap((education: IEducation) => education.master);
 			if (masters.length > 0) return masters as Master[];
 			return [];

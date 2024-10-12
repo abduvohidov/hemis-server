@@ -8,5 +8,6 @@ export interface IFacultyService {
 	update: (id: number, params: Faculty) => Promise<Faculty | null>;
 	delete: (id: number) => Promise<Faculty | null>;
 	findById: (id: number) => Promise<Faculty | null>;
-	findByName: (name: string) => Promise<Master[] | []>;
+	findByName: (name: string) => Promise<Faculty | null>;
+	filterByName: (name: string) => Promise<Master[] | []>;
 }

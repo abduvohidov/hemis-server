@@ -67,6 +67,20 @@ export class FacultyController extends BaseController implements IFacultyControl
 			{
 				path: '/filter',
 				method: 'post',
+				func: this.filterByName,
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
+			},
+			{
+				path: '/findByName',
+				method: 'post',
 				func: this.findByName,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
@@ -166,11 +180,29 @@ export class FacultyController extends BaseController implements IFacultyControl
 		}
 	}
 
+	async filterByName(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const { name } = req.body;
+			const data = await this.facultyService.filterByName(name);
+
+			this.ok(res, {
+				status: true,
+				message: 'Факультет успешно получено',
+				data,
+			});
+		} catch (error) {
+			next(error);
+		}
+	}
+
 	async findByName(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { name } = req.body;
 			const data = await this.facultyService.findByName(name);
-
+			if (!data) {
+				this.send(res, 404, 'Iltimos fakultet yarating');
+				return;
+			}
 			this.ok(res, {
 				status: true,
 				message: 'Факультет успешно получено',

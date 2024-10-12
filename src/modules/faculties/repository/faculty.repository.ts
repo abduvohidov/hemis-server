@@ -28,8 +28,8 @@ export class FacultyRepository implements IFacultyRepository {
 		});
 	}
 
-	async findByName(name: string): Promise<Faculty[] | []> {
-		return await this.prismaService.client.faculty.findMany({
+	async findByName(name: string): Promise<Faculty | null> {
+		return await this.prismaService.client.faculty.findFirst({
 			where: { name },
 		});
 	}
