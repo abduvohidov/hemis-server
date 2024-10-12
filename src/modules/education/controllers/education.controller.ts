@@ -41,7 +41,6 @@ export class EducationController extends BaseController implements IEducationCon
 				method: 'post',
 				func: this.findByMaster,
 				middlewares: [
-					new ValidateMiddleware(CreateEducationDto),
 					new AuthMiddleware(this.configService.get('SECRET')),
 					new VerifyRole(new PrismaClient(), [
 						ROLES.admin,
@@ -144,7 +143,9 @@ export class EducationController extends BaseController implements IEducationCon
 	}
 	async updateEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const id = Number(req.params.id);
-		const education = await this.educationService.changeEducation(id, req.body);
+		const data = req.body;
+		console.log('data', data);
+		const education = await this.educationService.changeEducation(id, data);
 		if (!education) {
 			this.send(res, 400, 'This education does not exists ');
 			return;
@@ -183,7 +184,8 @@ export class EducationController extends BaseController implements IEducationCon
 		this.ok(res, { data });
 	}
 	async findByMaster(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const education = await this.educationService.getByMasterId(req.body);
+		const { id } = req.body;
+		const education = await this.educationService.getByMasterId(Number(id));
 		if (!education) {
 			this.send(res, 404, 'This user does not exists');
 			return;
