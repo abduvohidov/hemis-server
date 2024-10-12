@@ -112,51 +112,98 @@ export class ArticleController extends BaseController implements IArticleControl
 			},
 		]);
 	}
+
 	async postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const article = await this.articleService.prepareArticle(req.body);
-		if (!article) {
-			this.send(res, 400, 'Check info');
-			return;
+		try {
+			const article = await this.articleService.prepareArticle(req.body);
+			if (!article) {
+				this.send(res, 400, 'Проверить информацию');
+				return;
+			}
+			this.ok(res, { article });
+		} catch (error) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении адреса, проверьте добавляемые данные',
+			);
 		}
-		this.ok(res, { article });
 	}
+
 	async deleteArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const article = await this.articleService.removeArticle(id);
-		if (!article) {
-			this.send(res, 404, 'Article not found');
-			return;
+		try {
+			const id = Number(req.params.id);
+			const article = await this.articleService.removeArticle(id);
+			if (!article) {
+				this.send(res, 404, 'Статья не найдена');
+				return;
+			}
+			this.ok(res, { article });
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при удаление статья');
 		}
-		this.ok(res, { article });
 	}
 
 	async updateArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const article = await this.articleService.changeArticle(id, req.body);
-		if (!article) {
-			this.send(res, 404, 'Article not found');
-			return;
+		try {
+			const id = Number(req.params.id);
+
+			if (isNaN(id)) {
+				this.send(res, 400, 'Неверный ID статьи');
+				return;
+			}
+
+			const article = await this.articleService.changeArticle(id, req.body);
+			if (!article) {
+				this.send(res, 404, 'Статья не найдена');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Статья успешно обновлена',
+				data: article,
+			});
+		} catch (err) {
+			console.error('Ошибка при обновлении статьи:', err);
+
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при обновлении статьи, проверьте добавляемые данные',
+			);
 		}
-		this.ok(res, { article });
 	}
 
 	async findAllArticles(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const articles = await this.articleService.getAll();
-		this.ok(res, { articles });
+		try {
+			const articles = await this.articleService.getAll();
+			this.ok(res, { articles });
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении статей');
+		}
 	}
 
 	async findArticleById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
-		const article = await this.articleService.getById(id);
-		if (!article) {
-			this.send(res, 400, 'Article not found');
-			return;
+		try {
+			const id = Number(req.params.id);
+			const article = await this.articleService.getById(id);
+			if (!article) {
+				this.send(res, 400, 'Статья не найдена');
+				return;
+			}
+			this.ok(res, { article });
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении статей');
 		}
-		this.ok(res, { article });
 	}
-	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.articleService.getByValues(req.body);
 
-		this.ok(res, { data });
+	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const data = await this.articleService.getByValues(req.body);
+			this.ok(res, { data });
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при получении статей');
+		}
 	}
 }

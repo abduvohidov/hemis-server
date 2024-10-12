@@ -9,13 +9,13 @@ import { IExeptionFilter } from './errors';
 import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { UserController } from './modules/users';
-import { ILogger } from './logger/logger.interface';
 import { MasterController } from './modules/masters';
 import { ArticleController } from './modules/articles';
 import { AddressController } from './modules/addresses';
 import { FacultyController } from './modules/faculties';
 import { BachelorController } from './modules/bachelors';
 import { EducationController } from './modules/education';
+import { ILogger } from './logger';
 
 @injectable()
 export class App {
