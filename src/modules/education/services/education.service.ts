@@ -19,21 +19,36 @@ export class EducationService implements IEducationService {
 	) {}
 
 	async prepareEducation(data: CreateEducationDto): Promise<Education | null> {
-		const isBachelorExists = await this.bachelorRepository.findById(data.bachelorId);
-		const isArticleExists = await this.articleRepository.findById(data.articlesId);
-		const isFacultyExists = await this.facultyRepository.findById(data.facultyId);
-		const isMasterExists = await this.masterRepository.findById(data.masterId);
-		const isDuplicate = await this.educationRepository.findByMasterId(data.masterId);
-		if (
-			isDuplicate ||
-			!isArticleExists ||
-			!isFacultyExists ||
-			!isMasterExists ||
-			!isBachelorExists
-		) {
+		try {
+			const isArticleExists = data.articlesId
+				? await this.articleRepository.findById(data.articlesId)
+				: true;
+			const isDuplicate = await this.educationRepository.findByMasterId(data.masterId);
+
+			// Check for existence only if IDs are provided
+			const isFacultyExists = data.facultyId
+				? await this.facultyRepository.findById(data.facultyId)
+				: true; // If not provided, consider it as valid
+			const isMasterExists = await this.masterRepository.findById(data.masterId); // Master is required
+			const isBachelorExists = data.bachelorId
+				? await this.bachelorRepository.findById(data.bachelorId)
+				: true; // If not provided, consider it as valid
+
+			if (
+				isDuplicate ||
+				!isArticleExists ||
+				!isFacultyExists ||
+				!isMasterExists ||
+				!isBachelorExists
+			) {
+				return null;
+			}
+
+			return await this.educationRepository.create(data);
+		} catch (error) {
+			console.error('Error preparing education:', error);
 			return null;
 		}
-		return await this.educationRepository.create(data);
 	}
 	async removeEducation(id: number): Promise<Education | null> {
 		return await this.educationRepository.delete(id);

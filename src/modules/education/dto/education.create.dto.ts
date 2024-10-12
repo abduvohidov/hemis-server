@@ -1,4 +1,4 @@
-import { IsInt, IsString, IsNotEmpty } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateEducationDto {
 	@IsInt()
@@ -6,16 +6,16 @@ export class CreateEducationDto {
 	masterId: number;
 
 	@IsInt()
-	@IsNotEmpty()
-	bachelorId: number;
+	@IsOptional() // Marking as optional
+	bachelorId?: number;
 
 	@IsInt()
-	@IsNotEmpty()
-	facultyId: number;
+	@IsOptional() // Marking as optional
+	facultyId?: number;
 
 	@IsInt()
-	@IsNotEmpty()
-	articlesId: number;
+	@IsOptional() // Marking as optional
+	articlesId?: number;
 
 	@IsString()
 	@IsNotEmpty()

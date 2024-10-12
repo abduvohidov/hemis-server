@@ -50,9 +50,9 @@ model Address {
 model Education {
   id                    Int    @id @default(autoincrement())
   masterId             Int
-  bachelorId            Int
+  bachelorId            Int?
   currentSpecialization String
-  facultyId             Int
+  facultyId             Int?
   course                String
   paymentType           String
   entryYear             String
@@ -65,14 +65,14 @@ model Education {
   internalReviewer      String
   externamReviewer      String
   thesisTopic           String
-  articlesId            Int
+  articlesId            Int?
   academicLeave         String
   
   // References
   master  Master  @relation(fields: [masterId], references: [id], onDelete: Cascade)
-  bachelor Bachelor @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
-  faculty  Faculty  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
-  articles Articles @relation(fields: [articlesId], references: [id], onDelete: Cascade)
+  bachelor Bachelor? @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
+  faculty  Faculty?  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  articles Articles? @relation(fields: [articlesId], references: [id], onDelete: Cascade)
 }
 
 model Bachelor {
