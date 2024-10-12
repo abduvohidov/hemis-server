@@ -2,14 +2,14 @@ import fs from 'fs';
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { ILogger } from '../../../logger';
-import { IMasterService } from '../index';
+import { IMasterService, MasterRegisterDto } from '../index';
 import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { ROLES, TYPES } from '../../../types';
 import { IConfigService } from '../../../config';
 import { Request, Response, NextFunction } from 'express';
 import { IMasterController } from './master.controller.interface';
-import { AuthMiddleware, BaseController, VerifyRole } from '../../../common';
+import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 import { IAddressService } from '../../addresses';
 
 injectable();
@@ -125,101 +125,141 @@ export class MasterController extends BaseController implements IMasterControlle
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.masterService.create(req.body);
+
 			if (!data) {
 				this.send(res, 422, 'Такой магистрант уже существует');
 				return;
 			}
+
 			this.ok(res, {
 				status: true,
 				message: 'Магистрант успешно создано',
 				data,
 			});
 		} catch (err) {
-			this.send(res, 500, err);
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении пользователя, проверьте добавляемые данные',
+			);
 		}
 	}
 
 	async getAll(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.masterService.getAll();
-		this.ok(res, {
-			status: true,
-			message: 'Магистранты успешно получено',
-			data,
-		});
+		try {
+			const data = await this.masterService.getAll();
+			this.ok(res, {
+				status: true,
+				message: 'Магистранты успешно получены',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении магистрантов:', error);
+			next(error);
+		}
 	}
 
 	async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.masterService.getByEmail(req.body.email);
+		try {
+			const data = await this.masterService.getByEmail(req.body.email);
 
-		if (!data) {
-			this.send(res, 422, 'Такой магистрант не существует');
-			return;
+			if (!data) {
+				this.send(res, 422, 'Такой магистрант не существует');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Магистрант успешно получено',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении магистрантов:', error);
+			next(error);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Магистрант успешно получено',
-			data,
-		});
 	}
 
 	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const { id } = req.params;
-		const data = await this.masterService.getById(Number(id));
+		try {
+			const data = await this.masterService.getById(Number(id));
 
-		if (!data) {
-			this.send(res, 422, 'Такой магистрант не существует');
-			return;
+			if (!data) {
+				this.send(res, 422, 'Такой магистрант не существует');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Магистрант успешно получено',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении магистрантов:', error);
+			next(error);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Магистрант успешно получено',
-			data,
-		});
 	}
-	async getByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.masterService.getByFilters(req.body);
 
-		this.ok(res, {
-			status: true,
-			message: 'Магистранты успешно получены',
-			data,
-		});
+	async getByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const data = await this.masterService.getByFilters(req.body);
+
+			this.ok(res, {
+				status: true,
+				message: 'Магистранты успешно получены',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении магистрантов:', error);
+			next(error);
+		}
 	}
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const data = req.body;
 		const id = Number(req.params.id);
 
-		if (!data) {
-			this.send(res, 422, 'Пж проверьте данные');
-			return;
-		}
+		try {
+			if (!data) {
+				this.send(res, 422, 'Пж проверьте данные');
+				return;
+			}
 
-		const student = await this.masterService.update(id, data);
-		const token = this.signJWT(student.email, this.configService.get('SECRET'));
-		res.cookie('token', token);
-		this.ok(res, {
-			status: true,
-			message: 'Магистрант успешно обновлено',
-			data: student,
-		});
+			const student = await this.masterService.update(id, data);
+			const token = this.signJWT(student.email, this.configService.get('SECRET'));
+			res.cookie('token', token);
+			this.ok(res, {
+				status: true,
+				message: 'Магистрант успешно обновлено',
+				data: student,
+			});
+		} catch (err) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при обновлении пользователя, проверьте добавляемые данные',
+			);
+		}
 	}
 
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const id = req.params.id;
 
-		if (!id) {
-			this.send(res, 422, 'Такой магистрант не существует');
-			return;
-		}
+		try {
+			if (!id) {
+				this.send(res, 422, 'Такой магистрант не существует');
+				return;
+			}
 
-		await this.masterService.delete(Number(id));
-		this.ok(res, {
-			status: true,
-			message: 'Магистрант успешно удалено',
-		});
+			await this.masterService.delete(Number(id));
+			this.ok(res, {
+				status: true,
+				message: 'Магистрант успешно удалено',
+			});
+		} catch (error) {
+			this.loggerService.error('Ошибка при удаление магистрантов');
+			this.send(res, 500, 'Ошибка при удаление магистрантов');
+		}
 	}
 
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
