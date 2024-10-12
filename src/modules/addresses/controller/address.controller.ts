@@ -28,13 +28,13 @@ export class AddressController extends BaseController implements IAddressControl
 				func: this.create,
 				middlewares: [
 					new ValidateMiddleware(AddressCreateDto),
-					// new AuthMiddleware(this.configService.get('SECRET')),
-					// new VerifyRole(new PrismaClient(), [
-					// 	ROLES.admin,
-					// 	ROLES.director,
-					// 	ROLES.teacher,
-					// 	ROLES.teamLead,
-					// ]),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 			{

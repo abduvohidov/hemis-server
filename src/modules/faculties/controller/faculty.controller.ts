@@ -27,13 +27,13 @@ export class FacultyController extends BaseController implements IFacultyControl
 				func: this.create,
 				middlewares: [
 					new ValidateMiddleware(FacultyCreateDto),
-					// new AuthMiddleware(this.configService.get('SECRET')),
-					// new VerifyRole(new PrismaClient(), [
-					// 	ROLES.admin,
-					// 	ROLES.director,
-					// 	ROLES.teacher,
-					// 	ROLES.teamLead,
-					// ]),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 			{
@@ -68,15 +68,15 @@ export class FacultyController extends BaseController implements IFacultyControl
 				path: '/filter',
 				method: 'post',
 				func: this.findByName,
-				// middlewares: [
-				// 	new AuthMiddleware(this.configService.get('SECRET')),
-				// 	new VerifyRole(new PrismaClient(), [
-				// 		ROLES.admin,
-				// 		ROLES.director,
-				// 		ROLES.teacher,
-				// 		ROLES.teamLead,
-				// 	]),
-				// ],
+				middlewares: [
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
 			},
 			{
 				path: '/update/:id',

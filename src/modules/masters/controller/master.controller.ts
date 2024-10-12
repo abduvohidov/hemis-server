@@ -27,14 +27,14 @@ export class MasterController extends BaseController implements IMasterControlle
 				method: 'post',
 				func: this.create,
 				middlewares: [
-					// new ValidateMiddleware(MasterRegisterDto),
-					// new AuthMiddleware(this.configService.get('SECRET')),
-					// new VerifyRole(new PrismaClient(), [
-					// 	ROLES.admin,
-					// 	ROLES.director,
-					// 	ROLES.teacher,
-					// 	ROLES.teamLead,
-					// ]),
+					new ValidateMiddleware(MasterRegisterDto),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
 			{

@@ -9,4 +9,4 @@ export interface IBachelorController {
 	find: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findByFilter: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-	}
+}
