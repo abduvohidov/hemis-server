@@ -257,7 +257,6 @@ export class MasterController extends BaseController implements IMasterControlle
 				message: 'Магистрант успешно удалено',
 			});
 		} catch (error) {
-			this.loggerService.error('Ошибка при удаление магистрантов');
 			this.send(res, 500, 'Ошибка при удаление магистрантов');
 		}
 	}

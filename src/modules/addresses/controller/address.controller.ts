@@ -52,7 +52,7 @@ export class AddressController extends BaseController implements IAddressControl
 				],
 			},
 			{
-				path: '/id',
+				path: '/id/:id',
 				method: 'get',
 				func: this.findById,
 				middlewares: [
@@ -115,89 +115,142 @@ export class AddressController extends BaseController implements IAddressControl
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
-		const data = await this.addressService.create(body);
+		try {
+			const data = await this.addressService.create(body);
 
-		if (!data) {
-			return next(new HTTPError(422, 'Не удалось создать адрес'));
+			if (!data) {
+				return next(new HTTPError(422, 'Не удалось создать адрес, проверьте добавляемые данные'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адресс успешно создано',
+				data,
+			});
+		} catch (error) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении адреса, проверьте добавляемые данные',
+			);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно создано',
-			data,
-		});
 	}
 
 	async find(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.find();
+		try {
+			const data = await this.addressService.find();
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
+			if (!data) {
+				return next(new HTTPError(422, 'Такой адресс не существует'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адресс успешно получено',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении адрессов:', error);
+			next(error);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно получено',
-			data,
-		});
 	}
 
-	async findById({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = await this.addressService.findById(body.id);
+	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const { id } = req.params;
+			const data = await this.addressService.findById(Number(id));
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
+			if (!data) {
+				return next(new HTTPError(422, 'Такой адресс не существует'));
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адресс успешно получено',
+				data,
+			});
+		} catch (error) {
+			console.error('Ошибка при получении адресса:', error);
+			next(error);
 		}
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно получено',
-			data,
-		});
 	}
 
 	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
-		const address = await this.addressService.findByFilters(body);
-		const data: Array<Master> = [];
-		if (address.length) {
-			address.forEach((address: IAddress) => {
-				const master = address['master'] as unknown as Master;
-				if (master) {
-					data.push(master);
-				}
+		try {
+			const address = await this.addressService.findByFilters(body);
+			const data: Array<Master> = [];
+
+			if (address.length) {
+				address.forEach((address: IAddress) => {
+					const master = address['master'] as unknown as Master;
+					if (master) {
+						data.push(master);
+					}
+				});
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адресс успешно получено',
+				data,
 			});
+		} catch (error) {
+			console.error('Ошибка при получении адресса:', error);
+			next(error);
 		}
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно получено',
-			data,
-		});
 	}
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		const { id } = req.params;
 		const data = req.body;
 
-		if (!data) {
-			return next(new HTTPError(422, 'Такой адресс не существует'));
+		try {
+			if (!id || isNaN(Number(id))) {
+				this.send(res, 422, 'Такой адрес не существует');
+				return;
+			}
+
+			const updatedAddress = await this.addressService.update(Number(id), data);
+
+			if (!updatedAddress) {
+				this.send(res, 404, 'Адрес не найден для обновления');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адрес успешно обновлен',
+				data: updatedAddress,
+			});
+		} catch (err) {
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при обновлении адреса, проверьте добавляемые данные',
+			);
 		}
-
-		await this.addressService.update(Number(id), data);
-
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно обновлено',
-			data: data,
-		});
 	}
 
 	async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.params;
+		try {
+			const { id } = req.params;
+			if (!id || isNaN(Number(id))) {
+				this.send(res, 422, 'Такой адрес не существует');
+				return;
+			}
 
-		await this.addressService.delete(Number(id));
-		this.ok(res, {
-			status: true,
-			message: 'Адресс успешно удалено',
-		});
+			const deletedAddress = await this.addressService.delete(Number(id));
+			if (!deletedAddress) {
+				this.send(res, 404, 'Адрес не найден для удаления');
+				return;
+			}
+
+			this.ok(res, {
+				status: true,
+				message: 'Адрес успешно удален',
+			});
+		} catch (error) {
+			this.send(res, 500, 'Ошибка при удалении адреса');
+		}
 	}
 }
