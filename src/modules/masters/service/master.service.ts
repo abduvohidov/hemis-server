@@ -156,7 +156,7 @@ export class MasterService implements IMasterService {
 
 			return {
 				//masters
-				Id: master.id,
+				ID: master.id,
 				FirstName: master.firstName,
 				LastName: master.lastName,
 				MiddleName: master.middleName,
@@ -204,11 +204,96 @@ export class MasterService implements IMasterService {
 			};
 		});
 
-		// Create a worksheet from the data array
 		const worksheet = xlsx.utils.json_to_sheet(data);
+
+		const header = [
+			'ID',
+			'Имя',
+			'Фамилия',
+			'Отчество',
+			'Номер паспорта',
+			'ЖСШР',
+			'Дата рождения',
+			'Пол',
+			'Национальность',
+			'Электронная почта',
+			'Номер телефона',
+			'Телефон родителей',
+			'Страна',
+			'Регион',
+			'Адрес',
+			'Текущая специализация',
+			'Курс',
+			'Тип оплаты',
+			'Год поступления',
+			'Форма обучения',
+			'Языковой сертификат',
+			'Семестр',
+			'Научный руководитель',
+			'Научный консультант',
+			'Руководитель стажировки',
+			'Внутренний рецензент',
+			'Внешний рецензент',
+			'Тема диплома',
+			'Академический отпуск',
+			'Год окончания',
+			'Номер диплома',
+			'Предыдущая специализация',
+			'Предыдущий университет',
+			'Название факультета',
+			'Первая статья',
+			'Журнал первой статьи',
+			'Дата первой статьи',
+			'Вторая статья',
+			'Журнал второй статьи',
+			'Дата второй статьи',
+		];
+
+		xlsx.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+		worksheet['!cols'] = [
+			{ wch: 5 },
+			{ wch: 20 },
+			{ wch: 20 },
+			{ wch: 20 },
+			{ wch: 15 },
+			{ wch: 15 },
+			{ wch: 15 },
+			{ wch: 10 },
+			{ wch: 15 },
+			{ wch: 25 },
+			{ wch: 15 },
+			{ wch: 20 },
+			{ wch: 15 },
+			{ wch: 15 },
+			{ wch: 30 },
+			{ wch: 30 },
+			{ wch: 10 },
+			{ wch: 10 },
+			{ wch: 10 },
+			{ wch: 10 },
+			{ wch: 20 },
+			{ wch: 10 },
+			{ wch: 25 },
+			{ wch: 25 },
+			{ wch: 25 },
+			{ wch: 25 },
+			{ wch: 25 },
+			{ wch: 30 },
+			{ wch: 20 },
+			{ wch: 15 },
+			{ wch: 15 },
+			{ wch: 30 },
+			{ wch: 30 },
+			{ wch: 25 },
+			{ wch: 30 },
+			{ wch: 30 },
+			{ wch: 15 },
+			{ wch: 30 },
+			{ wch: 30 },
+			{ wch: 15 },
+		];
 		xlsx.utils.book_append_sheet(workbook, worksheet, 'masters_data');
 
-		// Define the file path and write the workbook to a file
 		const filePath = path.join(__dirname, '../data.xlsx');
 		xlsx.writeFile(workbook, filePath);
 
