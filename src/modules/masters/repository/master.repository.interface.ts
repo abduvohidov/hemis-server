@@ -14,6 +14,7 @@ export interface IMasterRepository {
 		email,
 		phoneNumber,
 		parentPhoneNumber,
+		avatarUrl,
 		password,
 	}: IMasterEntity) => Promise<IMasterEntity>;
 	findAll: () => Promise<Master[]>;

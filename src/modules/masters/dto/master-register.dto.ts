@@ -45,6 +45,9 @@ export class MasterRegisterDto {
 	@IsString()
 	readonly parentPhoneNumber: string;
 
+	@IsString()
+	readonly avatarUrl: string = '';
+
 	@IsNotEmpty()
 	@IsString()
 	@Length(6, 20, { message: 'Длина вашего пароля должна быть больше 6' })

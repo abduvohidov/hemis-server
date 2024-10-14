@@ -11,7 +11,7 @@ export class MasterRepository implements IMasterRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(master: IMasterEntity): Promise<IMasterEntity> {
-		return await this.prismaService.client.master.create({
+		return this.prismaService.client.master.create({
 			data: {
 				lastName: master.lastName,
 				firstName: master.firstName,
@@ -24,6 +24,7 @@ export class MasterRepository implements IMasterRepository {
 				email: master.email,
 				phoneNumber: master.phoneNumber,
 				parentPhoneNumber: master.parentPhoneNumber,
+				avatarUrl: master.avatarUrl,
 				password: master.password,
 			},
 		});

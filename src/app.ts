@@ -47,7 +47,7 @@ export class App {
 				credentials: true,
 			}),
 		);
-		this.app.use(json());
+		this.app.use(json({ limit: '300mb' }));
 		this.app.use(cookieParser());
 	}
 
