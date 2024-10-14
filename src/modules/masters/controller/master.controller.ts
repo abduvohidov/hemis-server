@@ -12,6 +12,9 @@ import { IMasterController } from './master.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 import { IAddressService } from '../../addresses';
 import { IEducationService } from '../../education';
+import { IBachelorService } from '../../bachelors';
+import { IFacultyService } from '../../faculties';
+import { IArticleService } from '../../articles';
 
 injectable();
 export class MasterController extends BaseController implements IMasterController {
@@ -20,6 +23,9 @@ export class MasterController extends BaseController implements IMasterControlle
 		@inject(TYPES.MasterService) private masterService: IMasterService,
 		@inject(TYPES.EducationService) private educationService: IEducationService,
 		@inject(TYPES.AddressService) private addressService: IAddressService,
+		@inject(TYPES.BachelorService) private bachelorService: IBachelorService,
+		@inject(TYPES.FacultyService) private facultyService: IFacultyService,
+		@inject(TYPES.ArticleService) private articleService: IArticleService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
@@ -267,9 +273,20 @@ export class MasterController extends BaseController implements IMasterControlle
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const masters = await this.masterService.getAll();
+			const educations = await this.educationService.getAll();
 			const addresses = await this.addressService.find();
+			const bachelors = await this.bachelorService.find();
+			const faculties = await this.facultyService.find();
+			const articles = await this.articleService.getAll();
 
-			const filePath = await this.masterService.generateXlsxFile(masters, addresses);
+			const filePath = await this.masterService.generateXlsxFile(
+				masters,
+				educations,
+				addresses,
+				bachelors,
+				faculties,
+				articles,
+			);
 
 			res.download(filePath, (err) => {
 				if (err) {

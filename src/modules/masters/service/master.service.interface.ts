@@ -1,4 +1,4 @@
-import { Master, Address, Education } from '@prisma/client';
+import { Master, Address, Education, Bachelor, Faculty, Articles } from '@prisma/client';
 import { MasterRegisterDto } from '../dto/master-register.dto';
 import { IMasterEntity } from '../models/master.entity.interface';
 
@@ -10,5 +10,12 @@ export interface IMasterService {
 	getByEmail: (email: string) => Promise<Master | null>;
 	getById: (id: number) => Promise<Master | null>;
 	getByFilters: (data: Partial<Master>) => Promise<Master[] | []>;
-	generateXlsxFile: (masters: Master[], addresses: Address[]) => Promise<string>;
+	generateXlsxFile: (
+		masters: Master[],
+		education: Education[],
+		addresses: Address[],
+		bachelor: Bachelor[],
+		faculties: Faculty[],
+		articles: Articles[],
+	) => Promise<string>;
 }
