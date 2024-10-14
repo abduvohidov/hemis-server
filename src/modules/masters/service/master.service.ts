@@ -1,7 +1,7 @@
 import xlsx from 'xlsx';
 import path from 'path';
 import { TYPES } from '../../../types';
-import { Master } from '@prisma/client';
+import { Address, Education, Master } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IMasterService } from './master.service.interface';
@@ -43,6 +43,7 @@ export class MasterService implements IMasterService {
 	async getAll(): Promise<Master[]> {
 		return this.masterRepository.findAll();
 	}
+
 	async update(id: number, master: Partial<Master>): Promise<Master> {
 		const existingmaster = await this.masterRepository.findById(id);
 		if (!existingmaster) {
@@ -122,10 +123,30 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findByFilters(masterFilters);
 	}
 
-	async generateXlsxFile(data: Master[]): Promise<string> {
+	async generateXlsxFile(masters: Master[], addresses: Address[]): Promise<string> {
 		const workbook = xlsx.utils.book_new();
+
+		const data = masters.map((master, index) => ({
+			masterId: master.id,
+			masterFirstName: master.firstName,
+			masterLastName: master.lastName,
+			masterMidName: master.middleName,
+			masterPassportNumber: master.passportNumber,
+			masterJshshr: master.jshshr,
+			masterDateOfBirth: master.dateOfBirth,
+			masterGender: master.gender,
+			masterNationality: master.nationality,
+			masterEmail: master.email,
+			masterNumber: master.phoneNumber,
+			masterParentNumber: master.parentPhoneNumber,
+			addressCountry: addresses[index]?.country || null,
+			addressRegion: addresses[index]?.region || null,
+			address: addresses[index]?.address || null,
+		}));
+
 		const worksheet = xlsx.utils.json_to_sheet(data);
 		xlsx.utils.book_append_sheet(workbook, worksheet, 'masters_data');
+
 		const filePath = path.join(__dirname, '../data.xlsx');
 		xlsx.writeFile(workbook, filePath);
 

@@ -47,7 +47,7 @@ export class BachelorService implements IBachelorService {
 
 	async findById(id: number): Promise<Bachelor | null> {
 		const existed = await this.bachelorRepository.findById(id);
-		if (existed) {
+		if (!existed) {
 			return null;
 		}
 		return await this.bachelorRepository.findById(id);

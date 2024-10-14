@@ -207,8 +207,8 @@ export class BachelorController extends BaseController implements IBachelorContr
 	}
 
 	async findById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const id = Number(req.params.id);
 		try {
+			const id = Number(req.params.id);
 			if (isNaN(id) || id <= 0) {
 				return next(new HTTPError(422, 'Некорректный ID бакалавра'));
 			}

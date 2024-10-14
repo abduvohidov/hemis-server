@@ -11,12 +11,14 @@ import { Request, Response, NextFunction } from 'express';
 import { IMasterController } from './master.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 import { IAddressService } from '../../addresses';
+import { IEducationService } from '../../education';
 
 injectable();
 export class MasterController extends BaseController implements IMasterController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.MasterService) private masterService: IMasterService,
+		@inject(TYPES.EducationService) private educationService: IEducationService,
 		@inject(TYPES.AddressService) private addressService: IAddressService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
@@ -216,10 +218,10 @@ export class MasterController extends BaseController implements IMasterControlle
 	}
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const data = req.body;
-		const id = Number(req.params.id);
-
 		try {
+			const data = req.body;
+			const id = Number(req.params.id);
+
 			if (!data) {
 				this.send(res, 422, 'Пж проверьте данные');
 				return;
@@ -228,6 +230,7 @@ export class MasterController extends BaseController implements IMasterControlle
 			const student = await this.masterService.update(id, data);
 			const token = this.signJWT(student.email, this.configService.get('SECRET'));
 			res.cookie('token', token);
+
 			this.ok(res, {
 				status: true,
 				message: 'Магистрант успешно обновлено',
@@ -263,25 +266,26 @@ export class MasterController extends BaseController implements IMasterControlle
 
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const students = await this.masterService.getAll();
-			const filePath = await this.masterService.generateXlsxFile(students);
+			const masters = await this.masterService.getAll();
+			const addresses = await this.addressService.find();
+
+			const filePath = await this.masterService.generateXlsxFile(masters, addresses);
 
 			res.download(filePath, (err) => {
 				if (err) {
-					console.error('Ошибка при скачивании файла:', err);
-					return this.send(res, 500, 'Ошибка при скачивании файла.');
+					console.error('Ошибка загрузки файла:', err);
+					return this.send(res, 500, 'Ошибка загрузки файла.');
 				}
 
 				fs.unlink(filePath, (unlinkErr) => {
 					if (unlinkErr) {
-						console.error('Ошибка при удалении файла:', unlinkErr);
+						console.error('Ошибка удаления файла:', unlinkErr);
 					}
 				});
 			});
 		} catch (error) {
-			console.error('Ошибка при обработке запроса:', error);
-
-			this.send(res, 400, 'unknown');
+			console.error('Ошибка обработки запроса:', error);
+			this.send(res, 400, 'неизвестный');
 		}
 	}
 

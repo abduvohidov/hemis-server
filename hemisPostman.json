@@ -1,0 +1,1465 @@
+{
+	"info": {
+		"_postman_id": "f7b2d078-729f-438b-ad66-2cc8d5c9b89f",
+		"name": "Hemis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28558820",
+		"_collection_link": "https://speeding-space-341953.postman.co/workspace/My-Workspace~3662f73f-cf47-4e58-8c96-af50addba72a/collection/28558820-f7b2d078-729f-438b-ad66-2cc8d5c9b89f?action=share&source=collection_link&creator=28558820"
+	},
+	"item": [
+		{
+			"name": "articles",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstArticle\": \"firstArticle-1\",\n    \"firstArticleDate\": \"1993-03-25\",\n    \"firstArticleJournal\": \"firstArticleJournal-1\",\n    \"secondArticle\": \"secondArticle-1\",\n    \"secondArticleDate\": \"1993-03-25\",\n    \"secondArticleJournal\": \"secondArticleJournal-1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"secondArticleJournal\": \"secondArticleJournal-1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles/filter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/articles/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/articles/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstArticle\": \"update-1\",\n    \"firstArticleDate\": \"1993-03-25T00:00:00.000Z\",\n    \"firstArticleJournal\": \"update-1\",\n    \"secondArticle\": \"update-1\",\n    \"secondArticleDate\": \"1993-03-25T00:00:00.000Z\",\n    \"secondArticleJournal\": \"update-1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"update",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/articles/delete/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"articles",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "faculty",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Software Engineering\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faculties/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faculties",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/faculties/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faculties",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faculties/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faculties",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Business Management\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faculties/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faculties",
+								"update",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/faculties/delete/11",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"faculties",
+								"delete",
+								"11"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "masters",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"abduvohidov@gmail.com\",\n    \"password\": \"010101\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"ivanov\",\n    \"firstName\": \"sergey\",\n    \"middleName\": \"mikhail\",\n    \"passportNumber\": \"RU9900112\",\n    \"jshshr\": \"1122334455\",\n    \"dateOfBirth\": \"1986-05-17\",\n    \"gender\": \"Erkak\",\n    \"nationality\": \"russian\",\n    \"email\": \"ivanov@example.com\",\n    \"phoneNumber\": \"012012\",\n    \"parentPhoneNumber\": \"012012\",\n    \"password\": \"012012012\", \n    \"address\": [\"london\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readByEmail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ivanov@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"email"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findByFilters",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"passportNumber\": \"AD9998456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/filter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"ivanov-updated\",\n    \"firstName\": \"sergey-updated\",\n    \"middleName\": \"mikhail-updated\",\n    \"passportNumber\": \"RU9900112\",\n    \"jshshr\": \"1122334455\",\n    \"dateOfBirth\": \"1986-05-17\",\n    \"gender\": \"Erkak\",\n    \"nationality\": \"russian-updated\",\n    \"email\": \"updated@example.com\",\n    \"phoneNumber\": \"012012\",\n    \"parentPhoneNumber\": \"012012\",\n    \"password\": \"012012012\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/masters/delete/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"masters",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "address",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"Toshkent\",\n    \"region\": \"Toshkent Region\",\n    \"address\": \"Toshkent Address\",\n    \"masterId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addresses/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"Toshkent Address\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addresses/filter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/addresses/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addresses/id/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"id",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"country\": \"updated\",\n    \"region\": \"updated\",\n    \"address\": \"address - 1\",\n    \"masterId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addresses/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/addresses/delete/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"addresses",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "bachelor",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"previousUniversity\": \"previousUniversity-1\",\n    \"graduationYear\": \"graduationYear-1\",\n    \"diplomaNumber\": \"DI8989009123\",\n    \"previousSpecialization\": \"phd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "filter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"previousUniversity\": \"previousUniversity-1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/filter",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"1"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"previousUniversity\": \"previousUniversity-updated\",\n    \"graduationYear\": \"graduationYear-updated\",\n    \"diplomaNumber\": \"DI8989009123\",\n    \"previousSpecialization\": \"phd\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"update",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/bachelors/delete/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"bachelors",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "education",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"masterId\": 1,\n    \"bachelorId\": 1,\n    \"currentSpecialization\": \"currentSpecialization\",\n    \"facultyId\": 1,\n    \"course\": \"course\",\n    \"paymentType\": \"paymentType\",\n    \"entryYear\": \"entryYear \",\n    \"educationForm\": \" educationForm\",\n    \"languageCertificate\": \"languageCertificate\",\n    \"semester\": \"semester\",\n    \"scientificSupervisor\": \"scientificSupervisor\",\n    \"scientificAdvisor\": \"scientificAdvisor\",\n    \"internshipSupervisor\": \"internshipSupervisor\",\n    \"internalReviewer\": \"internalReviewer\",\n    \"externamReviewer\": \"externamReviewer\",\n    \"thesisTopic\": \"thesisTopic\",\n    \"articlesId\": 1,\n    \"academicLeave\": \"academicLeave\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/educations/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"educations",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "read",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/educations/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"educations",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "readById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/educations/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"educations",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": "{{token}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"masterId\": 1,\n    \"bachelorId\": 1,\n    \"currentSpecialization\": \"currentSpecialization-updated\",\n    \"facultyId\": 1,\n    \"course\": \"course\",\n    \"paymentType\": \"paymentType\",\n    \"entryYear\": \"entryYear \",\n    \"educationForm\": \" educationForm\",\n    \"languageCertificate\": \"languageCertificate\",\n    \"semester\": \"semester\",\n    \"scientificSupervisor\": \"scientificSupervisor\",\n    \"scientificAdvisor\": \"scientificAdvisor\",\n    \"internshipSupervisor\": \"internshipSupervisor\",\n    \"internalReviewer\": \"internalReviewer\",\n    \"externamReviewer\": \"externamReviewer\",\n    \"thesisTopic\": \"thesisTopic\",\n    \"articlesId\": 1,\n    \"academicLeave\": \"academicLeave\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/educations/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"educations",
+								"update",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/educations/delete/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"educations",
+								"delete",
+								"1"
+							],
+							"query": [
+								{
+									"key": "authorization",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTcyNzU5MzUwMn0.Hqb3_7KsFwaIERmGEH2O9cYAZkPBQGe2uqhWgKkQncM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"abdullah\",\r\n    \"lastName\": \"abduvohidov\",\r\n    \"email\": \"abduvohidov@gmail.com\",\r\n    \"password\": \"010101\",\r\n    \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"abduvohidov@gmail.com\",\r\n    \"password\": \"010101\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTcyNzU5MzUwMn0.Hqb3_7KsFwaIERmGEH2O9cYAZkPBQGe2uqhWgKkQncM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"hello\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/update/6",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"update",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delette",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTcyNzY5MzAyOH0.0opKKkBlO6DzB81tvP5a4RXaemqKn2G6ewXewKPFhqk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/delete/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"delete",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:9000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiZHV2b2hpZG92QGdtYWlsLmNvbSIsImlhdCI6MTcyNzc2MjcyMn0.EiWRyOWgzFaZNxYND7WDIgZzTrgjFgafx_DkCQ-KRQ8",
+			"type": "string"
+		}
+	]
+}
