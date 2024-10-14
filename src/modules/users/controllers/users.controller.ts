@@ -83,20 +83,19 @@ export class UserController extends BaseController implements IUserController {
 
 		const jwt = await this.signJWT(result.email, this.configService.get('SECRET'));
 		res.cookie('token', jwt);
-
 		if ('role' in result) {
 			switch (result.role) {
 				case ROLES.admin:
 					this.ok(res, { jwt, redirectTo: 'admin', result });
 					break;
 				case ROLES.director:
-					this.ok(res, { jwt, redirectTo: 'director', result });
+					this.ok(res, { jwt, redirectTo: 'admin', result });
 					break;
 				case ROLES.teamLead:
-					this.ok(res, { jwt, redirectTo: 'teamLead', result });
+					this.ok(res, { jwt, redirectTo: 'admin', result });
 					break;
 				case ROLES.teacher:
-					this.ok(res, { jwt, redirectTo: 'teacher', result });
+					this.ok(res, { jwt, redirectTo: 'admin', result });
 					break;
 				default:
 					this.ok(res, { jwt, redirectTo: 'master', result });
