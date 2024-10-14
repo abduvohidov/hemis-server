@@ -29,6 +29,7 @@ export class MasterService implements IMasterService {
 			master.email,
 			master.phoneNumber,
 			master.parentPhoneNumber,
+			master.avatarUrl,
 			master.password,
 		);
 		const salt = this.configService.get('SALT');
@@ -65,6 +66,7 @@ export class MasterService implements IMasterService {
 				existingmaster.email,
 				existingmaster.phoneNumber,
 				existingmaster.parentPhoneNumber,
+				existingmaster.avatarUrl,
 				master.password, // Use the updated password
 			);
 

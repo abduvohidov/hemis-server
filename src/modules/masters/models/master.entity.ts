@@ -16,6 +16,7 @@ export class Master implements IMasterEntity {
 		private readonly _email: string,
 		private readonly _phoneNumber: string,
 		private readonly _parentPhoneNumber: string,
+		private readonly _avatarUrl: string,
 		passwordHash?: string,
 	) {
 		if (passwordHash) {
@@ -66,6 +67,10 @@ export class Master implements IMasterEntity {
 
 	get parentPhoneNumber(): string {
 		return this._parentPhoneNumber;
+	}
+
+	get avatarUrl(): string {
+		return this._avatarUrl;
 	}
 
 	get password(): string {

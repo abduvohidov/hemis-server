@@ -11,4 +11,5 @@ export interface IMasterEntity {
 	phoneNumber: string;
 	parentPhoneNumber: string;
 	password: string;
+	avatarUrl: string;
 }
