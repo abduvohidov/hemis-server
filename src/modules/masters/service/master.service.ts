@@ -1,7 +1,7 @@
 import xlsx from 'xlsx';
 import path from 'path';
 import { TYPES } from '../../../types';
-import { Address, Education, Master } from '@prisma/client';
+import { Address, Articles, Bachelor, Education, Faculty, Master } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IMasterService } from './master.service.interface';
@@ -123,30 +123,92 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findByFilters(masterFilters);
 	}
 
-	async generateXlsxFile(masters: Master[], addresses: Address[]): Promise<string> {
+	async generateXlsxFile(
+		masters: Master[],
+		education: Education[],
+		addresses: Address[],
+		bachelors: Bachelor[],
+		faculties: Faculty[],
+		articles: Articles[],
+	): Promise<string> {
 		const workbook = xlsx.utils.book_new();
 
-		const data = masters.map((master, index) => ({
-			masterId: master.id,
-			masterFirstName: master.firstName,
-			masterLastName: master.lastName,
-			masterMidName: master.middleName,
-			masterPassportNumber: master.passportNumber,
-			masterJshshr: master.jshshr,
-			masterDateOfBirth: master.dateOfBirth,
-			masterGender: master.gender,
-			masterNationality: master.nationality,
-			masterEmail: master.email,
-			masterNumber: master.phoneNumber,
-			masterParentNumber: master.parentPhoneNumber,
-			addressCountry: addresses[index]?.country || null,
-			addressRegion: addresses[index]?.region || null,
-			address: addresses[index]?.address || null,
-		}));
+		const data = masters.map((master) => {
+			const masterEducation = education.filter((edu) => edu.masterId === master.id);
+			const masterAddress = addresses.filter((addr) => addr.masterId === master.id);
+			const masterBachelor = bachelors.filter((bachelor) => {
+				return bachelor.id === masterEducation[0]?.bachelorId;
+			});
 
+			const masterFaculty = faculties.filter((faculty) => {
+				return faculty.id === masterEducation[0]?.facultyId;
+			});
+
+			const masterArticle = articles.filter((article) => {
+				return article.id === masterEducation[0]?.articlesId;
+			});
+
+			const edu = masterEducation[0] || {};
+			const addr = masterAddress[0] || {};
+			const bachelor = masterBachelor[0] || {};
+			const faculty = masterFaculty[0] || {};
+			const article = masterArticle[0] || {};
+
+			return {
+				//masters
+				Id: master.id,
+				FirstName: master.firstName,
+				LastName: master.lastName,
+				MiddleName: master.middleName,
+				PassportNumber: master.passportNumber,
+				Jshshr: master.jshshr,
+				DateOfBirth: master.dateOfBirth,
+				Gender: master.gender,
+				Nationality: master.nationality,
+				Email: master.email,
+				PhoneNumber: master.phoneNumber,
+				ParentPhoneNumber: master.parentPhoneNumber,
+				//address
+				Country: addr.country || null,
+				Region: addr.region || null,
+				Address: addr.address || null,
+				//education
+				CurrentSpecialization: edu.currentSpecialization || null,
+				Course: edu.course || null,
+				PaymentType: edu.paymentType || null,
+				EntryYear: edu.entryYear || null,
+				Form: edu.educationForm || null,
+				LanguageCertification: edu.languageCertificate || null,
+				Semester: edu.semester || null,
+				ScientificSupervisor: edu.scientificSupervisor || null,
+				ScientificAdvisor: edu.scientificAdvisor || null,
+				InternshipSupervisor: edu.internshipSupervisor || null,
+				InternalReviewer: edu.internalReviewer || null,
+				ExternamReviewer: edu.externamReviewer || null,
+				ThesisTopic: edu.thesisTopic || null,
+				AcademicLeave: edu.academicLeave || null,
+				// bachelors
+				GraduationYear: bachelor.graduationYear || null,
+				DiplomaNumber: bachelor.diplomaNumber || null,
+				PreviousSpecialization: bachelor.previousSpecialization || null,
+				PreviousUniversity: bachelor.previousUniversity || null,
+				// Faculty
+				FacultyName: faculty.name || null,
+				// Article
+				FirstArticle: article.firstArticle || null,
+				SecondArticle: article.secondArticle || null,
+				FirstArticleJournal: article.firstArticleJournal || null,
+				SecondArticleJournal: article.secondArticleJournal || null,
+				FirstArticleDate: article.firstArticleDate || null,
+				SecondArticleDate: article.secondArticleDate || null,
+			};
+		});
+
+		// Create a worksheet from the data array
 		const worksheet = xlsx.utils.json_to_sheet(data);
 		xlsx.utils.book_append_sheet(workbook, worksheet, 'masters_data');
 
+		// Define the file path and write the workbook to a file
 		const filePath = path.join(__dirname, '../data.xlsx');
 		xlsx.writeFile(workbook, filePath);
 
