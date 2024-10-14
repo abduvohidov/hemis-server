@@ -34,6 +34,13 @@ export class MasterRepository implements IMasterRepository {
 			where: { id: Number(id) },
 			include: {
 				addresses: true,
+				education: {
+					include: {
+						bachelor: true,
+						faculty: true,
+						articles: true,
+					},
+				},
 			},
 		});
 	}
@@ -42,6 +49,13 @@ export class MasterRepository implements IMasterRepository {
 		return await this.prismaService.client.master.findUnique({
 			include: {
 				addresses: true,
+				education: {
+					include: {
+						bachelor: true,
+						faculty: true,
+						articles: true,
+					},
+				},
 			},
 			where: { email },
 		});
@@ -64,6 +78,13 @@ export class MasterRepository implements IMasterRepository {
 		return await this.prismaService.client.master.findMany({
 			include: {
 				addresses: true,
+				education: {
+					include: {
+						bachelor: true,
+						faculty: true,
+						articles: true,
+					},
+				},
 			},
 		});
 	}
@@ -71,6 +92,13 @@ export class MasterRepository implements IMasterRepository {
 		return await this.prismaService.client.master.findMany({
 			include: {
 				addresses: true,
+				education: {
+					include: {
+						bachelor: true,
+						faculty: true,
+						articles: true,
+					},
+				},
 			},
 			where: data,
 		});

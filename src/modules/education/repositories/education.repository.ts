@@ -82,6 +82,12 @@ export class EducationRepository implements IEducationRepository {
 	async findByMasterId(masterId: number): Promise<Education | null> {
 		return this.prismaService.client.education.findFirst({
 			where: { masterId },
+			include: {
+				master: true,
+				bachelor: true,
+				faculty: true,
+				articles: true,
+			},
 		});
 	}
 
@@ -92,6 +98,9 @@ export class EducationRepository implements IEducationRepository {
 			},
 			include: {
 				master: true,
+				bachelor: true,
+				faculty: true,
+				articles: true,
 			},
 		});
 	}
@@ -102,6 +111,9 @@ export class EducationRepository implements IEducationRepository {
 			},
 			include: {
 				master: true,
+				bachelor: true,
+				faculty: true,
+				articles: true,
 			},
 		});
 	}
@@ -112,6 +124,9 @@ export class EducationRepository implements IEducationRepository {
 			},
 			include: {
 				master: true,
+				bachelor: true,
+				faculty: true,
+				articles: true,
 			},
 		});
 	}
