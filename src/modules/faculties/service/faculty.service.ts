@@ -21,7 +21,7 @@ export class FacultyService implements IFacultyService {
 		const newFaculty = new FacultyEntity(params.name);
 		const existed = await this.facultyRepository.findByName(params.name);
 
-		if (!existed) {
+		if (existed) {
 			return null;
 		}
 
