@@ -234,9 +234,10 @@ export class MasterController extends BaseController implements IMasterControlle
 			}
 
 			const student = await this.masterService.update(id, data);
-			const token = this.signJWT(student.email, this.configService.get('SECRET'));
-			res.cookie('token', token);
-
+			if (!student) {
+				this.send(res, 401, 'Berilgan Malumotlarni tekshiring');
+				return;
+			}
 			this.ok(res, {
 				status: true,
 				message: 'Магистрант успешно обновлено',

@@ -72,4 +72,8 @@ export class CreateEducationDto {
 	@IsString()
 	@IsNotEmpty()
 	academicLeave: string;
+
+	@IsString()
+	@IsNotEmpty()
+	scientificInternshipPlace: string;
 }

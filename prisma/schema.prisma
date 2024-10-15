@@ -67,7 +67,7 @@ model Education {
   thesisTopic           String
   articlesId            Int?
   academicLeave         String
-  
+  scientificInternshipPlace String
   // References
   master  Master  @relation(fields: [masterId], references: [id], onDelete: Cascade)
   bachelor Bachelor? @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
@@ -102,7 +102,6 @@ model Articles {
   secondArticle        String
   secondArticleDate    DateTime
   secondArticleJournal String
-
   // References
   education Education[]
 }

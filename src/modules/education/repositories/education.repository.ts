@@ -52,6 +52,9 @@ export class EducationRepository implements IEducationRepository {
 				...(data.thesisTopic && { thesisTopic: data.thesisTopic }),
 				...(data.articlesId && { articlesId: data.articlesId }),
 				...(data.academicLeave && { academicLeave: data.academicLeave }),
+				...(data.scientificInternshipPlace && {
+					scientificInternshipPlace: data.scientificInternshipPlace,
+				}),
 			},
 		});
 	}

@@ -90,6 +90,9 @@ export class EducationService implements IEducationService {
 			...(data.thesisTopic && { thesisTopic: data.thesisTopic }),
 			...(data.articlesId && { articlesId: data.articlesId }),
 			...(data.academicLeave && { academicLeave: data.academicLeave }),
+			...(data.scientificInternshipPlace && {
+				scientificInternshipPlace: data.scientificInternshipPlace,
+			}),
 		};
 		const hasEducationFilters = Object.keys(educationFilters).length > 0;
 		if (!hasEducationFilters) {

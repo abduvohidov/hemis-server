@@ -72,4 +72,8 @@ export class UpdateEducationDto {
 	@IsString()
 	@IsOptional()
 	academicLeave?: string;
+
+	@IsString()
+	@IsOptional()
+	scientificInternshipPlace?: string;
 }
