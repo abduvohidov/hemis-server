@@ -75,7 +75,7 @@ export class MasterController extends BaseController implements IMasterControlle
 			},
 			{
 				path: '/download/sheets',
-				method: 'get',
+				method: 'post',
 				func: this.downloadXlsxFile,
 			},
 			{
@@ -273,12 +273,7 @@ export class MasterController extends BaseController implements IMasterControlle
 
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const masters = await this.masterService.getAll();
-			const educations = await this.educationService.getAll();
-			const addresses = await this.addressService.find();
-			const bachelors = await this.bachelorService.find();
-			const faculties = await this.facultyService.find();
-			const articles = await this.articleService.getAll();
+			const { masters, educations, addresses, bachelors, faculties, articles } = req.body;
 
 			const filePath = await this.masterService.generateXlsxFile(
 				masters,
