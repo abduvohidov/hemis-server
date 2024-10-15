@@ -27,13 +27,13 @@ export class FacultyController extends BaseController implements IFacultyControl
 				func: this.create,
 				middlewares: [
 					new ValidateMiddleware(FacultyCreateDto),
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
+					// new AuthMiddleware(this.configService.get('SECRET')),
+					// new VerifyRole(new PrismaClient(), [
+					// 	ROLES.admin,
+					// 	ROLES.director,
+					// 	ROLES.teacher,
+					// 	ROLES.teamLead,
+					// ]),
 				],
 			},
 			{
@@ -94,7 +94,7 @@ export class FacultyController extends BaseController implements IFacultyControl
 			},
 			{
 				path: '/update/:id',
-				method: 'patch',
+				method: 'put',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),

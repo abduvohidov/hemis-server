@@ -39,7 +39,7 @@ export class BachelorController extends BaseController implements IBachelorContr
 			},
 			{
 				path: '/update/:id',
-				method: 'patch',
+				method: 'put',
 				func: this.update,
 				middlewares: [
 					new AuthMiddleware(this.configService.get('SECRET')),
