@@ -29,6 +29,7 @@ model Master {
   email             String   @unique
   phoneNumber       String
   parentPhoneNumber String
+  avatarUrl         String   @default("")
   password          String
 
   // References
@@ -49,7 +50,7 @@ model Address {
 
 model Education {
   id                    Int    @id @default(autoincrement())
-  masterId             Int
+  masterId              Int
   bachelorId            Int?
   currentSpecialization String
   facultyId             Int?
