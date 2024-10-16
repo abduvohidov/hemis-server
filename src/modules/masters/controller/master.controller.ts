@@ -1,20 +1,21 @@
 import fs from 'fs';
+import path from 'path';
 import 'reflect-metadata';
 import { sign } from 'jsonwebtoken';
 import { ILogger } from '../../../logger';
-import { IMasterService, MasterRegisterDto } from '../index';
 import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { ROLES, TYPES } from '../../../types';
 import { IConfigService } from '../../../config';
+import { IArticleService } from '../../articles';
+import { IAddressService } from '../../addresses';
+import { IFacultyService } from '../../faculties';
+import { IBachelorService } from '../../bachelors';
+import { IEducationService } from '../../education';
 import { Request, Response, NextFunction } from 'express';
+import { IMasterService, MasterRegisterDto } from '../index';
 import { IMasterController } from './master.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
-import { IAddressService } from '../../addresses';
-import { IEducationService } from '../../education';
-import { IBachelorService } from '../../bachelors';
-import { IFacultyService } from '../../faculties';
-import { IArticleService } from '../../articles';
 
 injectable();
 export class MasterController extends BaseController implements IMasterController {
@@ -76,6 +77,11 @@ export class MasterController extends BaseController implements IMasterControlle
 			{
 				path: '/download/sheets',
 				method: 'post',
+				func: this.generateXlsxFile,
+			},
+			{
+				path: '/download/sheets/:filename',
+				method: 'get',
 				func: this.downloadXlsxFile,
 			},
 			{
@@ -170,7 +176,6 @@ export class MasterController extends BaseController implements IMasterControlle
 	async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.masterService.getByEmail(req.body.email);
-
 			if (!data) {
 				this.send(res, 422, 'Такой магистрант не существует');
 				return;
@@ -273,28 +278,27 @@ export class MasterController extends BaseController implements IMasterControlle
 
 	async downloadXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const { masters, educations, addresses, bachelors, faculties, articles } = req.body;
-
-			const filePath = await this.masterService.generateXlsxFile(
-				masters,
-				educations,
-				addresses,
-				bachelors,
-				faculties,
-				articles,
-			);
-
+			const filePath = path.join(__dirname, '../', req.params.filename);
 			res.download(filePath, (err) => {
 				if (err) {
-					console.error('Ошибка загрузки файла:', err);
-					return this.send(res, 500, 'Ошибка загрузки файла.');
+					console.log(err);
 				}
 
-				fs.unlink(filePath, (unlinkErr) => {
-					if (unlinkErr) {
-						console.error('Ошибка удаления файла:', unlinkErr);
-					}
-				});
+				fs.unlinkSync(filePath);
+			});
+		} catch (error) {
+			console.error('Ошибка обработки запроса:', error);
+			this.send(res, 400, 'неизвестный');
+		}
+	}
+
+	async generateXlsxFile(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const data = req.body;
+			const filename = await this.masterService.generateXlsxFile(data);
+			this.ok(res, {
+				ok: true,
+				data: { filename: filename },
 			});
 		} catch (error) {
 			console.error('Ошибка обработки запроса:', error);

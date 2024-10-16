@@ -125,36 +125,15 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findByFilters(masterFilters);
 	}
 
-	async generateXlsxFile(
-		masters: Master[],
-		education: Education[],
-		addresses: Address[],
-		bachelors: Bachelor[],
-		faculties: Faculty[],
-		articles: Articles[],
-	): Promise<string> {
+	async generateXlsxFile(masters: any[]): Promise<string> {
 		const workbook = xlsx.utils.book_new();
 
-		const data = masters.map((master) => {
-			const masterEducation = education.filter((edu) => edu.masterId === master.id);
-			const masterAddress = addresses.filter((addr) => addr.masterId === master.id);
-			const masterBachelor = bachelors.filter((bachelor) => {
-				return bachelor.id === masterEducation[0]?.bachelorId;
-			});
-
-			const masterFaculty = faculties.filter((faculty) => {
-				return faculty.id === masterEducation[0]?.facultyId;
-			});
-
-			const masterArticle = articles.filter((article) => {
-				return article.id === masterEducation[0]?.articlesId;
-			});
-
-			const edu = masterEducation[0] || {};
-			const addr = masterAddress[0] || {};
-			const bachelor = masterBachelor[0] || {};
-			const faculty = masterFaculty[0] || {};
-			const article = masterArticle[0] || {};
+		const data = masters?.map((master) => {
+			const masterEducation = master?.education[0] || {};
+			const masterAddress = master?.addresses[0] || {};
+			const masterBachelor = masterEducation?.bachelor || {};
+			const masterFaculty = masterEducation?.faculty || {};
+			const masterArticle = masterEducation?.article || {};
 
 			return {
 				//masters
@@ -171,38 +150,38 @@ export class MasterService implements IMasterService {
 				PhoneNumber: master.phoneNumber,
 				ParentPhoneNumber: master.parentPhoneNumber,
 				//address
-				Country: addr.country || '-',
-				Region: addr.region || '-',
-				Address: addr.address || '-',
+				Country: masterAddress.country || '-',
+				Region: masterAddress.region || '-',
+				Address: masterAddress.address || '-',
 				//education
-				CurrentSpecialization: edu.currentSpecialization || '-',
-				Course: edu.course || '-',
-				PaymentType: edu.paymentType || '-',
-				EntryYear: edu.entryYear || '-',
-				Form: edu.educationForm || '-',
-				LanguageCertification: edu.languageCertificate || '-',
-				Semester: edu.semester || '-',
-				ScientificSupervisor: edu.scientificSupervisor || '-',
-				ScientificAdvisor: edu.scientificAdvisor || '-',
-				InternshipSupervisor: edu.internshipSupervisor || '-',
-				InternalReviewer: edu.internalReviewer || '-',
-				ExternamReviewer: edu.externamReviewer || '-',
-				ThesisTopic: edu.thesisTopic || '-',
-				AcademicLeave: edu.academicLeave || '-',
+				CurrentSpecialization: masterEducation.currentSpecialization || '-',
+				Course: masterEducation.course || '-',
+				PaymentType: masterEducation.paymentType || '-',
+				EntryYear: masterEducation.entryYear || '-',
+				Form: masterEducation.masterEducationcationForm || '-',
+				LanguageCertification: masterEducation.languageCertificate || '-',
+				Semester: masterEducation.semester || '-',
+				ScientificSupervisor: masterEducation.scientificSupervisor || '-',
+				ScientificAdvisor: masterEducation.scientificAdvisor || '-',
+				InternshipSupervisor: masterEducation.internshipSupervisor || '-',
+				InternalReviewer: masterEducation.internalReviewer || '-',
+				ExternamReviewer: masterEducation.externamReviewer || '-',
+				ThesisTopic: masterEducation.thesisTopic || '-',
+				AcademicLeave: masterEducation.academicLeave || '-',
 				// bachelors
-				GraduationYear: bachelor.graduationYear || '-',
-				DiplomaNumber: bachelor.diplomaNumber || '-',
-				PreviousSpecialization: bachelor.previousSpecialization || '-',
-				PreviousUniversity: bachelor.previousUniversity || '-',
+				GraduationYear: masterBachelor.graduationYear || '-',
+				DiplomaNumber: masterBachelor.diplomaNumber || '-',
+				PreviousSpecialization: masterBachelor.previousSpecialization || '-',
+				PreviousUniversity: masterBachelor.previousUniversity || '-',
 				// Faculty
-				FacultyName: faculty.name || '-',
+				FacultyName: masterFaculty.name || '-',
 				// Article
-				FirstArticle: article.firstArticle || '-',
-				SecondArticle: article.secondArticle || '-',
-				FirstArticleJournal: article.firstArticleJournal || '-',
-				SecondArticleJournal: article.secondArticleJournal || '-',
-				FirstArticleDate: article.firstArticleDate || '-',
-				SecondArticleDate: article.secondArticleDate || '-',
+				FirstArticle: masterArticle.firstArticle || '-',
+				SecondArticle: masterArticle.secondArticle || '-',
+				FirstArticleJournal: masterArticle.firstArticleJournal || '-',
+				SecondArticleJournal: masterArticle.secondArticleJournal || '-',
+				FirstArticleDate: masterArticle.firstArticleDate || '-',
+				SecondArticleDate: masterArticle.secondArticleDate || '-',
 			};
 		});
 
@@ -295,10 +274,10 @@ export class MasterService implements IMasterService {
 			{ wch: 15 },
 		];
 		xlsx.utils.book_append_sheet(workbook, worksheet, 'masters_data');
-
-		const filePath = path.join(__dirname, '../data.xlsx');
+		const filename = `report-${Math.floor(Math.random() * 1000000)}.xlsx`;
+		const filePath = path.join(__dirname, `../${filename}`);
 		xlsx.writeFile(workbook, filePath);
 
-		return filePath;
+		return filename;
 	}
 }

@@ -10,12 +10,5 @@ export interface IMasterService {
 	getByEmail: (email: string) => Promise<Master | null>;
 	getById: (id: number) => Promise<Master | null>;
 	getByFilters: (data: Partial<Master>) => Promise<Master[] | []>;
-	generateXlsxFile: (
-		masters: Master[],
-		education: Education[],
-		addresses: Address[],
-		bachelor: Bachelor[],
-		faculties: Faculty[],
-		articles: Articles[],
-	) => Promise<string>;
+	generateXlsxFile: (masters: Master[]) => Promise<string>;
 }
