@@ -1,7 +1,7 @@
 import xlsx from 'xlsx';
 import path from 'path';
 import { TYPES } from '../../../types';
-import { Address, Articles, Bachelor, Education, Faculty, Master } from '@prisma/client';
+import { Master } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { IConfigService } from '../../../config';
 import { IMasterService } from './master.service.interface';

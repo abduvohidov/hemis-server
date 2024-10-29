@@ -48,9 +48,8 @@ export class Master implements IMasterEntity {
 		return this._jshshr;
 	}
 
-	// Return dateOfBirth as a Date object
 	get dateOfBirth(): Date {
-		return new Date(`${this._dateOfBirth}T00:00:00.000Z`);
+		return this._dateOfBirth;
 	}
 
 	get gender(): string {

@@ -7,11 +7,6 @@ import { PrismaClient } from '@prisma/client';
 import { injectable, inject } from 'inversify';
 import { ROLES, TYPES } from '../../../types';
 import { IConfigService } from '../../../config';
-import { IArticleService } from '../../articles';
-import { IAddressService } from '../../addresses';
-import { IFacultyService } from '../../faculties';
-import { IBachelorService } from '../../bachelors';
-import { IEducationService } from '../../education';
 import { Request, Response, NextFunction } from 'express';
 import { IMasterService, MasterRegisterDto } from '../index';
 import { IMasterController } from './master.controller.interface';
@@ -22,11 +17,6 @@ export class MasterController extends BaseController implements IMasterControlle
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
 		@inject(TYPES.MasterService) private masterService: IMasterService,
-		@inject(TYPES.EducationService) private educationService: IEducationService,
-		@inject(TYPES.AddressService) private addressService: IAddressService,
-		@inject(TYPES.BachelorService) private bachelorService: IBachelorService,
-		@inject(TYPES.FacultyService) private facultyService: IFacultyService,
-		@inject(TYPES.ArticleService) private articleService: IArticleService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
@@ -139,23 +129,21 @@ export class MasterController extends BaseController implements IMasterControlle
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.masterService.create(req.body);
+			console.log(data);
 
 			if (!data) {
-				this.send(res, 422, 'Такой магистрант уже существует');
+				this.send(res, 422, 'Bunday magistr allaqachon qo`shilgan');
 				return;
 			}
 
 			this.ok(res, {
 				status: true,
-				message: 'Магистрант успешно создано',
+				message: 'Magistr qo`shildi',
 				data,
 			});
 		} catch (err) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при добавлении пользователя, проверьте добавляемые данные',
-			);
+			console.log(err);
+			this.send(res, 500, 'Qo`shilgan ma`lumotlarni tekshirib, qaytadan urinib ko`ring');
 		}
 	}
 

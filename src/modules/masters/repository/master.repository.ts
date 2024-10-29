@@ -18,7 +18,7 @@ export class MasterRepository implements IMasterRepository {
 				middleName: master.middleName,
 				passportNumber: master.passportNumber,
 				jshshr: master.jshshr,
-				dateOfBirth: master.dateOfBirth,
+				dateOfBirth: new Date(master.dateOfBirth),
 				gender: master.gender,
 				nationality: master.nationality,
 				email: master.email,

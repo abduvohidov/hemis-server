@@ -18,11 +18,9 @@ export class MasterRegisterDto {
 	readonly passportNumber: string;
 
 	@IsNotEmpty()
-	@IsString()
 	readonly jshshr: string;
 
-	@IsDate()
-	@Type(() => Date)
+	@IsNotEmpty()
 	readonly dateOfBirth: Date;
 
 	@IsNotEmpty()
@@ -50,6 +48,6 @@ export class MasterRegisterDto {
 
 	@IsNotEmpty()
 	@IsString()
-	@Length(6, 20, { message: 'Длина вашего пароля должна быть больше 6' })
+	@Length(4, 20, { message: 'Parol eng kamida 4 ta bo`lish kerak' })
 	readonly password: string;
 }

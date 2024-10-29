@@ -23,7 +23,7 @@ model Master {
   middleName        String
   passportNumber    String   @unique
   jshshr            String   @unique
-  dateOfBirth       DateTime
+  dateOfBirth       DateTime @db.Date
   gender            String
   nationality       String
   email             String   @unique
@@ -98,10 +98,10 @@ model Faculty {
 model Articles {
   id                   Int      @id @default(autoincrement())
   firstArticle         String
-  firstArticleDate     DateTime
+  firstArticleDate     DateTime @db.Date
   firstArticleJournal  String
   secondArticle        String
-  secondArticleDate    DateTime
+  secondArticleDate    DateTime @db.Date
   secondArticleJournal String
   // References
   education Education[]
