@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 export interface IFacultyController {
-	create: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+	createOrFind: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	find: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	findByName: (req: Request, res: Response, next: NextFunction) => Promise<void>;

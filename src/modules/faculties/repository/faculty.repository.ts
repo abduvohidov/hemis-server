@@ -10,10 +10,10 @@ import { IFacultyRepository } from './faculty.repository.interface';
 export class FacultyRepository implements IFacultyRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create(params: IFaculty): Promise<IFaculty> {
+	async create(name: string): Promise<Faculty> {
 		return await this.prismaService.client.faculty.create({
 			data: {
-				name: params.name,
+				name,
 			},
 		});
 	}
@@ -29,7 +29,6 @@ export class FacultyRepository implements IFacultyRepository {
 	}
 
 	async findByName(name: string): Promise<Faculty | null> {
-		console.log(name);
 		return await this.prismaService.client.faculty.findFirst({
 			where: { name },
 		});

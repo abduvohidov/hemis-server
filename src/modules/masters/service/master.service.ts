@@ -98,10 +98,6 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findByEmail(email);
 	}
 
-	async getById(id: number): Promise<Master | null> {
-		return this.masterRepository.findById(id);
-	}
-
 	async getByFilters(data: Partial<Master>): Promise<Master[] | []> {
 		const birthDate = new Date(`${data?.dateOfBirth}T00:00:00.000Z`);
 		const masterFilters = {

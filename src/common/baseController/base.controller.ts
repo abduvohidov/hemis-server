@@ -16,16 +16,19 @@ export abstract class BaseController {
 	get router(): Router {
 		return this._router;
 	}
-
-	public send<T>(res: Response, code: number, message: T): ExpressReturnType {
+	public send<T>(
+		res: Response,
+		code: number,
+		message: T,
+		success?: boolean | undefined,
+	): ExpressReturnType {
 		res.type('application/json');
-		return res.status(code).json(message);
+		return res.status(code).json({ success, message });
 	}
 
 	public ok<T>(res: Response, message: T): ExpressReturnType {
-		return this.send<T>(res, 200, message);
+		return this.send<T>(res, 200, message, true); // success is true by default here
 	}
-
 	public created(res: Response): ExpressReturnType {
 		return res.sendStatus(201);
 	}

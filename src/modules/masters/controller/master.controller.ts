@@ -74,20 +74,6 @@ export class MasterController extends BaseController implements IMasterControlle
 				method: 'get',
 				func: this.downloadXlsxFile,
 			},
-			{
-				path: '/:id',
-				method: 'get',
-				func: this.getById,
-				middlewares: [
-					new AuthMiddleware(this.configService.get('SECRET')),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
-			},
 
 			{
 				path: '/update/:id',
@@ -129,7 +115,6 @@ export class MasterController extends BaseController implements IMasterControlle
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.masterService.create(req.body);
-			console.log(data);
 
 			if (!data) {
 				this.send(res, 422, 'Bunday magistr allaqachon qo`shilgan');
@@ -164,27 +149,6 @@ export class MasterController extends BaseController implements IMasterControlle
 	async getByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = await this.masterService.getByEmail(req.body.email);
-			if (!data) {
-				this.send(res, 422, 'Такой магистрант не существует');
-				return;
-			}
-
-			this.ok(res, {
-				status: true,
-				message: 'Магистрант успешно получено',
-				data,
-			});
-		} catch (error) {
-			console.error('Ошибка при получении магистрантов:', error);
-			next(error);
-		}
-	}
-
-	async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
-		const { id } = req.params;
-		try {
-			const data = await this.masterService.getById(Number(id));
-
 			if (!data) {
 				this.send(res, 422, 'Такой магистрант не существует');
 				return;

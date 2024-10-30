@@ -6,7 +6,6 @@ export interface IMasterController {
 	update: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	delete: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	getByEmail: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-	getById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	getByFilters: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	generateXlsxFile: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }

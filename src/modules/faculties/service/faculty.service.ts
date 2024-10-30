@@ -6,7 +6,6 @@ import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { IFacultyService } from './faculty.service.interface';
-import { IFaculty } from '../models/faculty.entity.interface';
 import { Faculty as FacultyEntity } from '../models/faculty.entity';
 import { FacultyRepository } from '../repository/faculty.repository';
 
@@ -17,15 +16,12 @@ export class FacultyService implements IFacultyService {
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
 
-	async create(params: FacultyCreateDto): Promise<IFaculty | null> {
-		const newFaculty = new FacultyEntity(params.name);
-		const existed = await this.facultyRepository.findByName(params.name);
-
-		if (existed) {
-			return null;
+	async createOrFind(name: string): Promise<Faculty> {
+		let faculty = await this.facultyRepository.findByName(name);
+		if (!faculty) {
+			faculty = await this.facultyRepository.create(name);
 		}
-
-		return this.facultyRepository.create(newFaculty);
+		return faculty;
 	}
 
 	async find(): Promise<Faculty[]> {

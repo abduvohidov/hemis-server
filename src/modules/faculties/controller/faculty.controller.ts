@@ -6,6 +6,7 @@ import { HTTPError } from '../../../errors';
 import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { IConfigService } from '../../../config';
+import { EducationService } from '../../education';
 import { NextFunction, Request, Response } from 'express';
 import { FacultyService } from '../service/faculty.service';
 import { FacultyCreateDto } from '../dto/faculty-create.dto';
@@ -16,26 +17,28 @@ import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '
 export class FacultyController extends BaseController implements IFacultyController {
 	constructor(
 		@inject(TYPES.ILogger) private loggerService: ILogger,
-		@inject(TYPES.FacultyService) private facultyService: FacultyService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
+		@inject(TYPES.FacultyService) private facultyService: FacultyService,
+		@inject(TYPES.EducationService) private educationService: EducationService,
 	) {
 		super(loggerService);
 		this.bindRoutes([
 			{
-				path: '/create',
+				path: '/createOrFind',
 				method: 'post',
-				func: this.create,
+				func: this.createOrFind,
 				middlewares: [
 					new ValidateMiddleware(FacultyCreateDto),
-					// new AuthMiddleware(this.configService.get('SECRET')),
-					// new VerifyRole(new PrismaClient(), [
-					// 	ROLES.admin,
-					// 	ROLES.director,
-					// 	ROLES.teacher,
-					// 	ROLES.teamLead,
-					// ]),
+					new AuthMiddleware(this.configService.get('SECRET')),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
 				],
 			},
+
 			{
 				path: '/all',
 				method: 'get',
@@ -123,28 +126,26 @@ export class FacultyController extends BaseController implements IFacultyControl
 		]);
 	}
 
-	async create(
-		{ body }: Request<{}, {}, FacultyCreateDto>,
-		res: Response,
-		next: NextFunction,
-	): Promise<void> {
+	async createOrFind(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const data = await this.facultyService.create(body);
-			if (!data) {
-				return next(new HTTPError(422, 'Такой факультет уже существует'));
+			const { masterId, name } = req.body;
+
+			const faculty = await this.facultyService.createOrFind(name);
+			// Get education by masterId
+			const education = await this.educationService.getByMasterId(Number(masterId));
+			if (education) {
+				// Update education with the newly created facultyId
+				await this.educationService.changeEducation(education?.id, { facultyId: faculty?.id });
+				this.ok(res, {
+					message: 'Fakultet qo`shildi',
+					data: faculty,
+				});
+				return;
 			}
 
-			this.ok(res, {
-				status: true,
-				message: 'Факультет успешно создано',
-				data,
-			});
+			this.send(res, 409, 'Fakultet mavjud');
 		} catch (e) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при добавлении пользователя, проверьте добавляемые данные',
-			);
+			this.send(res, 500, e);
 		}
 	}
 
@@ -198,7 +199,6 @@ export class FacultyController extends BaseController implements IFacultyControl
 	async findByName(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const { name } = req.body;
-			console.log(name);
 			const data = await this.facultyService.findByName(name);
 			if (!data) {
 				this.send(res, 404, 'Iltimos fakultet yarating');

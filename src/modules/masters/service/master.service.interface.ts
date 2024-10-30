@@ -8,7 +8,6 @@ export interface IMasterService {
 	update: (id: number, master: Partial<Master>) => Promise<Master>;
 	delete: (id: number) => Promise<void>;
 	getByEmail: (email: string) => Promise<Master | null>;
-	getById: (id: number) => Promise<Master | null>;
 	getByFilters: (data: Partial<Master>) => Promise<Master[] | []>;
 	generateXlsxFile: (masters: Master[]) => Promise<string>;
 }
