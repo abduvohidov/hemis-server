@@ -17,7 +17,7 @@ export class AddressRepository implements IAddressRepository {
 				country: address.country,
 				region: address.region,
 				address: address.address,
-				masterId: address.masterId,
+				masterId: Number(address.masterId),
 			},
 		});
 	}

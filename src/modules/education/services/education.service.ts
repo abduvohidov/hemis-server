@@ -44,6 +44,7 @@ export class EducationService implements IEducationService {
 				return null;
 			}
 
+			data = { ...data, masterId: Number(data.masterId) };
 			return await this.educationRepository.create(data);
 		} catch (error) {
 			console.error('Error preparing education:', error);

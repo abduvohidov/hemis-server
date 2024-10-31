@@ -124,15 +124,11 @@ export class AddressController extends BaseController implements IAddressControl
 
 			this.ok(res, {
 				status: true,
-				message: 'Адресс успешно создано',
+				message: 'Address qo`shildi',
 				data,
 			});
 		} catch (error) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при добавлении адреса, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Kutilmagan xato');
 		}
 	}
 
