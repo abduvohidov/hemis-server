@@ -111,20 +111,25 @@ export class BachelorController extends BaseController implements IBachelorContr
 	}
 
 	async create(
-		{ body }: Request<{}, {}, BachelorCreateDto>,
+		req: Request<{}, {}, BachelorCreateDto>,
 		res: Response,
 		next: NextFunction,
 	): Promise<void> {
 		try {
-			const data = await this.bachelorService.create(body);
+			const data = req.body;
+			const result = await this.bachelorService.create(data);
 
-			if (!data) {
-				return next(new HTTPError(422, 'Такой бакалавр уже существует'));
+			if (typeof result === 'string') {
+				this.send(res, 409, result, false);
+				return;
 			}
 
+			if (result === null) {
+				this.send(res, 409, "Iltimos malumotlarni tekshirib qaytadan urinib ko'ring", false);
+				return;
+			}
 			this.ok(res, {
-				status: true,
-				message: 'Бакалавр успешно создано',
+				message: 'Tugatilgan O`TM qo`shildi',
 				data,
 			});
 		} catch (error) {

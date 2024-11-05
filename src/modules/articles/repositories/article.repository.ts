@@ -8,7 +8,7 @@ import { IArticleRepository } from './article.repository.interface';
 export class ArticleRepository implements IArticleRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create(data: Articles): Promise<Articles | null> {
+	async create(data: Omit<Articles, 'id'>): Promise<Articles | null> {
 		return await this.prismaService.client.articles.create({
 			data: {
 				firstArticle: data.firstArticle,

@@ -1,17 +1,16 @@
-import { inject, injectable } from 'inversify';
-import { IBachelorRepository } from './bachelor.repository.interface';
-import { TYPES } from '../../../types';
-import { PrismaService } from '../../../database/prisma.service';
-import { Bachelor } from '@prisma/client';
-import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
-import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
 import 'reflect-metadata';
+import { TYPES } from '../../../types';
+import { Bachelor } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
+import { PrismaService } from '../../../database/prisma.service';
+import { IBachelorRepository } from './bachelor.repository.interface';
 
 @injectable()
 export class BacherlorRepository implements IBachelorRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
-	async create(params: BachelorCreateDto): Promise<Bachelor | null> {
+	async create(params: Omit<Bachelor, 'id'>): Promise<Bachelor | null> {
 		return await this.prismaService.client.bachelor.create({
 			include: {
 				education: true,

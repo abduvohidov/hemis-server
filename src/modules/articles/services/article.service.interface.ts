@@ -1,7 +1,8 @@
 import { Articles, Master } from '@prisma/client';
+import { CreateArticleDto } from '../dto/create.article.dto';
 
 export interface IArticleService {
-	prepareArticle: (data: Articles) => Promise<Articles | null>;
+	prepareArticle: (data: CreateArticleDto) => Promise<Articles | string | null>;
 	removeArticle: (id: number) => Promise<Articles | null>;
 	changeArticle: (id: number, data: Partial<Articles>) => Promise<Articles | null>;
 	//gets

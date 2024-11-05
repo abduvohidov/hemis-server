@@ -8,15 +8,32 @@ import { IMasterService } from './master.service.interface';
 import { MasterRegisterDto } from '../dto/master-register.dto';
 import { IMasterEntity } from '../models/master.entity.interface';
 import { Master as MasterEntity, IMasterRepository } from '../index';
+import { IUsersRepository } from '../../users';
 
 @injectable()
 export class MasterService implements IMasterService {
 	constructor(
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
+		@inject(TYPES.UserRepository) private userRepository: IUsersRepository,
 	) {}
 
-	async create(master: MasterRegisterDto): Promise<IMasterEntity | null> {
+	async create(master: MasterRegisterDto): Promise<IMasterEntity | string | null> {
+		// check if email is unique
+		const existedMastersEmail = await this.masterRepository.findByEmail(master.email);
+		const existedUserEmail = await this.userRepository.findByEmail(master.email);
+		if (!existedMastersEmail || !existedUserEmail) return 'Bunday email avval qo`shilgan';
+		const uniqueData = {
+			passportNumber: master.passportNumber,
+			phoneNumber: master.phoneNumber,
+			jshshr: master.jshshr,
+		};
+
+		// check for other unique data
+		const existingMaster = await this.masterRepository.findByFilters(uniqueData);
+		if (!existingMaster?.length)
+			return 'Passpo`rt raqam yoki JSHSHIR yoki telefon raqam avval kiritilgan ';
+		// Unless create master
 		const newmaster = new MasterEntity(
 			master.lastName,
 			master.firstName,
@@ -34,11 +51,7 @@ export class MasterService implements IMasterService {
 		);
 		const salt = this.configService.get('SALT');
 		await newmaster.setPassword(master.password, Number(salt));
-		const existedmaster = await this.masterRepository.findByEmail(master.email);
-		if (existedmaster) {
-			return null;
-		}
-		return this.masterRepository.create(newmaster);
+		return await this.masterRepository.create(newmaster);
 	}
 
 	async getAll(): Promise<Master[]> {

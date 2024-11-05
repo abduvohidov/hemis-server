@@ -16,12 +16,20 @@ export class BachelorService implements IBachelorService {
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
 
-	async create(params: BachelorCreateDto): Promise<Bachelor | null> {
+	async create(params: BachelorCreateDto): Promise<Bachelor | string | null> {
+		const education = await this.educationRepository.findByMasterId(params.masterId);
+		if (!education) return 'Bunday magistrant topilmadi';
 		const existed = await this.bachelorRepository.findByDiplomaNumber(params.diplomaNumber);
-		if (existed) {
-			return null;
-		}
-		return this.bachelorRepository.create(params);
+		if (existed) return 'Bunday diplom raqami avval kiritilgan';
+		const finalData = {
+			previousUniversity: params.previousUniversity,
+			graduationYear: params.graduationYear,
+			diplomaNumber: params.diplomaNumber,
+			previousSpecialization: params.previousSpecialization,
+		};
+		const bachelor = await this.bachelorRepository.create(finalData);
+		await this.educationRepository.update(education.id, { bachelorId: bachelor?.id });
+		return bachelor;
 	}
 
 	async update(id: number, params: BachelorUpdateDto): Promise<Bachelor | null> {

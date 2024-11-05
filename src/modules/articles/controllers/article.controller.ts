@@ -115,12 +115,11 @@ export class ArticleController extends BaseController implements IArticleControl
 
 	async postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const article = await this.articleService.prepareArticle(req.body);
-			if (!article) {
-				this.send(res, 400, 'Проверить информацию');
-				return;
-			}
-			this.ok(res, { article });
+			const data = req.body;
+			const article = await this.articleService.prepareArticle(data);
+			if (typeof article === 'string') this.send(res, 404, article, false);
+			else if (article) this.ok(res, { message: 'Maqola qo`shildi', data: article });
+			else this.send(res, 409, 'Iltimos qaytadan urinib ko`ring', false);
 		} catch (error) {
 			this.send(
 				res,

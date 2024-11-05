@@ -114,17 +114,21 @@ export class MasterController extends BaseController implements IMasterControlle
 
 	async create(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const data = await this.masterService.create(req.body);
+			const result = await this.masterService.create(req.body);
 
-			if (!data) {
-				this.send(res, 422, 'Bunday magistr allaqachon qo`shilgan');
+			if (typeof result === 'string') {
+				this.send(res, 400, result);
 				return;
 			}
 
+			if (!result) {
+				this.send(res, 409, 'Iltimos qaytadan urinib ko`ring');
+				return;
+			}
 			this.ok(res, {
 				status: true,
 				message: 'Magistr qo`shildi',
-				data,
+				result,
 			});
 		} catch (err) {
 			console.log(err);

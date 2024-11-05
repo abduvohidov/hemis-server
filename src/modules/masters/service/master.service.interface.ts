@@ -3,7 +3,7 @@ import { MasterRegisterDto } from '../dto/master-register.dto';
 import { IMasterEntity } from '../models/master.entity.interface';
 
 export interface IMasterService {
-	create: (master: MasterRegisterDto) => Promise<IMasterEntity | null>;
+	create: (master: MasterRegisterDto) => Promise<IMasterEntity | string | null>;
 	getAll: () => Promise<Master[]>;
 	update: (id: number, master: Partial<Master>) => Promise<Master>;
 	delete: (id: number) => Promise<void>;

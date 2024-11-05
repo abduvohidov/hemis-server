@@ -1,5 +1,5 @@
 import { TYPES } from './../../../types';
-import { IArticleRepository } from '../index';
+import { CreateArticleDto, IArticleRepository } from '../index';
 import { inject, injectable } from 'inversify';
 import { Articles, Master } from '@prisma/client';
 import { IEducation } from '../../education/types';
@@ -13,8 +13,20 @@ export class ArticleService implements IArticleService {
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
 
-	async prepareArticle(data: Articles): Promise<Articles | null> {
-		return await this.articleRepository.create(data);
+	async prepareArticle(data: CreateArticleDto): Promise<Articles | string | null> {
+		const education = await this.educationRepository.findByMasterId(data.masterId);
+		if (!education) return 'Magistrant topilmadi';
+		const finalData = {
+			firstArticle: data.firstArticle,
+			firstArticleDate: data.firstArticleDate,
+			firstArticleJournal: data.firstArticleJournal,
+			secondArticle: data.secondArticle,
+			secondArticleDate: data.secondArticleDate,
+			secondArticleJournal: data.secondArticleJournal,
+		};
+		const article = await this.articleRepository.create(finalData);
+		await this.educationRepository.update(education?.id, { articlesId: article?.id });
+		return article;
 	}
 	async removeArticle(id: number): Promise<Articles | null> {
 		const article = await this.articleRepository.findById(id);

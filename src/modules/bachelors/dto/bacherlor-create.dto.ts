@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsNumber, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray, IsOptional } from 'class-validator';
 
 export class BachelorCreateDto {
 	@IsNotEmpty()
@@ -17,8 +17,7 @@ export class BachelorCreateDto {
 	@IsString()
 	readonly previousSpecialization: string;
 
-	@IsNotEmpty()
-	@IsArray()
 	@IsNumber()
-	readonly educationIds: number[];
+	@IsOptional()
+	readonly masterId: number;
 }

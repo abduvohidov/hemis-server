@@ -3,7 +3,7 @@ import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
 import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
 
 export interface IBachelorService {
-	create: (params: BachelorCreateDto) => Promise<Bachelor | null>;
+	create: (params: BachelorCreateDto) => Promise<Bachelor | string | null>;
 	update: (id: number, params: BachelorUpdateDto) => Promise<Bachelor | null>;
 	delete: (id: number) => Promise<Bachelor | null>;
 

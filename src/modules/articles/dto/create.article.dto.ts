@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsDate, IsNotEmpty } from 'class-validator';
+import { IsString, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateArticleDto {
 	@IsString()
@@ -25,4 +25,7 @@ export class CreateArticleDto {
 	@IsString()
 	@IsNotEmpty()
 	secondArticleJournal: string;
+
+	@IsOptional()
+	masterId: number;
 }
