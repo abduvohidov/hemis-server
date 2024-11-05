@@ -30,18 +30,17 @@ export class UsersRepository implements IUsersRepository {
 		const user = await this.prismaService.client.userModel.findFirst({
 			where: { id },
 		});
-	
+
 		if (!user) {
 			return null;
 		}
-	
 		return this.prismaService.client.userModel.delete({
 			where: { id },
 		});
 	}
 
 	async findByEmail(email: string): Promise<UserModel | null> {
-		return this.prismaService.client.userModel.findFirst({
+		return this.prismaService.client.userModel.findUnique({
 			where: { email },
 		});
 	}

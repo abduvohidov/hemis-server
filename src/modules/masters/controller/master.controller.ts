@@ -190,26 +190,22 @@ export class MasterController extends BaseController implements IMasterControlle
 			const id = Number(req.params.id);
 
 			if (!data) {
-				this.send(res, 422, 'Пж проверьте данные');
+				this.send(res, 400, 'Malumotlarni qayta tekshiring');
 				return;
 			}
 
-			const student = await this.masterService.update(id, data);
-			if (!student) {
-				this.send(res, 401, 'Berilgan Malumotlarni tekshiring');
-				return;
+			const result = await this.masterService.update(id, data);
+			if (typeof result === 'string') {
+				this.send(res, 404, result);
+			} else {
+				this.ok(res, {
+					status: true,
+					message: 'Magistr o`zgartirildi',
+					data: result,
+				});
 			}
-			this.ok(res, {
-				status: true,
-				message: 'Магистрант успешно обновлено',
-				data: student,
-			});
 		} catch (err) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при обновлении пользователя, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Qayta urinib ko`ring');
 		}
 	}
 

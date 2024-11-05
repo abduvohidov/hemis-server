@@ -22,17 +22,30 @@ export class MasterService implements IMasterService {
 		// check if email is unique
 		const existedMastersEmail = await this.masterRepository.findByEmail(master.email);
 		const existedUserEmail = await this.userRepository.findByEmail(master.email);
-		if (!existedMastersEmail || !existedUserEmail) return 'Bunday email avval qo`shilgan';
-		const uniqueData = {
-			passportNumber: master.passportNumber,
-			phoneNumber: master.phoneNumber,
-			jshshr: master.jshshr,
-		};
-
+		if (existedMastersEmail !== null || existedUserEmail !== null)
+			return 'Bunday email avval qo`shilgan';
 		// check for other unique data
-		const existingMaster = await this.masterRepository.findByFilters(uniqueData);
-		if (!existingMaster?.length)
-			return 'Passpo`rt raqam yoki JSHSHIR yoki telefon raqam avval kiritilgan ';
+		const existingMastersPassport = await this.masterRepository.findByFilters({
+			passportNumber: master.passportNumber,
+		});
+
+		if (existingMastersPassport?.length) {
+			return 'Passpo`rt raqam  avval kiritilgan ';
+		}
+		const existingMastersPhone = await this.masterRepository.findByFilters({
+			phoneNumber: master.phoneNumber,
+		});
+
+		if (existingMastersPhone?.length) {
+			return 'Telefon raqam avval kiritilgan ';
+		}
+		const existingMastersJshshr = await this.masterRepository.findByFilters({
+			jshshr: master.jshshr,
+		});
+
+		if (existingMastersJshshr?.length) {
+			return 'JSHSHIR avval kiritilgan ';
+		}
 		// Unless create master
 		const newmaster = new MasterEntity(
 			master.lastName,
@@ -58,39 +71,38 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findAll();
 	}
 
-	async update(id: number, master: Partial<Master>): Promise<Master> {
-		const existingmaster = await this.masterRepository.findById(id);
-		if (!existingmaster) {
-			throw new Error(`Студент с идентификатором ${id} не найден.`);
+	async update(id: number, master: Partial<Master>): Promise<Master | string> {
+		const existingMaster = await this.masterRepository.findById(id);
+		if (!existingMaster) {
+			return 'Bunday magistr topilmadi';
 		}
 
 		// Check if the password is included in the update data
 		if (master.password) {
 			// Only hash and update the password if it was provided
-			const updatedmasterEntity = new MasterEntity(
-				existingmaster.lastName,
-				existingmaster.firstName,
-				existingmaster.middleName,
-				existingmaster.passportNumber,
-				existingmaster.jshshr,
-				existingmaster.dateOfBirth,
-				existingmaster.gender,
-				existingmaster.nationality,
-				existingmaster.email,
-				existingmaster.phoneNumber,
-				existingmaster.parentPhoneNumber,
-				existingmaster.avatarUrl,
+			const updatedMasterEntity = new MasterEntity(
+				existingMaster.lastName,
+				existingMaster.firstName,
+				existingMaster.middleName,
+				existingMaster.passportNumber,
+				existingMaster.jshshr,
+				existingMaster.dateOfBirth,
+				existingMaster.gender,
+				existingMaster.nationality,
+				existingMaster.email,
+				existingMaster.phoneNumber,
+				existingMaster.parentPhoneNumber,
+				existingMaster.avatarUrl,
 				master.password, // Use the updated password
 			);
-
 			const salt = this.configService.get('SALT');
-			await updatedmasterEntity.setPassword(master.password, Number(salt));
+			await updatedMasterEntity.setPassword(master.password, Number(salt));
 
 			// Replace the plaintext password with the hashed one
-			master.password = updatedmasterEntity.password;
+			master.password = updatedMasterEntity.password;
 		}
 
-		return this.masterRepository.update(id, master);
+		return await this.masterRepository.update(id, master);
 	}
 
 	async delete(id: number): Promise<void> {
