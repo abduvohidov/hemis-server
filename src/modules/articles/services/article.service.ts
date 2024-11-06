@@ -1,10 +1,10 @@
 import { TYPES } from './../../../types';
-import { CreateArticleDto, IArticleRepository } from '../index';
 import { inject, injectable } from 'inversify';
 import { Articles, Master } from '@prisma/client';
 import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
 import { IArticleService } from './article.service.interface';
+import { CreateArticleDto, IArticleRepository } from '../index';
 
 @injectable()
 export class ArticleService implements IArticleService {

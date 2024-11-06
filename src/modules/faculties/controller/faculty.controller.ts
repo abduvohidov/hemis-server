@@ -219,23 +219,17 @@ export class FacultyController extends BaseController implements IFacultyControl
 			const data = req.body;
 			const id = Number(req.params.id);
 
-			if (!data) {
-				return next(new HTTPError(422, 'Такой факультет не существует'));
+			const result = await this.facultyService.update(id, data);
+			if (!result) this.send(res, 404, 'Iltimos qayta urinib ko`ring');
+			else {
+				this.ok(res, {
+					status: true,
+					message: 'Yangilandi',
+					data: data,
+				});
 			}
-
-			await this.facultyService.update(id, data);
-
-			this.ok(res, {
-				status: true,
-				message: 'Факультет успешно обновлено',
-				data: data,
-			});
 		} catch (e) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при обновлении пользователя, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Iltimos qayta urinib ko`ring');
 		}
 	}
 

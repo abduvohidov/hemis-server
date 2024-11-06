@@ -145,32 +145,19 @@ export class ArticleController extends BaseController implements IArticleControl
 
 	async updateArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			const data = req.body;
 			const id = Number(req.params.id);
-
-			if (isNaN(id)) {
-				this.send(res, 400, 'Неверный ID статьи');
-				return;
-			}
-
 			const article = await this.articleService.changeArticle(id, req.body);
-			if (!article) {
-				this.send(res, 404, 'Статья не найдена');
-				return;
+			if (!article) this.send(res, 404, 'Iltimos qaytadan urinib ko`ring');
+			else {
+				this.ok(res, {
+					status: true,
+					message: 'Yangilandi',
+					data: article,
+				});
 			}
-
-			this.ok(res, {
-				status: true,
-				message: 'Статья успешно обновлена',
-				data: article,
-			});
 		} catch (err) {
-			console.error('Ошибка при обновлении статьи:', err);
-
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при обновлении статьи, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Iltimos qaytadan urinib ko`ring');
 		}
 	}
 

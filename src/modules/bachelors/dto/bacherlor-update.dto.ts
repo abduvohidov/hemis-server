@@ -16,9 +16,4 @@ export class BachelorUpdateDto {
 	@IsNotEmpty()
 	@IsString()
 	readonly previousSpecialization: string;
-
-	@IsNotEmpty()
-	@IsArray()
-	@IsNumber()
-	readonly educationIds: number[];
 }

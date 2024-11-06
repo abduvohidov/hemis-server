@@ -31,12 +31,7 @@ export class BacherlorRepository implements IBachelorRepository {
 				education: true,
 			},
 			where: { id },
-			data: {
-				previousUniversity: params.previousUniversity,
-				graduationYear: params.graduationYear,
-				diplomaNumber: params.diplomaNumber,
-				previousSpecialization: params.previousSpecialization,
-			},
+			data: params,
 		});
 	}
 	async delete(id: number): Promise<Bachelor | null> {

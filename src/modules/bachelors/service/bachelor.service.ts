@@ -37,7 +37,13 @@ export class BachelorService implements IBachelorService {
 		if (!existed) {
 			return null;
 		}
-		return this.bachelorRepository.update(id, params);
+		const data = {
+			previousUniversity: params.previousUniversity,
+			graduationYear: params.graduationYear,
+			diplomaNumber: params.diplomaNumber,
+			previousSpecialization: params.previousSpecialization,
+		};
+		return this.bachelorRepository.update(id, data);
 	}
 
 	async delete(id: number): Promise<Bachelor | null> {

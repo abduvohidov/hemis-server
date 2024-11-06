@@ -1,18 +1,18 @@
-import { ROLES } from './../../../types';
-import { VerifyRole } from './../../../common/middlewares/verify-role.middleware';
-import { AuthMiddleware } from './../../../common/middlewares/auth.middleware';
-import { Request, Response, NextFunction } from 'express';
-import { BaseController } from '../../../common';
-import { IBachelorController } from './bachelor.controller.interface';
-import { TYPES } from '../../../types';
-import { inject, injectable } from 'inversify';
-import { ILogger } from '../../../logger';
-import { IConfigService } from '../../../config';
-import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
-import { IBachelorService } from '../service/bachelor.service.interface';
-import { HTTPError } from '../../../errors';
 import 'reflect-metadata';
+import { TYPES } from '../../../types';
+import { ROLES } from './../../../types';
+import { ILogger } from '../../../logger';
+import { HTTPError } from '../../../errors';
 import { PrismaClient } from '@prisma/client';
+import { inject, injectable } from 'inversify';
+import { IConfigService } from '../../../config';
+import { BaseController } from '../../../common';
+import { Request, Response, NextFunction } from 'express';
+import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
+import { IBachelorController } from './bachelor.controller.interface';
+import { IBachelorService } from '../service/bachelor.service.interface';
+import { AuthMiddleware } from './../../../common/middlewares/auth.middleware';
+import { VerifyRole } from './../../../common/middlewares/verify-role.middleware';
 
 @injectable()
 export class BachelorController extends BaseController implements IBachelorController {
@@ -143,30 +143,21 @@ export class BachelorController extends BaseController implements IBachelorContr
 
 	async update(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
+			const data = req.body;
 			const id = Number(req.params.id);
-			const { body } = req;
 
-			if (isNaN(id) || id <= 0) {
-				return next(new HTTPError(422, 'Некорректный ID бакалавра'));
+			const result = await this.bachelorService.update(id, data);
+			if (!result) this.send(res, 404, 'Iltimos qaytadan urinib ko`ring');
+			else {
+
+				this.ok(res, {
+					status: true,
+					message: 'Бакалавр успешно обновлен',
+					data,
+				});
 			}
-
-			const data = await this.bachelorService.update(id, body);
-
-			if (!data) {
-				return next(new HTTPError(404, 'Такой бакалавр не найден'));
-			}
-
-			this.ok(res, {
-				status: true,
-				message: 'Бакалавр успешно обновлен',
-				data,
-			});
 		} catch (error) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при обновлении бакалавра, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Iltimos qaytadan urinib ko`ring');
 		}
 	}
 

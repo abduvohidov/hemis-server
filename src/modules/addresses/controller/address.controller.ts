@@ -201,29 +201,19 @@ export class AddressController extends BaseController implements IAddressControl
 		const data = req.body;
 
 		try {
-			if (!id || isNaN(Number(id))) {
-				this.send(res, 422, 'Такой адрес не существует');
-				return;
-			}
-
 			const updatedAddress = await this.addressService.update(Number(id), data);
 
 			if (!updatedAddress) {
-				this.send(res, 404, 'Адрес не найден для обновления');
-				return;
+				this.send(res, 404, 'Iltimos qaytadan urinib ko`ring');
+			} else {
+				this.ok(res, {
+					status: true,
+					message: 'Yangilandi',
+					data: updatedAddress,
+				});
 			}
-
-			this.ok(res, {
-				status: true,
-				message: 'Адрес успешно обновлен',
-				data: updatedAddress,
-			});
 		} catch (err) {
-			this.send(
-				res,
-				500,
-				'Что-то пошло не так при обновлении адреса, проверьте добавляемые данные',
-			);
+			this.send(res, 500, 'Iltimos qaytadan urinib ko`ring');
 		}
 	}
 

@@ -169,28 +169,18 @@ export class EducationController extends BaseController implements IEducationCon
 
 	async updateEducation(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const id = Number(req.params.id);
 			const data = req.body;
-
-			if (isNaN(id) || id <= 0) {
-				this.send(res, 400, 'Некорректный ID образования');
-				return;
-			}
+			const id = Number(req.params.id);
 
 			const education = await this.educationService.changeEducation(id, data);
 
-			if (!education) {
-				this.send(res, 404, 'Такое образование не существует');
-				return;
-			}
-
 			this.ok(res, {
 				status: true,
-				message: 'Образование успешно обновлено',
+				message: 'O`zgartirildi',
 				data: education,
 			});
 		} catch (error) {
-			this.send(res, 500, 'Ошибка при обновлении образования');
+			this.send(res, 500, 'Iltimos qaytadan urinib ko`ring');
 		}
 	}
 
