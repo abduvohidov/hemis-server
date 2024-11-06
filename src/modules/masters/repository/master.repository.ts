@@ -65,7 +65,10 @@ export class MasterRepository implements IMasterRepository {
 	async update(id: number, master: Partial<Master>): Promise<Master> {
 		return await this.prismaService.client.master.update({
 			where: { id },
-			data: master,
+			data: {
+				...master,
+				dateOfBirth: new Date(master.dateOfBirth as Date),
+			},
 		});
 	}
 
