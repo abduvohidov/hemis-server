@@ -124,14 +124,13 @@ export class MasterService implements IMasterService {
 	}
 
 	async getByFilters(data: Partial<Master>): Promise<Master[] | []> {
-		const birthDate = new Date(`${data?.dateOfBirth}T00:00:00.000Z`);
 		const masterFilters = {
 			...(data.lastName && { lastName: data.lastName }),
 			...(data.firstName && { firstName: data.firstName }),
 			...(data.middleName && { middleName: data.middleName }),
 			...(data.passportNumber && { passportNumber: data.passportNumber }),
 			...(data.jshshr && { jshshr: data.jshshr }),
-			...(data.dateOfBirth && { dateOfBirth: birthDate }),
+			...(data.dateOfBirth && { dateOfBirth: data.dateOfBirth }),
 			...(data.gender && { gender: data.gender }),
 			...(data.nationality && { nationality: data.nationality }),
 			...(data.email && { email: data.email }),

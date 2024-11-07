@@ -18,7 +18,7 @@ export class MasterRepository implements IMasterRepository {
 				middleName: master.middleName,
 				passportNumber: master.passportNumber,
 				jshshr: master.jshshr,
-				dateOfBirth: new Date(master.dateOfBirth),
+				dateOfBirth: master.dateOfBirth,
 				gender: master.gender,
 				nationality: master.nationality,
 				email: master.email,
@@ -67,7 +67,7 @@ export class MasterRepository implements IMasterRepository {
 			where: { id },
 			data: {
 				...master,
-				dateOfBirth: new Date(master.dateOfBirth as Date),
+				...(master.dateOfBirth && { dateOfBirth: master.dateOfBirth }),
 			},
 		});
 	}
