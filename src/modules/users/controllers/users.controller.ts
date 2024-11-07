@@ -77,10 +77,9 @@ export class UserController extends BaseController implements IUserController {
 	): Promise<void> {
 		const result: UserModel | Master | false = await this.userService.validateUser(req.body);
 		if (result === false) {
-			this.send(res, 422, 'This user does not exists');
+			this.send(res, 404, 'Lo`gin yo`ki paro`l xato', false);
 			return;
 		}
-
 		const jwt = await this.signJWT(result.email, this.configService.get('SECRET'));
 		res.cookie('token', jwt);
 		if ('role' in result) {
