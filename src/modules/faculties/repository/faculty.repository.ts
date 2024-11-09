@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { TYPES } from '../../../types';
 import { Faculty } from '@prisma/client';
 import { injectable, inject } from 'inversify';
-import { IFaculty } from '../models/faculty.entity.interface';
 import { PrismaService } from '../../../database/prisma.service';
 import { IFacultyRepository } from './faculty.repository.interface';
 
