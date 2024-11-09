@@ -23,4 +23,5 @@ export interface IMasterRepository {
 	findById: (id: number) => Promise<Master | null>;
 	findByEmail: (email: string) => Promise<Master | null>;
 	findByFilters: (data: Partial<Master>) => Promise<Master[] | []>;
+	findByIds: (ids: number[]) => Promise<Master[] | []>;
 }

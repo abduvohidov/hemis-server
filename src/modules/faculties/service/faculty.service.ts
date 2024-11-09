@@ -2,17 +2,16 @@ import 'reflect-metadata';
 import { TYPES } from '../../../types';
 import { inject, injectable } from 'inversify';
 import { Faculty, Master } from '@prisma/client';
-import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
-import { FacultyCreateDto } from '../dto/faculty-create.dto';
 import { IFacultyService } from './faculty.service.interface';
-import { Faculty as FacultyEntity } from '../models/faculty.entity';
 import { FacultyRepository } from '../repository/faculty.repository';
+import { IMasterRepository } from '../../masters';
 
 @injectable()
 export class FacultyService implements IFacultyService {
 	constructor(
 		@inject(TYPES.FacultyRepository) private facultyRepository: FacultyRepository,
+		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
 
@@ -47,13 +46,10 @@ export class FacultyService implements IFacultyService {
 	async filterByName(name: string): Promise<Master[] | []> {
 		if (!name) return [];
 		const faculty = await this.facultyRepository.findByName(name);
-		if (faculty) {
-			const education = await this.educationRepository.findByFacultyId(faculty.id);
-			const masters = education.flatMap((education: IEducation) => education.master);
-			if (masters.length > 0) return masters as Master[];
-			return [];
-		}
-		return [];
+		if (!faculty) return [];
+		const education = await this.educationRepository.findByFacultyId(faculty.id);
+		const educationMasterIds = education.map((edu) => edu.masterId);
+		return await this.masterRepository.findByIds(educationMasterIds);
 	}
 
 	async update(id: number, params: Faculty): Promise<Faculty | null> {

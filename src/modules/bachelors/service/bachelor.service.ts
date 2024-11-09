@@ -8,10 +8,12 @@ import { IBachelorService } from './bachelor.service.interface';
 import { BachelorCreateDto } from '../dto/bacherlor-create.dto';
 import { BachelorUpdateDto } from '../dto/bacherlor-update.dto';
 import { BacherlorRepository } from '../repository/bachelor.repository';
+import { IMasterRepository } from '../../masters';
 
 @injectable()
 export class BachelorService implements IBachelorService {
 	constructor(
+		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
 		@inject(TYPES.BachelorRepository) private bachelorRepository: BacherlorRepository,
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
@@ -77,11 +79,15 @@ export class BachelorService implements IBachelorService {
 
 		const hasBachelorFilters = Object.keys(bachelorFilters).length > 0;
 		if (!hasBachelorFilters) return [];
-		const bachelor = await this.bachelorRepository.findByFilters(data);
-		const bachelorIds = bachelor.map((bachelor) => bachelor.id);
-		const education = await this.educationRepository.findByBachelorsId(bachelorIds);
-		const masters = education.flatMap((education: IEducation) => education.master);
-		if (masters.length > 0) return masters as Master[];
-		return [];
+
+		const bachelors = await this.bachelorRepository.findByFilters(bachelorFilters);
+		if (bachelors.length === 0) return [];
+
+		const bachelorIds = bachelors.map((bachelor) => bachelor.id);
+		const education = await this.educationRepository.findByArticlesId(bachelorIds);
+		const educationMasterIds = education?.map((edu) => edu.masterId);
+		const masters = await this.masterRepository.findByIds(educationMasterIds);
+
+		return masters;
 	}
 }

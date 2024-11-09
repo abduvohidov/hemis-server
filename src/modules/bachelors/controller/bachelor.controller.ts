@@ -149,7 +149,6 @@ export class BachelorController extends BaseController implements IBachelorContr
 			const result = await this.bachelorService.update(id, data);
 			if (!result) this.send(res, 404, 'Iltimos qaytadan urinib ko`ring');
 			else {
-
 				this.ok(res, {
 					status: true,
 					message: 'Бакалавр успешно обновлен',
@@ -234,6 +233,8 @@ export class BachelorController extends BaseController implements IBachelorContr
 				data,
 			});
 		} catch (error) {
+			console.log(error);
+
 			this.send(res, 500, 'Ошибка при получении бакалавр');
 		}
 	}

@@ -45,6 +45,23 @@ export class MasterRepository implements IMasterRepository {
 			},
 		});
 	}
+	async findByIds(ids: number[]): Promise<Master[] | []> {
+		return await this.prismaService.client.master.findMany({
+			where: {
+				id: { in: ids },
+			},
+			include: {
+				addresses: true,
+				education: {
+					include: {
+						bachelor: true,
+						faculty: true,
+						articles: true,
+					},
+				},
+			},
+		});
+	}
 
 	async findByEmail(email: string): Promise<Master | null> {
 		return await this.prismaService.client.master.findUnique({

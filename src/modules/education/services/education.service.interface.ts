@@ -1,4 +1,5 @@
 import { Education } from '@prisma/client';
+import { Master } from '@prisma/client';
 import { CreateEducationDto, UpdateEducationDto } from '../index';
 
 export interface IEducationService {
@@ -10,5 +11,5 @@ export interface IEducationService {
 	getAll: () => Promise<Education[]>;
 	getById: (id: number) => Promise<Education | null>;
 	getByMasterId: (id: number) => Promise<Education | null>;
-	getByFilters: (filters: Partial<Education>) => Promise<Education[] | []>;
+	getByFilters: (filters: Partial<Education>) => Promise<Master[] | []>;
 }

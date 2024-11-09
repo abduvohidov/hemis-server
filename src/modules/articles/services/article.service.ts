@@ -5,11 +5,13 @@ import { IEducation } from '../../education/types';
 import { IEducationRepository } from '../../education';
 import { IArticleService } from './article.service.interface';
 import { CreateArticleDto, IArticleRepository } from '../index';
+import { IMasterRepository } from '../../masters';
 
 @injectable()
 export class ArticleService implements IArticleService {
 	constructor(
 		@inject(TYPES.ArticleRepository) private articleRepository: IArticleRepository,
+		@inject(TYPES.MasterRepository) private masterRepository: IMasterRepository,
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
 
@@ -59,13 +61,9 @@ export class ArticleService implements IArticleService {
 		if (!hasArticleFilters) return [];
 
 		const articles = await this.articleRepository.filterByValues(filters);
-		const articlesId = articles?.map((article: Articles) => article.id);
-		const education = await this.educationRepository.findByArticlesId(articlesId);
-		const masters = education.flatMap((education: IEducation) => education.master);
-
-		if (masters.length > 0) {
-			return masters as Master[];
-		}
-		return [];
+		const articleIds = articles.map((article) => article.id);
+		const education = await this.educationRepository.findByArticlesId(articleIds);
+		const educationMasterIds = education?.map((edu) => edu.masterId);
+		return await this.masterRepository.findByIds(educationMasterIds);
 	}
 }

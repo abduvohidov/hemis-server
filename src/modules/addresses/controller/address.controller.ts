@@ -174,21 +174,11 @@ export class AddressController extends BaseController implements IAddressControl
 	async findByFilter({ body }: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const address = await this.addressService.findByFilters(body);
-			const data: Array<Master> = [];
-
-			if (address.length) {
-				address.forEach((address: IAddress) => {
-					const master = address['master'] as unknown as Master;
-					if (master) {
-						data.push(master);
-					}
-				});
-			}
 
 			this.ok(res, {
 				status: true,
 				message: 'Адресс успешно получено',
-				data,
+				data: address,
 			});
 		} catch (error) {
 			console.error('Ошибка при получении адресса:', error);

@@ -1,5 +1,5 @@
 import { TYPES } from '../../../types';
-import { Address } from '@prisma/client';
+import { Address, Master } from '@prisma/client';
 import { MasterRepository } from '../../masters';
 import { inject, injectable } from 'inversify';
 import { AddressCreateDto } from '../dto/address-create.dto';
@@ -45,7 +45,7 @@ export class AddressService implements IAddressService {
 		return this.addressRepository.findById(id);
 	}
 
-	async findByFilters(data: Partial<Address>): Promise<Address[] | []> {
+	async findByFilters(data: Partial<Address>): Promise<Master[] | []> {
 		const addressFilters = {
 			...(data.address && { address: data.address }),
 			...(data.country && { country: data.country }),
@@ -57,7 +57,9 @@ export class AddressService implements IAddressService {
 		if (!hasAddressFilters) {
 			return [];
 		}
-		return await this.addressRepository.findByFilters(addressFilters);
+		const address = await this.addressRepository.findByFilters(addressFilters);
+		const addressMasterIds = address.map((add) => add.masterId);
+		return await this.masterRepository.findByIds(addressMasterIds);
 	}
 
 	async update(id: number, address: Partial<Address>): Promise<Address | null> {

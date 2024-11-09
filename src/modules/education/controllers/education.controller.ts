@@ -231,23 +231,12 @@ export class EducationController extends BaseController implements IEducationCon
 
 	async findByFilters(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const education = await this.educationService.getByFilters(req.body);
-
-			const data: Array<Master> = [];
-
-			if (education && education.length > 0) {
-				education.forEach((educationRecord: IEducation) => {
-					const master = educationRecord.master as Master;
-					if (master) {
-						data.push(master);
-					}
-				});
-			}
+			const masters = await this.educationService.getByFilters(req.body);
 
 			this.ok(res, {
 				status: true,
 				message: 'Фильтрованные мастера успешно получены',
-				data,
+				data: masters,
 			});
 		} catch (error) {
 			this.send(res, 500, 'Ошибка при фильтрации образований');

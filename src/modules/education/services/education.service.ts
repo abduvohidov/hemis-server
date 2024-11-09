@@ -1,5 +1,5 @@
 import { TYPES } from '../../../types';
-import { Education } from '@prisma/client';
+import { Education, Master } from '@prisma/client';
 import { inject, injectable } from 'inversify';
 import { IMasterRepository } from './../../masters';
 import { IArticleRepository } from './../../articles';
@@ -95,7 +95,7 @@ export class EducationService implements IEducationService {
 		return await this.educationRepository.findByMasterId(id);
 	}
 
-	async getByFilters(data: Partial<Education>): Promise<Education[] | []> {
+	async getByFilters(data: Partial<Education>): Promise<Master[] | []> {
 		const educationFilters = {
 			...(data.masterId && { masterId: data.masterId }),
 			...(data.bachelorId && { bachelorId: data.bachelorId }),
@@ -123,6 +123,8 @@ export class EducationService implements IEducationService {
 		if (!hasEducationFilters) {
 			return [];
 		}
-		return await this.educationRepository.findByValues(educationFilters);
+		const educations = await this.educationRepository.findByValues(educationFilters);
+		const educationMasterIds = educations.map((edu) => edu.masterId);
+		return await this.masterRepository.findByIds(educationMasterIds);
 	}
 }

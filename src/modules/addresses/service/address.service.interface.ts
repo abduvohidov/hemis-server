@@ -1,4 +1,4 @@
-import { Address } from '@prisma/client';
+import { Address, Master } from '@prisma/client';
 import { AddressCreateDto, IAddress } from '../index';
 
 export interface IAddressService {
@@ -7,5 +7,5 @@ export interface IAddressService {
 	update: (id: number, address: Partial<Address>) => Promise<Address | null>;
 	delete: (id: number) => Promise<void | null>;
 	findById: (id: number) => Promise<Address | null>;
-	findByFilters: (data: Partial<Address>) => Promise<Address[] | []>;
+	findByFilters: (data: Partial<Address>) => Promise<Master[] | []>;
 }
