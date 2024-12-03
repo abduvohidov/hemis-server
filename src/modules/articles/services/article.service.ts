@@ -15,7 +15,25 @@ export class ArticleService implements IArticleService {
 		@inject(TYPES.FileStorage) private fileStorage: FileStorage,
 		@inject(TYPES.EducationRepository) private educationRepository: IEducationRepository,
 	) {}
+	async deleteFile(id: number, fileType: 'first' | 'second'): Promise<Articles | null> {
+		const article = await this.articleRepository.findById(id);
 
+		if (!article) {
+			return null;
+		}
+
+		// Determine which file to delete and remove it from storage
+		if (fileType === 'first' && article.firstArticleFilename) {
+			await this.fileStorage.deleteFile(article.firstArticleFilename); // Delete the old file
+			article.firstArticleFilename = ''; // Set filename to empty string
+		} else if (fileType === 'second' && article.secondArticleFilename) {
+			await this.fileStorage.deleteFile(article.secondArticleFilename); // Delete the old file
+			article.secondArticleFilename = ''; // Set filename to empty string
+		}
+
+		// Update the article in the database
+		return await this.articleRepository.update(id, article);
+	}
 	async fileUpload(id: number, data: ArticleUploadParams): Promise<Articles | string | null> {
 		const article = await this.articleRepository.findById(id);
 
@@ -80,7 +98,9 @@ export class ArticleService implements IArticleService {
 			...(filters.secondArticle && { secondArticle: filters.secondArticle }),
 			...(filters.secondArticleDate && { secondArticleDate: filters.secondArticleDate }),
 			...(filters.secondArticleJournal && { secondArticleJournal: filters.secondArticleJournal }),
-			...(filters.secondArticleFilename && { secondArticleFilename: filters.secondArticleFilename }),
+			...(filters.secondArticleFilename && {
+				secondArticleFilename: filters.secondArticleFilename,
+			}),
 		};
 
 		const hasArticleFilters = Object.keys(articleFilters).length > 0;

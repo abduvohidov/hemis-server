@@ -202,7 +202,7 @@ export class MasterController extends BaseController implements IMasterControlle
 				this.ok(res, {
 					status: true,
 					message: 'Magistr o`zgartirildi',
-					data: result,
+					data,
 				});
 			}
 		} catch (err) {

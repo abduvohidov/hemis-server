@@ -45,11 +45,6 @@ export class UserController extends BaseController implements IUserController {
 				path: '/create',
 				method: 'post',
 				func: this.createUser,
-				// middlewares: [
-				// 	new ValidateMiddleware(UserRegisterDto),
-				// 	new AuthMiddleware(this.secret4Token),
-				// 	new VerifyRole(new PrismaClient(), [ROLES.admin]),
-				// ],
 			},
 
 			{

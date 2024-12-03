@@ -71,7 +71,7 @@ export class MasterService implements IMasterService {
 		return this.masterRepository.findAll();
 	}
 
-	async update(id: number, master: Partial<Master>): Promise<Master | string> {
+	async update(id: number, master: Partial<Master>): Promise<any | string> {
 		const existingMaster = await this.masterRepository.findById(id);
 		if (!existingMaster) {
 			return 'Bunday magistr topilmadi';
@@ -101,8 +101,11 @@ export class MasterService implements IMasterService {
 			// Replace the plaintext password with the hashed one
 			master.password = updatedMasterEntity.password;
 		}
+		const res = await this.masterRepository.update(id, master);
+		console.log(res);
+		console.log(res?.education[0]);
 
-		return await this.masterRepository.update(id, master);
+		return res;
 	}
 
 	async delete(id: number): Promise<void> {

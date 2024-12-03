@@ -2,6 +2,7 @@ import { Articles, Master } from '@prisma/client';
 import { CreateArticleDto } from '../dto/create.article.dto';
 
 export interface IArticleService {
+	deleteFile(id: number, fileType: 'first' | 'second'): Promise<Articles | null>;
 	prepareArticle: (data: CreateArticleDto) => Promise<Articles | string | null>;
 	fileUpload: (id: number, data: ArticleUploadParams) => Promise<Articles | string | null>;
 	removeArticle: (id: number) => Promise<Articles | null>;

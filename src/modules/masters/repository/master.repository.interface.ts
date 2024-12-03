@@ -18,7 +18,7 @@ export interface IMasterRepository {
 		password,
 	}: IMasterEntity) => Promise<IMasterEntity>;
 	findAll: () => Promise<Master[]>;
-	update: (id: number, master: Partial<Master>) => Promise<Master>;
+	update: (id: number, master: Partial<Master>) => Promise<any>;
 	delete: (id: number) => Promise<void>;
 	findById: (id: number) => Promise<Master | null>;
 	findByEmail: (email: string) => Promise<Master | null>;

@@ -29,17 +29,9 @@ export class ArticleController extends BaseController implements IArticleControl
 				path: '/file-upload/:id',
 				method: 'post',
 				func: this.fileUpload,
-				middlewares: [
-					new ArticleFileUploadMiddleware(),
-					new AuthMiddleware(this.secret4Token),
-					new VerifyRole(new PrismaClient(), [
-						ROLES.admin,
-						ROLES.director,
-						ROLES.teacher,
-						ROLES.teamLead,
-					]),
-				],
+				middlewares: [new ArticleFileUploadMiddleware()],
 			},
+
 			{
 				path: '/download/:filename',
 				method: 'get',
@@ -172,9 +164,12 @@ export class ArticleController extends BaseController implements IArticleControl
 				};
 			}
 
-			await this.articleService.fileUpload(Number(req.params.id), fileUploadParams);
+			const updatedArticle = await this.articleService.fileUpload(
+				Number(req.params.id),
+				fileUploadParams,
+			);
 
-			this.ok(res, { message: 'Maqola qo`shildi' });
+			this.ok(res, updatedArticle);
 		} catch (error) {
 			console.log(error);
 			this.send(
