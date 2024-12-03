@@ -1,25 +1,44 @@
 import 'reflect-metadata';
-import { ILogger } from './../../../logger';
+import { ILogger } from '../../../logger';
 import { PrismaClient } from '@prisma/client';
 import { inject, injectable } from 'inversify';
-import { TYPES, ROLES } from './../../../types';
+import { TYPES, ROLES } from '../../../types';
 import { IConfigService } from '../../../config';
 import { NextFunction, Request, Response } from 'express';
 import { IArticleService, CreateArticleDto } from '../index';
 import { IArticleController } from './article.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
+import { ArticleUploadParams } from '../services/article.service.interface';
+import { ArticleFileUploadMiddleware } from '../../../common/middlewares/article-file-upload.middleware';
 
 @injectable()
 export class ArticleController extends BaseController implements IArticleController {
 	private readonly secret4Token: string;
 	constructor(
-		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.ILogger) loggerService: ILogger,
 		@inject(TYPES.ArticleService) private articleService: IArticleService,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
 		this.secret4Token = this.configService.get('SECRET');
+
 		this.bindRoutes([
+			{
+				path: '/file-upload/:id',
+				method: 'post',
+				func: this.fileUpload,
+				middlewares: [
+					new ArticleFileUploadMiddleware(),
+					new AuthMiddleware(this.secret4Token),
+					new VerifyRole(new PrismaClient(), [
+						ROLES.admin,
+						ROLES.director,
+						ROLES.teacher,
+						ROLES.teamLead,
+					]),
+				],
+			},
+
 			{
 				path: '/create',
 				method: 'post',
@@ -113,6 +132,47 @@ export class ArticleController extends BaseController implements IArticleControl
 		]);
 	}
 
+	async fileUpload(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+			if (!files.firstArticle && !files.secondArticle) {
+				res.status(400).json({
+					message: 'Загрузите хоть один файл',
+				});
+				return;
+			}
+
+			const fileUploadParams: ArticleUploadParams = {};
+
+			const firstFile = (files?.firstArticle || [])[0];
+			if (firstFile) {
+				fileUploadParams.first = {
+					filename: firstFile.originalname,
+					content: firstFile.buffer,
+				};
+			}
+
+			const secondFile = (files?.secondArticle || [])[0];
+			if (secondFile) {
+				fileUploadParams.second = {
+					filename: secondFile.originalname,
+					content: secondFile.buffer,
+				};
+			}
+
+			await this.articleService.fileUpload(Number(req.params.id), fileUploadParams);
+
+			this.ok(res, { message: 'Maqola qo`shildi' });
+		} catch (error) {
+			console.log(error);
+			this.send(
+				res,
+				500,
+				'Что-то пошло не так при добавлении адреса, проверьте добавляемые данные',
+			);
+		}
+	}
+
 	async postArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
 			const data = req.body;
@@ -121,6 +181,7 @@ export class ArticleController extends BaseController implements IArticleControl
 			else if (article) this.ok(res, { message: 'Maqola qo`shildi', data: article });
 			else this.send(res, 409, 'Iltimos qaytadan urinib ko`ring', false);
 		} catch (error) {
+			console.log(error);
 			this.send(
 				res,
 				500,
@@ -145,7 +206,6 @@ export class ArticleController extends BaseController implements IArticleControl
 
 	async updateArticle(req: Request, res: Response, next: NextFunction): Promise<void> {
 		try {
-			const data = req.body;
 			const id = Number(req.params.id);
 			const article = await this.articleService.changeArticle(id, req.body);
 			if (!article) this.send(res, 404, 'Iltimos qaytadan urinib ko`ring');

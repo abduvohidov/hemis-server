@@ -3,15 +3,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model UserModel {
-  id       Int     @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   name     String
   lastName String
-  email    String  @unique
+  email    String @unique
   password String
   role     String
 }
@@ -34,14 +34,14 @@ model Master {
 
   // References
   addresses Address[]
-  education Education[] 
+  education Education[]
 }
 
 model Address {
-  id        Int    @id @default(autoincrement())
-  country   String
-  region    String
-  address   String
+  id       Int    @id @default(autoincrement())
+  country  String
+  region   String
+  address  String
   masterId Int
 
   // References
@@ -49,31 +49,31 @@ model Address {
 }
 
 model Education {
-  id                    Int    @id @default(autoincrement())
-  masterId              Int
-  bachelorId            Int?
-  currentSpecialization String
-  facultyId             Int?
-  course                String
-  paymentType           String
-  entryYear             String
-  educationForm         String
-  languageCertificate   String
-  semester              String
-  scientificSupervisor  String
-  scientificAdvisor     String
-  internshipSupervisor  String
-  internalReviewer      String
-  externamReviewer      String
-  thesisTopic           String
-  articlesId            Int?
-  academicLeave         String
+  id                        Int       @id @default(autoincrement())
+  masterId                  Int
+  bachelorId                Int?
+  currentSpecialization     String
+  facultyId                 Int?
+  course                    String
+  paymentType               String
+  entryYear                 String
+  educationForm             String
+  languageCertificate       String
+  semester                  String
+  scientificSupervisor      String
+  scientificAdvisor         String
+  internshipSupervisor      String
+  internalReviewer          String
+  externamReviewer          String
+  thesisTopic               String
+  articlesId                Int?
+  academicLeave             String
   scientificInternshipPlace String
   // References
-  master  Master  @relation(fields: [masterId], references: [id], onDelete: Cascade)
-  bachelor Bachelor? @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
-  faculty  Faculty?  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
-  articles Articles? @relation(fields: [articlesId], references: [id], onDelete: Cascade)
+  master                    Master    @relation(fields: [masterId], references: [id], onDelete: Cascade)
+  bachelor                  Bachelor? @relation(fields: [bachelorId], references: [id], onDelete: Cascade)
+  faculty                   Faculty?  @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  articles                  Articles? @relation(fields: [articlesId], references: [id], onDelete: Cascade)
 }
 
 model Bachelor {
@@ -96,13 +96,15 @@ model Faculty {
 }
 
 model Articles {
-  id                   Int      @id @default(autoincrement())
-  firstArticle         String
-  firstArticleDate     DateTime @db.Date
-  firstArticleJournal  String
-  secondArticle        String
-  secondArticleDate    DateTime @db.Date
-  secondArticleJournal String
+  id                    Int         @id @default(autoincrement())
+  firstArticle          String
+  firstArticleDate      DateTime    @db.Date
+  firstArticleJournal   String
+  firstArticleFilename  String      @default("")
+  secondArticle         String
+  secondArticleDate     DateTime    @db.Date
+  secondArticleJournal  String
+  secondArticleFilename String      @default("")
   // References
-  education Education[]
+  education             Education[]
 }

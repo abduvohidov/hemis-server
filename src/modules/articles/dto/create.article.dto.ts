@@ -15,6 +15,9 @@ export class CreateArticleDto {
 	firstArticleJournal: string;
 
 	@IsString()
+	firstArticleFilename = '';
+
+	@IsString()
 	@IsNotEmpty()
 	secondArticle: string;
 
@@ -25,6 +28,9 @@ export class CreateArticleDto {
 	@IsString()
 	@IsNotEmpty()
 	secondArticleJournal: string;
+
+	@IsString()
+	secondArticleFilename = '';
 
 	@IsOptional()
 	masterId: number;

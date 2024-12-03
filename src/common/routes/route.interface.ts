@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Request, RequestHandler, Response, Router } from 'express';
 import { IMiddleware } from '../middlewares/middleware.interface';
 
 export interface IControllerRoute {

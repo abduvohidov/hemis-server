@@ -4,6 +4,8 @@ export const TYPES = {
 	ConfigService: Symbol.for('ConfigService'),
 	PrismaService: Symbol.for('PrismaService'),
 	ExeptionFilter: Symbol.for('ExeptionFilter'),
+	FileStorage: Symbol.for('FileStorage'),
+	FileStorageConfig: Symbol.for('FileStorageConfig'),
 
 	//User
 	UserModel: Symbol.for('UserModel'),

@@ -61,6 +61,8 @@ import {
 	IArticleRepository,
 	IArticleService,
 } from './modules/articles';
+import { FileStorage, LocalFileStorageImpl } from './common/fileStorage';
+import { FileStorageConfig, FileStorageConfigImpl } from './config/file-storage-config';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -72,6 +74,8 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService);
+	bind<FileStorage>(TYPES.FileStorage).to(LocalFileStorageImpl);
+	bind<FileStorageConfig>(TYPES.FileStorageConfig).to(FileStorageConfigImpl);
 
 	bind<IUsersRepository>(TYPES.UserRepository).to(UsersRepository).inSingletonScope();
 	bind<IUserController>(TYPES.UserController).to(UserController).inSingletonScope();

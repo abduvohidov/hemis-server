@@ -9,45 +9,49 @@ export class ArticleRepository implements IArticleRepository {
 	constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
 	async create(data: Omit<Articles, 'id'>): Promise<Articles | null> {
-		return await this.prismaService.client.articles.create({
+		return this.prismaService.client.articles.create({
 			data: {
 				firstArticle: data.firstArticle,
 				firstArticleDate: new Date(data?.secondArticleDate),
 				firstArticleJournal: data.firstArticleJournal,
+				firstArticleFilename: '',
 				secondArticle: data.secondArticle,
 				secondArticleDate: new Date(data?.secondArticleDate),
 				secondArticleJournal: data.secondArticleJournal,
+				secondArticleFilename: '',
 			},
 		});
 	}
 
 	async delete(id: number): Promise<Articles | null> {
-		return await this.prismaService.client.articles.delete({ where: { id } });
+		return this.prismaService.client.articles.delete({ where: { id } });
 	}
 
 	async update(id: number, data: Partial<Articles>): Promise<Articles | null> {
-		return await this.prismaService.client.articles.update({
+		return this.prismaService.client.articles.update({
 			where: { id },
 			data: {
 				...(data.firstArticle && { firstArticle: data.firstArticle }),
 				...(data.firstArticleDate && { firstArticleDate: data.firstArticleDate }),
 				...(data.firstArticleJournal && { firstArticleJournal: data.firstArticleJournal }),
+				...(data.firstArticleFilename && { firstArticleFilename: data.firstArticleFilename }),
 				...(data.secondArticle && { secondArticle: data.secondArticle }),
 				...(data.secondArticleDate && { secondArticleDate: data.secondArticleDate }),
 				...(data.secondArticleJournal && { secondArticleJournal: data.secondArticleJournal }),
+				...(data.secondArticleFilename && { secondArticleFilename: data.secondArticleFilename }),
 			},
 		});
 	}
 
 	async findAll(): Promise<Articles[]> {
-		return await this.prismaService.client.articles.findMany();
+		return this.prismaService.client.articles.findMany();
 	}
 	async findById(id: number): Promise<Articles | null> {
-		return await this.prismaService.client.articles.findUnique({ where: { id } });
+		return this.prismaService.client.articles.findUnique({ where: { id } });
 	}
 
 	async filterByValues(filters: Partial<Articles>): Promise<Articles[] | []> {
-		return await this.prismaService.client.articles.findMany({
+		return this.prismaService.client.articles.findMany({
 			where: filters,
 		});
 	}
