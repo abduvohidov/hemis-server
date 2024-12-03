@@ -10,6 +10,7 @@ import { IArticleController } from './article.controller.interface';
 import { AuthMiddleware, BaseController, ValidateMiddleware, VerifyRole } from '../../../common';
 import { ArticleUploadParams } from '../services/article.service.interface';
 import { ArticleFileUploadMiddleware } from '../../../common/middlewares/article-file-upload.middleware';
+import { FileStorage } from '../../../common/fileStorage';
 
 @injectable()
 export class ArticleController extends BaseController implements IArticleController {
@@ -17,6 +18,7 @@ export class ArticleController extends BaseController implements IArticleControl
 	constructor(
 		@inject(TYPES.ILogger) loggerService: ILogger,
 		@inject(TYPES.ArticleService) private articleService: IArticleService,
+		@inject(TYPES.FileStorage) private fileStorage: FileStorage,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 	) {
 		super(loggerService);
@@ -37,6 +39,11 @@ export class ArticleController extends BaseController implements IArticleControl
 						ROLES.teamLead,
 					]),
 				],
+			},
+			{
+				path: '/download/:filename',
+				method: 'get',
+				func: this.download,
 			},
 
 			{
@@ -130,6 +137,11 @@ export class ArticleController extends BaseController implements IArticleControl
 				],
 			},
 		]);
+	}
+
+	async download(req: Request, res: Response): Promise<void> {
+		const file = await this.fileStorage.getFilePath(req.params.filename);
+		res.download(file);
 	}
 
 	async fileUpload(req: Request, res: Response, next: NextFunction): Promise<void> {

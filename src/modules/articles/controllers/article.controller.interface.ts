@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 export interface IArticleController {
 	fileUpload: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+	download: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	postArticle: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	deleteArticle: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 	updateArticle: (req: Request, res: Response, next: NextFunction) => Promise<void>;
