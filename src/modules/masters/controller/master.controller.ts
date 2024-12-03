@@ -197,7 +197,6 @@ export class MasterController extends BaseController implements IMasterControlle
 			const result = await this.masterService.update(id, data);
 			if (typeof result === 'string') {
 				this.send(res, 404, result);
-				console.log(result);
 			} else {
 				this.ok(res, {
 					status: true,

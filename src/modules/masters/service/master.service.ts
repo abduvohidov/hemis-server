@@ -102,8 +102,6 @@ export class MasterService implements IMasterService {
 			master.password = updatedMasterEntity.password;
 		}
 		const res = await this.masterRepository.update(id, master);
-		console.log(res);
-		console.log(res?.education[0]);
 
 		return res;
 	}
