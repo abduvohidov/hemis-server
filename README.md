@@ -1,1 +1,1 @@
-# Empty Node Js File With Prisma Database Configuration File
+# Created a Hemis server using Node.js and Express, following a monolithic architecture.
